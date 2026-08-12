@@ -339,6 +339,16 @@ export function Compressor() {
       <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
         <DropZone onFiles={addFiles} disabled={running} />
 
+        <div className="mt-3 min-h-9" aria-live="polite">
+          {engineState === "loading" && (
+            <div className="flex items-center gap-3 overflow-hidden rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              <span className="zg-shimmer h-2 w-24 rounded-full bg-primary/20" aria-hidden="true" />
+              Starting compression engine…
+            </div>
+          )}
+        </div>
+
+
         {notices.length > 0 && (
           <ul className="mt-4 space-y-2" role="alert">
             {notices.map((n) => (
