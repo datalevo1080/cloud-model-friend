@@ -168,6 +168,26 @@ export function warmupEngine(): Promise<boolean> {
 
 const SAFE_NAME = "input.gif";
 
+/**
+ * Runs an arbitrary gifsicle command against one file with the shared WASM
+ * engine. `build` receives the safe in-VM file name.
+ */
+export async function runGifsicleCommand(
+  file: File,
+  build: (inputName: string) => string,
+): Promise<Blob> {
+  const gifsicle = await getGifsicle();
+  const out = await gifsicle.run({
+    input: [{ file, name: SAFE_NAME }],
+    command: [build(SAFE_NAME)],
+    isStrict: false,
+  });
+  const result = out?.[0];
+  if (!result || result.size === 0) throw new Error("Gifsicle returned no output.");
+  return result;
+}
+
+
 export async function runGifsicle(
   file: File,
   method: CompressMethod,
