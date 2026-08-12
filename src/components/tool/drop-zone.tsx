@@ -8,7 +8,7 @@ export function DropZone({
   onUrl,
   disabled,
 }: {
-  onFiles: (files: File[]) => void | Promise<void>;
+  onFiles: (files: File[]) => unknown;
   /** Resolves when the remote GIF was added; rejects with a friendly message. */
   onUrl?: (url: string) => Promise<void>;
   disabled?: boolean;
