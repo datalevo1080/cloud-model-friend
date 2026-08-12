@@ -474,15 +474,13 @@ export function Compressor() {
       if (!item) continue;
       // Drop the previous result before making a new one — no orphan blob URLs.
       if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
-      patch(item.id, {
-        status: "processing",
-        progress: 4,
-        statusText: STATUS_TEXTS[0]!,
-        resultBlob: undefined,
-        resultUrl: undefined,
-        resultSize: undefined,
-        resultSignature: undefined,
-      });
+      setItems((prev) =>
+        prev.map((i) => {
+          if (i.id !== item.id) return i;
+          const { resultBlob: _b, resultUrl: _u, resultSize: _s, resultSignature: _g, ...rest } = i;
+          return { ...rest, status: "processing", progress: 4, statusText: STATUS_TEXTS[0]! };
+        }),
+      );
 
       let textIdx = 0;
       const ticker = window.setInterval(() => {
