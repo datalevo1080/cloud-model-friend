@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
+  Check,
   ChevronDown,
   Download,
+  FileSpreadsheet,
+  Link2,
   Loader2,
   RotateCcw,
   Sparkles,
@@ -29,6 +32,9 @@ import {
 import type { SavingsEstimate } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
 import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
+import { ThroughputModel, formatEta } from "@/lib/eta";
+import { downloadCsvReport } from "@/lib/report";
+import { buildSettingsLink, settingsFromSearch } from "@/lib/settings-link";
 
 import {
   MAX_BYTES,
@@ -37,6 +43,7 @@ import {
   type GifAnalysis,
   type GifItem,
 } from "@/lib/gif-types";
+
 
 const STATUS_TEXTS = [
   "Crunching frames…",
