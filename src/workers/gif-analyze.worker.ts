@@ -68,7 +68,10 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
   const duplicateIndices: number[] = [];
   const colorSet = new Set<number>();
 
+  let analysed = 0;
+  try {
   for (let i = 0; i < frames.length; i++) {
+
     const f = frames[i]!;
     if (f.disposalType === 2 && prev) {
       fctx.clearRect(f.dims.left, f.dims.top, f.dims.width, f.dims.height);
