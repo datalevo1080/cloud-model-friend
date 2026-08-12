@@ -1028,7 +1028,15 @@ const STATUS_LABEL: Record<GifItem["status"], string> = {
   canceled: "Canceled",
 };
 
-function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
+function FileCard({
+  item,
+  estimate,
+  onRemove,
+}: {
+  item: GifItem;
+  estimate?: SavingsEstimate;
+  onRemove: () => void;
+}) {
   const saving =
     item.resultSize !== undefined ? savingsPercent(item.size, item.resultSize) : undefined;
   const [previewBroken, setPreviewBroken] = useState(false);
