@@ -694,6 +694,38 @@ export function Compressor() {
     a.click();
   }, [zipCache]);
 
+  /** CSV summary of the finished batch — built and downloaded locally. */
+  const downloadReport = useCallback(() => {
+    downloadCsvReport(itemsRef.current);
+  }, []);
+
+  const settingsLink = useMemo(
+    () =>
+      buildSettingsLink(
+        typeof window === "undefined" ? "https://zipgif.com" : window.location.origin,
+        "/",
+        { smart, method, targetOn, targetValue, targetUnit },
+      ),
+    [smart, method, targetOn, targetValue, targetUnit],
+  );
+
+  const copySettingsLink = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(settingsLink);
+    } catch {
+      // Clipboard blocked (insecure context or permissions) — show the URL instead.
+      window.prompt("Copy your settings link:", settingsLink);
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", settingsLink.slice(window.location.origin.length));
+    }
+    setLinkCopied(true);
+    window.setTimeout(() => setLinkCopied(false), 2500);
+  }, [settingsLink]);
+
+
+
   useEffect(
     () => () => {
       if (zipCache) URL.revokeObjectURL(zipCache.url);
