@@ -93,6 +93,8 @@ export function Compressor() {
   const [running, setRunning] = useState(false);
   const [engineState, setEngineState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [workerFailed, setWorkerFailed] = useState(false);
+  // Session-only cache of the last generated .zip, keyed by the result set.
+  const [zipCache, setZipCache] = useState<{ key: string; url: string } | null>(null);
   const workerRef = useRef<Worker | null>(null);
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
