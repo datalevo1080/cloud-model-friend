@@ -6,10 +6,47 @@ const SAMPLE = 48; // downsample edge for motion analysis
 
 type Req = { id: string; buffer: ArrayBuffer };
 
+function isGifHeader(buffer: ArrayBuffer): boolean {
+  if (buffer.byteLength < 6) return false;
+  const sig = String.fromCharCode(...new Uint8Array(buffer, 0, 6));
+  return sig === "GIF87a" || sig === "GIF89a";
+}
+
 function analyze(buffer: ArrayBuffer): GifAnalysis {
+  if (!isGifHeader(buffer)) {
+    throw new Error("NOT_GIF");
+  }
   const gif = parseGIF(buffer);
-  const frames = decompressFrames(gif, true);
-  if (!frames.length) throw new Error("No frames found in this GIF.");
+  let frames: ReturnType<typeof decompressFrames>;
+  let truncated = false;
+  try {
+    frames = decompressFrames(gif, true);
+  } catch {
+    // A truncated file can still parse its header; salvage what we can.
+    truncated = true;
+    frames = [];
+  }
+  if (!frames.length) {
+    // Fall back to header-only metadata so the user can still compress.
+    const w = gif.lsd?.width ?? 0;
+    const h = gif.lsd?.height ?? 0;
+    if (!w || !h) throw new Error("CORRUPT");
+    return {
+      width: w,
+      height: h,
+      frameCount: Math.max(1, gif.frames?.filter((f) => "image" in f).length ?? 1),
+      fps: 0,
+      durationMs: 0,
+      duplicateShare: 0,
+      duplicateIndices: [],
+      paletteDensity: 1,
+      motionAverage: 0.15,
+      motionVariance: 0,
+      truncated: true,
+      partial: true,
+    };
+  }
+
 
   const width = gif.lsd.width;
   const height = gif.lsd.height;
