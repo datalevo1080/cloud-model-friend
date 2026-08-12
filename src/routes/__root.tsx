@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider, themeInitScript } from "../lib/theme";
+import { PwaInstall } from "../components/pwa-install";
 
 function NotFoundComponent() {
   return (
@@ -104,7 +105,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "Every GIF tool. Zero uploads. Compress GIFs privately in your browser.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "ZipGIF" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: "ZipGIF" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "application-name", content: "ZipGIF" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -125,7 +132,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", sizes: "64x64", href: "/favicon.png" },
+      { rel: "shortcut icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [{ children: themeInitScript }],
   }),
@@ -170,6 +180,7 @@ function RootComponent() {
       <ThemeProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
+        <PwaInstall />
       </ThemeProvider>
     </QueryClientProvider>
   );

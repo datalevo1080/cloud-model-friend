@@ -194,6 +194,7 @@ export async function compressToTarget(
   base: CompressMethod,
   analysis: GifAnalysis | undefined,
   onPass: (pass: number, maxPasses: number, size: number) => void,
+  isCanceled?: () => boolean,
 ): Promise<{ blob: Blob; method: CompressMethod; hitTarget: boolean }> {
   const maxPasses = 7;
   let low = 5;
@@ -202,6 +203,7 @@ export async function compressToTarget(
   let lastAny: { blob: Blob; method: CompressMethod } | null = null;
 
   for (let pass = 1; pass <= maxPasses; pass++) {
+    if (isCanceled?.()) throw new DOMException("Canceled", "AbortError");
     const lossy = Math.round((low + high) / 2);
     const colors: CompressMethod["colors"] =
       pass >= 5 && !best ? 64 : pass >= 6 && !best ? 32 : base.colors;

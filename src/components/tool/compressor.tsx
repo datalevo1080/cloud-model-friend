@@ -23,6 +23,8 @@ import {
   warmupEngine,
 } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
+import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
+
 
 
 import {
@@ -51,6 +53,12 @@ let idCounter = 0;
 const nextId = () => `gif-${++idCounter}-${Date.now()}`;
 
 const HUGE_BYTES = 100 * 1024 * 1024;
+/** Base budget for one analysis pass before the worker is considered stalled. */
+const ANALYZE_TIMEOUT_MS = 8000;
+/** GIFs are decoded and compressed strictly one at a time to bound peak memory. */
+const MAX_CONCURRENCY = 1;
+/** Combined queue weight above which we warn before the browser struggles. */
+const BATCH_WARN_BYTES = 300 * 1024 * 1024;
 
 function friendlyError(err: unknown): string {
   if (err instanceof EngineLoadError) return err.message;
@@ -138,21 +146,36 @@ export function Compressor() {
     void warmupEngine().then((ok) => setEngineState(ok ? "ready" : "error"));
   }, []);
 
-  useEffect(() => {
-    let worker: Worker | null = null;
+  // The analysis worker is disposable on purpose: if it stalls or dies on a
+  // pathological GIF we terminate it and spawn a fresh one instead of leaking
+  // a wedged thread and its decoded frame buffers.
+  const spawnWorker = useCallback((): Worker | null => {
     try {
-      worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
+      const worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
         type: "module",
       });
       worker.addEventListener("error", () => setWorkerFailed(true));
       workerRef.current = worker;
+      return worker;
     } catch {
       setWorkerFailed(true);
+      workerRef.current = null;
+      return null;
     }
-    return () => worker?.terminate();
   }, []);
 
+  const killWorker = useCallback(() => {
+    workerRef.current?.terminate();
+    workerRef.current = null;
+  }, []);
 
+  useEffect(() => {
+    spawnWorker();
+    return () => {
+      workerRef.current?.terminate();
+      workerRef.current = null;
+    };
+  }, [spawnWorker]);
 
   useEffect(
     () => () => {
@@ -172,75 +195,107 @@ export function Compressor() {
   // main out-of-memory risk, so the analysis worker gets a strict serial queue.
   const analyzeChain = useRef<Promise<void>>(Promise.resolve());
 
+  /** Runs one analysis pass with a hard timeout. Resolves null on stall/failure. */
+  const analyzeOnce = useCallback(
+    (item: GifItem, buffer: ArrayBuffer): Promise<{ analysis?: GifAnalysis; code?: string } | null> =>
+      new Promise((resolve) => {
+        const worker = workerRef.current ?? spawnWorker();
+        if (!worker) return resolve(null);
+        // Generous but bounded: ~8s plus 1s per 10 MB of file.
+        const budget = ANALYZE_TIMEOUT_MS + Math.round(item.size / (10 * 1024 * 1024)) * 1000;
+        let settled = false;
+        const finish = (value: { analysis?: GifAnalysis; code?: string } | null) => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timer);
+          worker.removeEventListener("message", handler);
+          resolve(value);
+        };
+        const timer = window.setTimeout(() => {
+          // Stalled: drop the worker so its memory is reclaimed immediately.
+          killWorker();
+          finish(null);
+        }, budget);
+        const handler = (e: MessageEvent) => {
+          const data = e.data as { id: string; analysis?: GifAnalysis; code?: string };
+          if (data.id !== item.id) return;
+          finish({ ...(data.analysis ? { analysis: data.analysis } : {}), ...(data.code ? { code: data.code } : {}) });
+        };
+        worker.addEventListener("message", handler);
+        try {
+          worker.postMessage({ id: item.id, buffer }, [buffer]);
+        } catch {
+          finish(null);
+        }
+      }),
+    [killWorker, spawnWorker],
+  );
+
   const analyze = useCallback(
     (item: GifItem) => {
-      analyzeChain.current = analyzeChain.current.then(
-        () =>
-          new Promise<void>((resolve) => {
-            const worker = workerRef.current;
-            if (!worker) {
-              // No worker available: skip analysis, compression still works.
-              patch(item.id, {
-                status: "ready",
-                warning: "Smart analysis is unavailable in this browser — using manual settings.",
-              });
-              return resolve();
-            }
-            item.file
-              .arrayBuffer()
-              .then((buffer) => {
-                const handler = (e: MessageEvent) => {
-                  const data = e.data as {
-                    id: string;
-                    analysis?: GifAnalysis;
-                    error?: string;
-                    code?: string;
-                  };
-                  if (data.id !== item.id) return;
-                  worker.removeEventListener("message", handler);
-                  if (data.analysis) {
-                    const a = data.analysis;
-                    const warnings: string[] = [];
-                    if (a.truncated)
-                      warnings.push(
-                        "This GIF looks truncated — we analysed the frames we could read and will still compress it.",
-                      );
-                    if (a.frameCount === 1)
-                      warnings.push(
-                        "Static GIF (1 frame) — frame-dropping options are turned off for this file.",
-                      );
-                    if (item.size >= HUGE_BYTES)
-                      warnings.push(
-                        "Very large file — it is processed on its own to protect memory. Target file size mode gives the most reliable result.",
-                      );
-                    patch(item.id, {
-                      status: "ready",
-                      analysis: a,
-                      plan: planFromAnalysis(a),
-                      ...(warnings.length ? { warning: warnings.join(" ") } : {}),
-                    });
+      analyzeChain.current = analyzeChain.current.then(async () => {
+        let buffer: ArrayBuffer;
+        try {
+          buffer = await item.file.arrayBuffer();
+        } catch {
+          patch(item.id, {
+            status: "error",
+            error:
+              "This file couldn't be read — it may have been moved, or it's too large for this browser's memory.",
+          });
+          return;
+        }
 
-                  } else {
-                    patch(item.id, { status: "error", error: analysisError(data.code) });
-                  }
-                  resolve();
-                };
-                worker.addEventListener("message", handler);
-                worker.postMessage({ id: item.id, buffer }, [buffer]);
-              })
-              .catch(() => {
-                patch(item.id, {
-                  status: "error",
-                  error:
-                    "This file couldn't be read — it may have been moved, or it's too large for this browser's memory.",
-                });
-                resolve();
-              });
-          }),
-      );
+        let result = await analyzeOnce(item, buffer);
+        if (result === null) {
+          // One retry on a fresh worker; a second stall means we skip analysis
+          // rather than block the queue.
+          try {
+            const retryBuffer = await item.file.arrayBuffer();
+            spawnWorker();
+            result = await analyzeOnce(item, retryBuffer);
+          } catch {
+            result = null;
+          }
+        }
+
+        if (result === null) {
+          patch(item.id, {
+            status: "ready",
+            warning:
+              "Smart analysis timed out on this file, so manual settings will be used. Compression still works.",
+          });
+          return;
+        }
+
+        if (!result.analysis) {
+          patch(item.id, { status: "error", error: analysisError(result.code) });
+          return;
+        }
+
+        const a = result.analysis;
+        const warnings: string[] = [];
+        if (a.truncated)
+          warnings.push(
+            "This GIF looks truncated — we analysed the frames we could read and will still compress it.",
+          );
+        if (a.frameCount === 1)
+          warnings.push(
+            "Static GIF (1 frame) — frame-dropping options are turned off for this file.",
+          );
+        if (item.size >= HUGE_BYTES)
+          warnings.push(
+            "Very large file — it is processed on its own to protect memory. Target file size mode gives the most reliable result.",
+          );
+        patch(item.id, {
+          status: "ready",
+          analysis: a,
+          plan: planFromAnalysis(a),
+          ...(warnings.length ? { warning: warnings.join(" ") } : {}),
+        });
+      });
     },
-    [patch],
-
+    [analyzeOnce, patch, spawnWorker],
   );
 
   const addFiles = useCallback(
@@ -300,9 +355,23 @@ export function Compressor() {
         setItems((prev) => [...prev, ...accepted]);
         accepted.forEach(analyze);
       }
+      return accepted.length;
     },
     [analyze, ensureEngine],
+  );
 
+  /** "Or enter direct image URL": fetched by the browser, never by a server. */
+  const addFromUrl = useCallback(
+    async (raw: string) => {
+      const file = await fetchGifFromUrl(raw);
+      const added = await addFiles([file]);
+      if (!added) {
+        throw new UrlFetchError(
+          "That GIF couldn't be added — it may already be in the queue or over the limits.",
+        );
+      }
+    },
+    [addFiles],
   );
 
 
@@ -791,6 +860,7 @@ const STATUS_LABEL: Record<GifItem["status"], string> = {
   processing: "Compressing",
   done: "Done",
   error: "Failed",
+  canceled: "Canceled",
 };
 
 function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
