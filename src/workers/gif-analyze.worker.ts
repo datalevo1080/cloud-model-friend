@@ -144,9 +144,9 @@ self.onmessage = (e: MessageEvent<Req>) => {
     const analysis = analyze(buffer);
     (self as unknown as Worker).postMessage({ id, analysis });
   } catch (err) {
-    (self as unknown as Worker).postMessage({
-      id,
-      error: err instanceof Error ? err.message : "Could not read this GIF.",
-    });
+    const raw = err instanceof Error ? err.message : "";
+    const code = raw === "NOT_GIF" ? "NOT_GIF" : /memory|allocation/i.test(raw) ? "MEMORY" : "CORRUPT";
+    (self as unknown as Worker).postMessage({ id, error: raw || "CORRUPT", code });
   }
 };
+
