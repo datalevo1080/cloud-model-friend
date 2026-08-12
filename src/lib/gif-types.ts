@@ -39,7 +39,14 @@ export type SmartPlan = {
   explanation: string;
 };
 
-export type FileStatus = "ready" | "analyzing" | "queued" | "processing" | "done" | "error";
+export type FileStatus =
+  | "ready"
+  | "analyzing"
+  | "queued"
+  | "processing"
+  | "done"
+  | "error"
+  | "canceled";
 
 export type GifItem = {
   id: string;
@@ -59,7 +66,10 @@ export type GifItem = {
   warning?: string;
   /** compression made it bigger, so the original was kept */
   keptOriginal?: boolean;
+  /** settings fingerprint of the cached result — lets us skip recompression */
+  resultSignature?: string;
 };
+
 
 
 export const MAX_FILES = 20;

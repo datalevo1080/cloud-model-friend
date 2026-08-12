@@ -8,6 +8,7 @@ import {
   Sparkles,
   Trash2,
   Wand2,
+  XCircle,
 } from "lucide-react";
 import { DropZone } from "./drop-zone";
 import { BeforeAfter } from "./before-after";
@@ -23,6 +24,8 @@ import {
   warmupEngine,
 } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
+import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
+
 
 
 import {
@@ -51,6 +54,12 @@ let idCounter = 0;
 const nextId = () => `gif-${++idCounter}-${Date.now()}`;
 
 const HUGE_BYTES = 100 * 1024 * 1024;
+/** Base budget for one analysis pass before the worker is considered stalled. */
+const ANALYZE_TIMEOUT_MS = 8000;
+/** GIFs are decoded and compressed strictly one at a time to bound peak memory. */
+const MAX_CONCURRENCY = 1;
+/** Combined queue weight above which we warn before the browser struggles. */
+const BATCH_WARN_BYTES = 300 * 1024 * 1024;
 
 function friendlyError(err: unknown): string {
   if (err instanceof EngineLoadError) return err.message;
@@ -85,6 +94,8 @@ export function Compressor() {
   const [running, setRunning] = useState(false);
   const [engineState, setEngineState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [workerFailed, setWorkerFailed] = useState(false);
+  // Session-only cache of the last generated .zip, keyed by the result set.
+  const [zipCache, setZipCache] = useState<{ key: string; url: string } | null>(null);
   const workerRef = useRef<Worker | null>(null);
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
@@ -138,21 +149,36 @@ export function Compressor() {
     void warmupEngine().then((ok) => setEngineState(ok ? "ready" : "error"));
   }, []);
 
-  useEffect(() => {
-    let worker: Worker | null = null;
+  // The analysis worker is disposable on purpose: if it stalls or dies on a
+  // pathological GIF we terminate it and spawn a fresh one instead of leaking
+  // a wedged thread and its decoded frame buffers.
+  const spawnWorker = useCallback((): Worker | null => {
     try {
-      worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
+      const worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
         type: "module",
       });
       worker.addEventListener("error", () => setWorkerFailed(true));
       workerRef.current = worker;
+      return worker;
     } catch {
       setWorkerFailed(true);
+      workerRef.current = null;
+      return null;
     }
-    return () => worker?.terminate();
   }, []);
 
+  const killWorker = useCallback(() => {
+    workerRef.current?.terminate();
+    workerRef.current = null;
+  }, []);
 
+  useEffect(() => {
+    spawnWorker();
+    return () => {
+      workerRef.current?.terminate();
+      workerRef.current = null;
+    };
+  }, [spawnWorker]);
 
   useEffect(
     () => () => {
@@ -172,75 +198,107 @@ export function Compressor() {
   // main out-of-memory risk, so the analysis worker gets a strict serial queue.
   const analyzeChain = useRef<Promise<void>>(Promise.resolve());
 
+  /** Runs one analysis pass with a hard timeout. Resolves null on stall/failure. */
+  const analyzeOnce = useCallback(
+    (item: GifItem, buffer: ArrayBuffer): Promise<{ analysis?: GifAnalysis; code?: string } | null> =>
+      new Promise((resolve) => {
+        const worker = workerRef.current ?? spawnWorker();
+        if (!worker) return resolve(null);
+        // Generous but bounded: ~8s plus 1s per 10 MB of file.
+        const budget = ANALYZE_TIMEOUT_MS + Math.round(item.size / (10 * 1024 * 1024)) * 1000;
+        let settled = false;
+        const finish = (value: { analysis?: GifAnalysis; code?: string } | null) => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timer);
+          worker.removeEventListener("message", handler);
+          resolve(value);
+        };
+        const timer = window.setTimeout(() => {
+          // Stalled: drop the worker so its memory is reclaimed immediately.
+          killWorker();
+          finish(null);
+        }, budget);
+        const handler = (e: MessageEvent) => {
+          const data = e.data as { id: string; analysis?: GifAnalysis; code?: string };
+          if (data.id !== item.id) return;
+          finish({ ...(data.analysis ? { analysis: data.analysis } : {}), ...(data.code ? { code: data.code } : {}) });
+        };
+        worker.addEventListener("message", handler);
+        try {
+          worker.postMessage({ id: item.id, buffer }, [buffer]);
+        } catch {
+          finish(null);
+        }
+      }),
+    [killWorker, spawnWorker],
+  );
+
   const analyze = useCallback(
     (item: GifItem) => {
-      analyzeChain.current = analyzeChain.current.then(
-        () =>
-          new Promise<void>((resolve) => {
-            const worker = workerRef.current;
-            if (!worker) {
-              // No worker available: skip analysis, compression still works.
-              patch(item.id, {
-                status: "ready",
-                warning: "Smart analysis is unavailable in this browser — using manual settings.",
-              });
-              return resolve();
-            }
-            item.file
-              .arrayBuffer()
-              .then((buffer) => {
-                const handler = (e: MessageEvent) => {
-                  const data = e.data as {
-                    id: string;
-                    analysis?: GifAnalysis;
-                    error?: string;
-                    code?: string;
-                  };
-                  if (data.id !== item.id) return;
-                  worker.removeEventListener("message", handler);
-                  if (data.analysis) {
-                    const a = data.analysis;
-                    const warnings: string[] = [];
-                    if (a.truncated)
-                      warnings.push(
-                        "This GIF looks truncated — we analysed the frames we could read and will still compress it.",
-                      );
-                    if (a.frameCount === 1)
-                      warnings.push(
-                        "Static GIF (1 frame) — frame-dropping options are turned off for this file.",
-                      );
-                    if (item.size >= HUGE_BYTES)
-                      warnings.push(
-                        "Very large file — it is processed on its own to protect memory. Target file size mode gives the most reliable result.",
-                      );
-                    patch(item.id, {
-                      status: "ready",
-                      analysis: a,
-                      plan: planFromAnalysis(a),
-                      ...(warnings.length ? { warning: warnings.join(" ") } : {}),
-                    });
+      analyzeChain.current = analyzeChain.current.then(async () => {
+        let buffer: ArrayBuffer;
+        try {
+          buffer = await item.file.arrayBuffer();
+        } catch {
+          patch(item.id, {
+            status: "error",
+            error:
+              "This file couldn't be read — it may have been moved, or it's too large for this browser's memory.",
+          });
+          return;
+        }
 
-                  } else {
-                    patch(item.id, { status: "error", error: analysisError(data.code) });
-                  }
-                  resolve();
-                };
-                worker.addEventListener("message", handler);
-                worker.postMessage({ id: item.id, buffer }, [buffer]);
-              })
-              .catch(() => {
-                patch(item.id, {
-                  status: "error",
-                  error:
-                    "This file couldn't be read — it may have been moved, or it's too large for this browser's memory.",
-                });
-                resolve();
-              });
-          }),
-      );
+        let result = await analyzeOnce(item, buffer);
+        if (result === null) {
+          // One retry on a fresh worker; a second stall means we skip analysis
+          // rather than block the queue.
+          try {
+            const retryBuffer = await item.file.arrayBuffer();
+            spawnWorker();
+            result = await analyzeOnce(item, retryBuffer);
+          } catch {
+            result = null;
+          }
+        }
+
+        if (result === null) {
+          patch(item.id, {
+            status: "ready",
+            warning:
+              "Smart analysis timed out on this file, so manual settings will be used. Compression still works.",
+          });
+          return;
+        }
+
+        if (!result.analysis) {
+          patch(item.id, { status: "error", error: analysisError(result.code) });
+          return;
+        }
+
+        const a = result.analysis;
+        const warnings: string[] = [];
+        if (a.truncated)
+          warnings.push(
+            "This GIF looks truncated — we analysed the frames we could read and will still compress it.",
+          );
+        if (a.frameCount === 1)
+          warnings.push(
+            "Static GIF (1 frame) — frame-dropping options are turned off for this file.",
+          );
+        if (item.size >= HUGE_BYTES)
+          warnings.push(
+            "Very large file — it is processed on its own to protect memory. Target file size mode gives the most reliable result.",
+          );
+        patch(item.id, {
+          status: "ready",
+          analysis: a,
+          plan: planFromAnalysis(a),
+          ...(warnings.length ? { warning: warnings.join(" ") } : {}),
+        });
+      });
     },
-    [patch],
-
+    [analyzeOnce, patch, spawnWorker],
   );
 
   const addFiles = useCallback(
@@ -300,9 +358,23 @@ export function Compressor() {
         setItems((prev) => [...prev, ...accepted]);
         accepted.forEach(analyze);
       }
+      return accepted.length;
     },
     [analyze, ensureEngine],
+  );
 
+  /** "Or enter direct image URL": fetched by the browser, never by a server. */
+  const addFromUrl = useCallback(
+    async (raw: string) => {
+      const file = await fetchGifFromUrl(raw);
+      const added = await addFiles([file]);
+      if (!added) {
+        throw new UrlFetchError(
+          "That GIF couldn't be added — it may already be in the queue or over the limits.",
+        );
+      }
+    },
+    [addFiles],
   );
 
 
@@ -331,23 +403,87 @@ export function Compressor() {
     [targetValue, targetUnit],
   );
 
-  const compressAll = useCallback(async () => {
-    const queue = itemsRef.current.filter((i) => i.status === "ready" || i.status === "done");
-    if (!queue.length || running) return;
-    setRunning(true);
-    setNotices([]);
+  /**
+   * Fingerprint of the settings that produced a result. While it matches, the
+   * cached blob is reused for re-downloads and the .zip — no recompression.
+   */
+  const signatureFor = useCallback(
+    (item: GifItem) => {
+      const base: CompressMethod = smart && item.plan ? item.plan.method : method;
+      return JSON.stringify({ base, targetOn, targetBytes: targetOn ? targetBytes : 0 });
+    },
+    [method, smart, targetBytes, targetOn],
+  );
+
+  const cancelRef = useRef(false);
+
+  const cancel = useCallback(() => {
+    cancelRef.current = true;
+    // Free the analysis worker (and its decoded frames) right away.
+    killWorker();
     setItems((prev) =>
       prev.map((i) =>
-        i.status === "error" ? i : { ...i, status: "queued", progress: 0, statusText: "Queued…" },
+        i.status === "processing" || i.status === "queued"
+          ? { ...i, status: "canceled", progress: 0, statusText: "Canceled" }
+          : i,
+      ),
+    );
+  }, [killWorker]);
+
+  const compressAll = useCallback(async () => {
+    const candidates = itemsRef.current.filter(
+      (i) => i.status === "ready" || i.status === "done" || i.status === "canceled",
+    );
+    if (!candidates.length || running) return;
+
+    // Cache hit: everything already compressed with these exact settings.
+    const stale = candidates.filter((i) => i.resultSignature !== signatureFor(i));
+    if (!stale.length) {
+      setNotices([]);
+      setZipCache(null);
+      setItems((prev) =>
+        prev.map((i) =>
+          i.resultBlob ? { ...i, statusText: "Using your cached result — settings unchanged." } : i,
+        ),
+      );
+      return;
+    }
+
+    cancelRef.current = false;
+    setRunning(true);
+    setNotices([]);
+    setZipCache(null);
+    setItems((prev) =>
+      prev.map((i) =>
+        stale.some((s) => s.id === i.id)
+          ? { ...i, status: "queued", progress: 0, statusText: "Queued…" }
+          : i,
       ),
     );
 
     let bestSaving = 0;
+    let canceledAny = false;
 
-    for (const queued of queue) {
+    // MAX_CONCURRENCY is 1 by design: one GIF is decoded and encoded at a time
+    // so peak memory stays bounded no matter how big the batch is.
+    void MAX_CONCURRENCY;
+
+    for (const queued of stale) {
+      if (cancelRef.current) {
+        canceledAny = true;
+        break;
+      }
       const item = itemsRef.current.find((i) => i.id === queued.id);
       if (!item) continue;
-      patch(item.id, { status: "processing", progress: 4, statusText: STATUS_TEXTS[0]! });
+      // Drop the previous result before making a new one — no orphan blob URLs.
+      if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
+      setItems((prev) =>
+        prev.map((i) => {
+          if (i.id !== item.id) return i;
+          const { resultBlob: _b, resultUrl: _u, resultSize: _s, resultSignature: _g, ...rest } = i;
+          return { ...rest, status: "processing", progress: 4, statusText: STATUS_TEXTS[0]! };
+        }),
+      );
 
       let textIdx = 0;
       const ticker = window.setInterval(() => {
@@ -367,6 +503,7 @@ export function Compressor() {
 
       try {
         const base: CompressMethod = smart && item.plan ? item.plan.method : method;
+        const signature = signatureFor(item);
         let blob: Blob;
         let hitTarget = true;
 
@@ -381,6 +518,7 @@ export function Compressor() {
                 progress: Math.round((pass / maxPasses) * 95),
                 statusText: `Target pass ${pass} of ${maxPasses}…`,
               }),
+            () => cancelRef.current,
           );
           blob = res.blob;
           hitTarget = res.hitTarget;
@@ -389,6 +527,12 @@ export function Compressor() {
         }
 
         window.clearInterval(ticker);
+
+        if (cancelRef.current) {
+          canceledAny = true;
+          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled" });
+          break;
+        }
 
         // Some GIFs are already optimal — re-encoding can make them bigger.
         // In that case we hand back the untouched original.
@@ -403,6 +547,7 @@ export function Compressor() {
           resultBlob: finalBlob,
           resultUrl,
           resultSize: finalBlob.size,
+          resultSignature: signature,
           keptOriginal,
           statusText: keptOriginal
             ? "Already optimized — we kept your original"
@@ -411,17 +556,38 @@ export function Compressor() {
               : "Smallest possible size reached — still above your target.",
         });
       } catch (err) {
-        // One failure must never stop the rest of the queue.
         window.clearInterval(ticker);
+        if (cancelRef.current || (err instanceof DOMException && err.name === "AbortError")) {
+          canceledAny = true;
+          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled" });
+          break;
+        }
+        // One failure must never stop the rest of the queue.
         patch(item.id, { status: "error", progress: 0, error: friendlyError(err) });
         if (err instanceof EngineLoadError) setEngineState("error");
       }
-
     }
 
+    if (cancelRef.current) {
+      setItems((prev) =>
+        prev.map((i) =>
+          i.status === "queued" || i.status === "processing"
+            ? { ...i, status: "canceled", progress: 0, statusText: "Canceled" }
+            : i,
+        ),
+      );
+      // A canceled worker was terminated — bring a fresh one back for the next run.
+      spawnWorker();
+    }
+
+    cancelRef.current = false;
     setRunning(false);
 
-    if (bestSaving > 50 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      !canceledAny &&
+      bestSaving > 50 &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 }, disableForReducedMotion: true });
@@ -429,22 +595,40 @@ export function Compressor() {
         /* confetti is decorative only */
       }
     }
-  }, [method, patch, running, smart, targetBytes, targetOn]);
+  }, [method, patch, running, signatureFor, smart, spawnWorker, targetBytes, targetOn]);
 
+  // Re-downloading the batch reuses the .zip we already built, unless the set
+  // of results changed. Nothing is recompressed.
   const downloadAll = useCallback(async () => {
     const done = itemsRef.current.filter((i) => i.resultBlob);
     if (!done.length) return;
-    const JSZip = (await import("jszip")).default;
-    const zip = new JSZip();
-    done.forEach((i) => zip.file(i.file.name.replace(/\.gif$/i, "") + "-zipgif.gif", i.resultBlob!));
-    const blob = await zip.generateAsync({ type: "blob" });
-    const url = URL.createObjectURL(blob);
+    const key = done.map((i) => `${i.id}:${i.resultSignature ?? ""}:${i.resultSize}`).join("|");
+
+    let url = zipCache && zipCache.key === key ? zipCache.url : null;
+    if (!url) {
+      const JSZip = (await import("jszip")).default;
+      const zip = new JSZip();
+      done.forEach((i) =>
+        zip.file(i.file.name.replace(/\.gif$/i, "") + "-zipgif.gif", i.resultBlob!),
+      );
+      const blob = await zip.generateAsync({ type: "blob" });
+      if (zipCache) URL.revokeObjectURL(zipCache.url);
+      url = URL.createObjectURL(blob);
+      setZipCache({ key, url });
+    }
+
     const a = document.createElement("a");
     a.href = url;
     a.download = "zipgif-compressed.zip";
     a.click();
-    URL.revokeObjectURL(url);
-  }, []);
+  }, [zipCache]);
+
+  useEffect(
+    () => () => {
+      if (zipCache) URL.revokeObjectURL(zipCache.url);
+    },
+    [zipCache],
+  );
 
   const readyCount = items.filter((i) => i.status !== "error").length;
   const doneCount = items.filter((i) => i.status === "done").length;
@@ -453,6 +637,12 @@ export function Compressor() {
   // Frame-dropping is meaningless for static GIFs.
   const allStatic = analysed.length > 0 && analysed.every((i) => i.analysis!.frameCount === 1);
   const hasHuge = items.some((i) => i.size >= HUGE_BYTES);
+  const batchBytes = items.reduce((n, i) => n + i.size, 0);
+  const heavyBatch = batchBytes > BATCH_WARN_BYTES;
+  const cachedCount = items.filter(
+    (i) => i.status === "done" && i.resultSignature === signatureFor(i),
+  ).length;
+  const allCached = cachedCount > 0 && cachedCount === items.filter((i) => i.status !== "error").length;
 
   const queueSummary = running
     ? `Compressing file ${Math.min(doneCount + errorCount + 1, items.length)} of ${items.length}.`
@@ -463,7 +653,7 @@ export function Compressor() {
   return (
     <section id="tool" aria-label="GIF compressor" className="scroll-mt-24">
       <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
-        <DropZone onFiles={addFiles} disabled={running} />
+        <DropZone onFiles={addFiles} onUrl={addFromUrl} disabled={running} />
 
         <div className="mt-3 min-h-9" aria-live="polite">
           {engineState === "loading" && (
@@ -522,6 +712,14 @@ export function Compressor() {
             One or more files are over 100&nbsp;MB. They are processed one at a time to protect your
             browser&rsquo;s memory — turn on <strong className="text-foreground">Target file size</strong>{" "}
             for the most reliable result.
+          </p>
+        )}
+
+        {heavyBatch && (
+          <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+            This queue adds up to {formatBytes(batchBytes)}. ZipGIF works through it one GIF at a
+            time and frees each preview as it goes — you can cancel at any point without losing the
+            files already finished.
           </p>
         )}
 
@@ -751,12 +949,27 @@ export function Compressor() {
                   <>
                     <Loader2 className="size-5 animate-spin" aria-hidden="true" /> Compressing…
                   </>
+                ) : allCached ? (
+                  <>
+                    <Wand2 className="size-5" aria-hidden="true" /> Compressed — change settings to
+                    redo
+                  </>
                 ) : (
                   <>
                     <Wand2 className="size-5" aria-hidden="true" /> Compress GIF →
                   </>
                 )}
               </button>
+
+              {running && (
+                <button
+                  type="button"
+                  onClick={cancel}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-destructive/50 px-6 text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-destructive"
+                >
+                  <XCircle className="size-4" aria-hidden="true" /> Cancel
+                </button>
+              )}
 
               {doneCount > 1 && (
                 <button
@@ -777,6 +990,13 @@ export function Compressor() {
                 <RotateCcw className="size-4" aria-hidden="true" /> Compress more
               </button>
             </div>
+
+            {allCached && !running && (
+              <p className="mt-3 text-sm text-muted-foreground" role="status">
+                Results are cached for this session — download again as often as you like. Change a
+                setting to recompress.
+              </p>
+            )}
           </>
         )}
       </div>
@@ -791,6 +1011,7 @@ const STATUS_LABEL: Record<GifItem["status"], string> = {
   processing: "Compressing",
   done: "Done",
   error: "Failed",
+  canceled: "Canceled",
 };
 
 function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
@@ -912,6 +1133,14 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
               {item.error}
             </p>
           )}
+
+          {item.status === "canceled" && (
+            <p role="status" className="mt-3 text-sm text-muted-foreground">
+              Canceled — memory released. Press Compress GIF to run it again.
+            </p>
+          )}
+
+
 
           {item.status === "done" && item.resultUrl && item.resultSize !== undefined && (
             <div className="mt-3 flex flex-wrap items-center gap-3">
