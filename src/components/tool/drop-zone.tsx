@@ -64,6 +64,7 @@ export function DropZone({
       className={cn(
         "group relative flex min-h-52 w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted/30 px-6 py-10 text-center transition-colors",
         "hover:border-primary/60 hover:bg-primary/5",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
         dragging && "zg-dropzone-active border-primary bg-primary/10",
         disabled && "pointer-events-none opacity-60",
       )}
@@ -72,7 +73,7 @@ export function DropZone({
         <UploadCloud className="size-6" aria-hidden="true" />
       </span>
       <p className="mt-4 text-base font-semibold">
-        <span className="hidden sm:inline">Drop GIFs here, or </span>
+        <span className="hidden sm:inline">Drop GIFs or a folder here, or </span>
         <span className="text-primary underline-offset-4 group-hover:underline">
           <span className="sm:hidden">Tap to select GIFs</span>
           <span className="hidden sm:inline">click to browse</span>
@@ -81,6 +82,10 @@ export function DropZone({
       <p className="mt-2 text-sm text-muted-foreground">
         .gif only · up to 20 files · 200&nbsp;MB each · paste with Ctrl/Cmd&nbsp;+&nbsp;V
       </p>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Drop a folder or a mixed selection — we pick out the GIFs and list anything skipped.
+      </p>
+
       <input
         ref={inputRef}
         type="file"
