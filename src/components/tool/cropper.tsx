@@ -700,17 +700,23 @@ export function Cropper() {
               </p>
             )}
 
-            {remainingSameSize > 0 && (
+            {remainingCount > 0 && (
               <label className="flex items-start gap-2 text-sm">
                 <input
                   type="checkbox"
                   checked={applyToAll}
                   onChange={(e) => setApplyToAll(e.target.checked)}
+                  aria-describedby="crop-apply-all-help"
                   className="mt-1 size-4"
                 />
                 <span>
-                  Apply the same crop to the {remainingSameSize} remaining GIF
-                  {remainingSameSize > 1 ? "s" : ""} of the same size
+                  Apply the same crop to the {remainingCount} remaining GIF
+                  {remainingCount > 1 ? "s" : ""} in the queue
+                  <span id="crop-apply-all-help" className="mt-1 block text-xs text-muted-foreground">
+                    {remainingDifferent > 0
+                      ? `${remainingDifferent} of them ${remainingDifferent > 1 ? "have" : "has"} different dimensions — the crop region is scaled proportionally so it lands on the same part of the frame.`
+                      : "Every queued GIF is the same size, so the exact same pixel region is used."}
+                  </span>
                 </span>
               </label>
             )}
