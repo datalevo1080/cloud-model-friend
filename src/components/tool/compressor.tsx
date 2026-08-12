@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
+  Check,
   ChevronDown,
   Download,
+  FileSpreadsheet,
+  Link2,
   Loader2,
   RotateCcw,
   Sparkles,
@@ -29,6 +32,9 @@ import {
 import type { SavingsEstimate } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
 import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
+import { ThroughputModel, formatEta } from "@/lib/eta";
+import { downloadCsvReport } from "@/lib/report";
+import { buildSettingsLink, settingsFromSearch } from "@/lib/settings-link";
 
 import {
   MAX_BYTES,
@@ -37,6 +43,7 @@ import {
   type GifAnalysis,
   type GifItem,
 } from "@/lib/gif-types";
+
 
 const STATUS_TEXTS = [
   "Crunching frames…",
@@ -97,9 +104,27 @@ export function Compressor() {
   const [workerFailed, setWorkerFailed] = useState(false);
   // Session-only cache of the last generated .zip, keyed by the result set.
   const [zipCache, setZipCache] = useState<{ key: string; url: string } | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [settingsRestored, setSettingsRestored] = useState(false);
   const workerRef = useRef<Worker | null>(null);
+  // Learns this device's compression speed so the per-file countdown is real.
+  const throughput = useRef(new ThroughputModel());
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
+
+  // Shareable settings links: read once on the client so SSR markup is stable.
+  useEffect(() => {
+    const restored = settingsFromSearch(window.location.search);
+    if (!restored) return;
+    setSmart(restored.smart);
+    setMethod(restored.method);
+    setTargetOn(restored.targetOn);
+    setTargetValue(restored.targetValue);
+    setTargetUnit(restored.targetUnit);
+    if (!restored.smart || restored.targetOn) setAdvancedOpen(true);
+    setSettingsRestored(true);
+  }, []);
+
 
   // Privacy-preserving engine cache: a service worker keeps the Gifsicle WASM
   // bundle in Cache Storage so repeat visits start instantly. No file data is
@@ -487,11 +512,27 @@ export function Compressor() {
       if (!item) continue;
       // Drop the previous result before making a new one — no orphan blob URLs.
       if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
+      const passes = targetOn ? 6 : 1;
+      const startedAt = Date.now();
+      let predicted = throughput.current.predict(item.size, passes);
+      const remaining = () => Math.max(400, predicted - (Date.now() - startedAt));
+      const estimateForItem = estimateSavings(
+        item.size,
+        item.analysis,
+        smart && item.plan ? item.plan.method : method,
+        targetOn ? targetBytes : undefined,
+      );
       setItems((prev) =>
         prev.map((i) => {
           if (i.id !== item.id) return i;
           const { resultBlob: _b, resultUrl: _u, resultSize: _s, resultSignature: _g, ...rest } = i;
-          return { ...rest, status: "processing", progress: 4, statusText: STATUS_TEXTS[0]! };
+          return {
+            ...rest,
+            status: "processing",
+            progress: 4,
+            statusText: STATUS_TEXTS[0]!,
+            etaMs: predicted,
+          };
         }),
       );
 
@@ -505,6 +546,7 @@ export function Compressor() {
                   ...i,
                   statusText: STATUS_TEXTS[textIdx]!,
                   progress: Math.min(92, i.progress + 6),
+                  etaMs: remaining(),
                 }
               : i,
           ),
@@ -523,11 +565,16 @@ export function Compressor() {
             targetBytes,
             base,
             item.analysis,
-            (pass, maxPasses) =>
+            (pass, maxPasses) => {
+              // Re-anchor the countdown on measured pass time.
+              const elapsed = Date.now() - startedAt;
+              predicted = Math.max(predicted, (elapsed / pass) * maxPasses);
               patch(item.id, {
                 progress: Math.round((pass / maxPasses) * 95),
                 statusText: `Target pass ${pass} of ${maxPasses}…`,
-              }),
+                etaMs: remaining(),
+              });
+            },
             () => cancelRef.current,
           );
           blob = res.blob;
@@ -537,10 +584,11 @@ export function Compressor() {
         }
 
         window.clearInterval(ticker);
+        throughput.current.record(item.size, Date.now() - startedAt, passes);
 
         if (cancelRef.current) {
           canceledAny = true;
-          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled" });
+          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled", etaMs: 0 });
           break;
         }
 
@@ -554,17 +602,25 @@ export function Compressor() {
         patch(item.id, {
           status: "done",
           progress: 100,
+          etaMs: 0,
           resultBlob: finalBlob,
           resultUrl,
           resultSize: finalBlob.size,
           resultSignature: signature,
           keptOriginal,
+          reportMode: targetOn
+            ? `Target size ${formatBytes(targetBytes)}`
+            : smart && item.plan
+              ? "Smart Compress (AI)"
+              : "Manual",
+          reportConfidence: estimateForItem.confidence,
           statusText: keptOriginal
             ? "Already optimized — we kept your original"
             : hitTarget
               ? "Done"
               : "Smallest possible size reached — still above your target.",
         });
+
       } catch (err) {
         window.clearInterval(ticker);
         if (cancelRef.current || (err instanceof DOMException && err.name === "AbortError")) {
@@ -638,6 +694,38 @@ export function Compressor() {
     a.click();
   }, [zipCache]);
 
+  /** CSV summary of the finished batch — built and downloaded locally. */
+  const downloadReport = useCallback(() => {
+    downloadCsvReport(itemsRef.current);
+  }, []);
+
+  const settingsLink = useMemo(
+    () =>
+      buildSettingsLink(
+        typeof window === "undefined" ? "https://zipgif.com" : window.location.origin,
+        "/",
+        { smart, method, targetOn, targetValue, targetUnit },
+      ),
+    [smart, method, targetOn, targetValue, targetUnit],
+  );
+
+  const copySettingsLink = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(settingsLink);
+    } catch {
+      // Clipboard blocked (insecure context or permissions) — show the URL instead.
+      window.prompt("Copy your settings link:", settingsLink);
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", settingsLink.slice(window.location.origin.length));
+    }
+    setLinkCopied(true);
+    window.setTimeout(() => setLinkCopied(false), 2500);
+  }, [settingsLink]);
+
+
+
   useEffect(
     () => () => {
       if (zipCache) URL.revokeObjectURL(zipCache.url);
@@ -705,7 +793,18 @@ export function Compressor() {
           {queueSummary}
         </p>
 
+        {settingsRestored && (
+          <p
+            className="mt-4 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary"
+            role="status"
+          >
+            Settings loaded from your shared link — mode, strength and frame options are already
+            set. Just add your GIFs.
+          </p>
+        )}
+
         {notices.length > 0 && (
+
           <div
             className="mt-4 rounded-xl border border-warning/40 bg-warning/10 p-3"
             role="status"
@@ -1011,6 +1110,32 @@ export function Compressor() {
                 </button>
               )}
 
+              {doneCount > 0 && (
+                <button
+                  type="button"
+                  onClick={downloadReport}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border px-6 text-sm font-semibold transition-colors hover:bg-accent"
+                >
+                  <FileSpreadsheet className="size-4" aria-hidden="true" /> Download report (.csv)
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={copySettingsLink}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border px-6 text-sm font-semibold transition-colors hover:bg-accent"
+              >
+                {linkCopied ? (
+                  <>
+                    <Check className="size-4 text-success" aria-hidden="true" /> Link copied
+                  </>
+                ) : (
+                  <>
+                    <Link2 className="size-4" aria-hidden="true" /> Copy settings link
+                  </>
+                )}
+              </button>
+
               <button
                 type="button"
                 onClick={reset}
@@ -1021,12 +1146,19 @@ export function Compressor() {
               </button>
             </div>
 
+            <p className="mt-3 text-sm text-muted-foreground" aria-live="polite">
+              {linkCopied
+                ? "Settings link copied — open it any time to load this exact mode and frame options."
+                : "The settings link stores your mode, strength, colours, frame options and target size in the URL. No files are ever included."}
+            </p>
+
             {allCached && !running && (
               <p className="mt-3 text-sm text-muted-foreground" role="status">
                 Results are cached for this session — download again as often as you like. Change a
                 setting to recompress.
               </p>
             )}
+
           </>
         )}
       </div>
@@ -1199,7 +1331,14 @@ function FileCard({
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 {item.progress}% · {item.statusText}
+                {item.status === "processing" && item.etaMs !== undefined && item.etaMs > 0 && (
+                  <>
+                    {" · "}
+                    <span className="font-medium text-foreground">{formatEta(item.etaMs)}</span>
+                  </>
+                )}
               </p>
+
             </div>
           )}
 

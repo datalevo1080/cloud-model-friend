@@ -68,6 +68,13 @@ export type GifItem = {
   keptOriginal?: boolean;
   /** settings fingerprint of the cached result — lets us skip recompression */
   resultSignature?: string;
+  /** ms remaining for the in-flight compression, refreshed while it runs */
+  etaMs?: number;
+  /** human-readable mode used for this result, shown in the CSV report */
+  reportMode?: string;
+  /** confidence of the pre-compression estimate, shown in the CSV report */
+  reportConfidence?: "high" | "medium" | "low";
+
 };
 
 
