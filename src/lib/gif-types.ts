@@ -27,6 +27,11 @@ export type GifAnalysis = {
   motionAverage: number;
   /** 0..1 variance of motion between frames */
   motionVariance: number;
+  /** the file's frame data ended early — analysed on a best-effort basis */
+  truncated?: boolean;
+  /** only header metadata was recoverable */
+  partial?: boolean;
+
 };
 
 export type SmartPlan = {

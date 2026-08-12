@@ -34,7 +34,7 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
     return {
       width: w,
       height: h,
-      frameCount: Math.max(1, gif.frames?.filter((f) => "image" in f).length ?? 1),
+      frameCount: 1,
       fps: 0,
       durationMs: 0,
       duplicateShare: 0,
