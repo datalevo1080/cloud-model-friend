@@ -4,36 +4,32 @@ import { cn } from "@/lib/utils";
 
 export const faqs = [
   {
-    q: "Are my GIFs uploaded to a server?",
-    a: "No. ZipGIF loads a WebAssembly build of Gifsicle into your browser and does all the work locally. Open your network tab while compressing — you will not see your file go anywhere. After the first visit the tool even works offline.",
+    q: "How do I compress a GIF without losing quality?",
+    a: "Start with lossless work: optimize transparency and remove duplicate frames. Both cut bytes without changing a single visible pixel. Then add lossy compression slowly — strength 40 to 80 is invisible on most footage. Check the before/after slider at full size. If you can't spot a difference, you haven't lost anything that matters.",
   },
   {
-    q: "How much smaller will my GIF get?",
-    a: "Most GIFs shrink by 40–70%. GIFs exported from video, screen recordings and anything with duplicate frames tend to be at the top of that range. A GIF that has already been optimized may only lose a few percent.",
+    q: "How do I make a GIF smaller file size for Discord?",
+    a: "Set a target size instead of guessing. Discord's default attachment limit is 10 MiB, so pick 8 MB and let the compressor binary-search the lossy level until your GIF fits. For a custom emoji use 256 KB, and for a sticker use 512 KB. Those three numbers cover almost every Discord upload you'll ever do.",
   },
   {
-    q: "Will the quality drop?",
-    a: "Lossy compression always trades some fidelity for size, but Smart Compress tunes the strength to your content so the change is hard to see. Use the before/after slider on the result to judge for yourself, and lower the strength in Advanced settings if you want to be conservative.",
+    q: "How long can a GIF be?",
+    a: "There's no length limit in the GIF format itself — a GIF can loop forever and hold thousands of frames. The practical limit is file size, because every frame is a full still image. A 30-second GIF at 25 fps is 750 frames. Trim it to five seconds and you've cut the file by roughly 83% before compressing anything.",
   },
   {
-    q: "What is the maximum file size?",
-    a: "200 MB per GIF, and up to 20 GIFs in one batch. The real ceiling is your device's memory: very large GIFs on a phone may run out of RAM, in which case ZipGIF tells you instead of crashing.",
+    q: "Why can't I resize a GIF on Discord?",
+    a: "Discord doesn't resize or re-encode animated images for you — it accepts or rejects them at the size you upload. That's why an oversized GIF fails instead of shrinking. Emoji must be at most 256 KiB and stickers at most 512 KiB per Discord's developer docs, so resize and compress the GIF before it ever touches the upload dialog.",
   },
   {
-    q: "Does it add a watermark or require a signup?",
-    a: "Never. There is no account, no email, no credit system and no watermark. The output is your GIF, unbranded.",
+    q: "Why is my GIF still too big?",
+    a: "Usually it's frame count, not colours. Screen recordings captured at 30 fps carry hundreds of near-identical frames, and lossy compression can only do so much with that. Drop every second frame, remove duplicates, or trim the clip shorter. If your GIF is photographic and long, honestly, MP4 or WebP will beat any GIF optimizer.",
   },
   {
-    q: "How does the target file size mode work?",
-    a: "You give ZipGIF a limit — say 256 KB — and it compresses repeatedly, binary-searching the lossy strength to find the highest quality that still fits. If even the strongest setting cannot reach your target it hands back the smallest version it managed and tells you.",
+    q: "Is this GIF compressor really free?",
+    a: "Yes, and there's no catch we're hiding. No account, no email, no credit system, no watermark, no daily cap. Compression runs on your own CPU rather than our servers, so each file costs us nothing — which is exactly why we can leave it free and unlimited instead of metering it.",
   },
   {
-    q: "Can I compress animated stickers or WebP files?",
-    a: "Not yet. ZipGIF currently accepts .gif files only. Resize, crop and format conversion tools are on the way.",
-  },
-  {
-    q: "Is ZipGIF really free?",
-    a: "Yes, and unlimited. Because there are no servers processing your files, there are no per-file costs to pass on to you.",
+    q: "Are my uploaded GIFs private?",
+    a: "Nothing is uploaded, so there's nothing to keep private. Your GIF is read by your browser, compressed by a WebAssembly build of Gifsicle in a background worker, and written back to your disk. Open your network tab while you compress — you'll see no request carrying your file. After the first visit it works offline.",
   },
 ];
 
@@ -43,8 +39,12 @@ export function Faq() {
   return (
     <section aria-labelledby="faq" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
       <h2 id="faq" className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-        Frequently asked questions
+        GIF compression questions we actually get asked
       </h2>
+      <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
+        Short answers to the things people email us about most: quality loss, Discord limits, GIF
+        length, and what to do when a file just won't get small enough.
+      </p>
       <div className="mt-8 divide-y divide-border rounded-2xl border border-border bg-card">
         {faqs.map((item, i) => {
           const expanded = open === i;
@@ -69,16 +69,15 @@ export function Faq() {
                   />
                 </button>
               </h3>
-              {expanded && (
-                <div
-                  id={`faq-panel-${i}`}
-                  role="region"
-                  aria-labelledby={`faq-button-${i}`}
-                  className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground"
-                >
-                  {item.a}
-                </div>
-              )}
+              <div
+                id={`faq-panel-${i}`}
+                role="region"
+                aria-labelledby={`faq-button-${i}`}
+                hidden={!expanded}
+                className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground"
+              >
+                {item.a}
+              </div>
             </div>
           );
         })}
