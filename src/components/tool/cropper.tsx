@@ -21,8 +21,12 @@ import {
   ASPECT_PRESETS,
   clampRect,
   cropGif,
+  croppedFileName,
   detectContentBounds,
+  estimateCroppedSize,
+  scaleRect,
   successLine,
+  uniqueName,
   type AspectId,
   type CropRect,
 } from "@/lib/gif-crop";
@@ -258,6 +262,40 @@ export function Cropper() {
     setRectSafe({ ...rect, x: rect.x + delta[0], y: rect.y + delta[1] });
   };
 
+  /** Keyboard resizing from a specific handle: same maths as pointer dragging. */
+  const onHandleKeyDown = (handle: Handle) => (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 10 : 1;
+    const map: Record<string, [number, number]> = {
+      ArrowLeft: [-step, 0],
+      ArrowRight: [step, 0],
+      ArrowUp: [0, -step],
+      ArrowDown: [0, step],
+    };
+    const delta = map[e.key];
+    if (!delta) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const [dx, dy] = delta;
+    let { x, y, width, height } = rect;
+    if (handle.includes("w")) {
+      x += dx;
+      width -= dx;
+    }
+    if (handle.includes("e")) width += dx;
+    if (handle.includes("n")) {
+      y += dy;
+      height -= dy;
+    }
+    if (handle.includes("s")) height += dy;
+    if (width < 16) width = 16;
+    if (height < 16) height = 16;
+    if (ratio) {
+      if (handle === "n" || handle === "s") width = height * ratio;
+      else height = width / ratio;
+    }
+    setRectSafe({ x, y, width, height });
+  };
+
   // ---- play / pause -----------------------------------------------------
   const togglePlay = () => {
     if (playing) {
@@ -299,14 +337,14 @@ export function Cropper() {
   const runCrop = async () => {
     if (!current) return;
     const target = clampRect(rect, current.width, current.height);
-    const queue = applyToAll
-      ? items.filter(
-          (i) =>
-            i.status === "ready" && i.width === current.width && i.height === current.height,
-        )
-      : [current];
+    const queue = applyToAll ? items.filter((i) => i.status === "ready") : [current];
 
     for (const item of queue) {
+      // Different-sized GIFs get the same crop region proportionally scaled.
+      const itemRect =
+        item.width === current.width && item.height === current.height
+          ? target
+          : scaleRect(target, current.width, current.height, item.width, item.height);
       setItems((prev) =>
         prev.map((i) => {
           if (i.id !== item.id) return i;
@@ -315,7 +353,7 @@ export function Cropper() {
         }),
       );
       try {
-        const blob = await cropGif(item.file, target);
+        const blob = await cropGif(item.file, itemRect);
         const resultUrl = URL.createObjectURL(blob);
         setItems((prev) =>
           prev.map((i) =>
@@ -323,7 +361,7 @@ export function Cropper() {
               ? {
                   ...i,
                   status: "done",
-                  rect: target,
+                  rect: itemRect,
                   resultBlob: blob,
                   resultUrl,
                   resultSize: blob.size,
@@ -349,8 +387,14 @@ export function Cropper() {
     try {
       const { default: JSZip } = await import("jszip");
       const zip = new JSZip();
+      const taken = new Set<string>();
       for (const item of done) {
-        if (item.resultBlob) zip.file(`cropped-${item.file.name}`, item.resultBlob);
+        if (!item.resultBlob) continue;
+        const name = croppedFileName(
+          item.file.name,
+          item.rect ?? { x: 0, y: 0, width: item.width, height: item.height },
+        );
+        zip.file(uniqueName(name, taken), item.resultBlob);
       }
       const blob = await zip.generateAsync({ type: "blob" });
       const url = URL.createObjectURL(blob);
@@ -385,15 +429,21 @@ export function Cropper() {
     };
   }, [rect, current]);
 
-  const remainingSameSize = current
-    ? items.filter(
-        (i) =>
-          i.status === "ready" &&
-          i.id !== current.id &&
-          i.width === current.width &&
-          i.height === current.height,
-      ).length
-    : 0;
+  const estimate = useMemo(
+    () =>
+      current
+        ? estimateCroppedSize(current.size, rect, current.width, current.height)
+        : null,
+    [current, rect],
+  );
+
+  const remaining = current
+    ? items.filter((i) => i.status === "ready" && i.id !== current.id)
+    : [];
+  const remainingCount = remaining.length;
+  const remainingDifferent = remaining.filter(
+    (i) => current && (i.width !== current.width || i.height !== current.height),
+  ).length;
 
   const busy = items.some((i) => i.status === "cropping");
 
@@ -446,9 +496,10 @@ export function Cropper() {
               />
 
               <div
-                role="application"
+                role="group"
                 tabIndex={0}
-                aria-label={`Crop box: ${Math.round(rect.width)} by ${Math.round(rect.height)} pixels at ${Math.round(rect.x)}, ${Math.round(rect.y)}. Arrow keys move it by 1 pixel, Shift plus arrows by 10.`}
+                aria-label={`Crop region, ${Math.round(rect.width)} by ${Math.round(rect.height)} pixels, positioned ${Math.round(rect.x)} pixels from the left and ${Math.round(rect.y)} pixels from the top of a ${current.width} by ${current.height} pixel GIF. Press the arrow keys to move the region by 1 pixel, or hold Shift for 10 pixels. Tab to the eight resize handles inside to change its size.`}
+                aria-describedby="crop-keyboard-help"
                 onKeyDown={onKeyDown}
                 onPointerDown={onPointerDown("move")}
                 className="absolute cursor-move border-2 border-primary bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
@@ -460,19 +511,35 @@ export function Cropper() {
                 }}
               >
                 {HANDLES.map((h) => (
-                  <span
+                  <button
                     key={h.id}
-                    role="presentation"
+                    type="button"
+                    aria-label={`Resize crop region from the ${h.label} handle. Arrow keys resize by 1 pixel, Shift plus arrow keys by 10 pixels. Current size ${Math.round(rect.width)} by ${Math.round(rect.height)} pixels.`}
+                    aria-describedby="crop-keyboard-help"
                     onPointerDown={onPointerDown(h.id)}
+                    onKeyDown={onHandleKeyDown(h.id)}
                     style={{ cursor: h.cursor }}
                     className={cn(
-                      "absolute size-6 rounded-full border-2 border-background bg-primary shadow-soft",
+                      "absolute size-6 rounded-full border-2 border-background bg-primary shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                       h.className,
                     )}
                   />
                 ))}
               </div>
             </div>
+
+            <p id="crop-keyboard-help" className="sr-only">
+              Keyboard instructions: focus the crop region and press the arrow keys to move it one
+              pixel at a time, or hold Shift for ten pixels. Tab into any of the eight resize
+              handles — top left, top, top right, right, bottom right, bottom, bottom left and left
+              — and use the same arrow keys to resize from that edge or corner. The exact pixel
+              fields in the settings panel accept typed values as an alternative.
+            </p>
+
+            <p aria-live="polite" className="sr-only">
+              Crop region {Math.round(rect.width)} by {Math.round(rect.height)} pixels at{" "}
+              {Math.round(rect.x)}, {Math.round(rect.y)}.
+            </p>
 
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               <button
@@ -493,10 +560,41 @@ export function Cropper() {
               <span>
                 Original {current.width}×{current.height}px · {formatBytes(current.size)}
               </span>
-              <span className="font-medium text-foreground">
-                Output {Math.round(rect.width)}×{Math.round(rect.height)}px
-              </span>
             </div>
+
+            {estimate && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="mt-3 rounded-xl border border-border bg-card p-4 text-sm"
+              >
+                <p className="font-semibold text-foreground">Estimated result before you crop</p>
+                <dl className="mt-2 grid gap-2 sm:grid-cols-3">
+                  <div>
+                    <dt className="text-xs text-muted-foreground">Output dimensions</dt>
+                    <dd className="font-medium text-foreground">
+                      {Math.round(rect.width)}×{Math.round(rect.height)}px
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-muted-foreground">Approx. file size</dt>
+                    <dd className="font-medium text-foreground">
+                      {formatBytes(estimate.low)} – {formatBytes(estimate.high)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-muted-foreground">Pixels kept</dt>
+                    <dd className="font-medium text-foreground">
+                      {Math.round(estimate.areaShare * 100)}%
+                    </dd>
+                  </div>
+                </dl>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Estimated from the pixel area you keep — palettes and frame data don't shrink
+                  perfectly in step, so the real file can land just outside this range.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-5 rounded-xl border border-border bg-card p-5">
@@ -602,17 +700,23 @@ export function Cropper() {
               </p>
             )}
 
-            {remainingSameSize > 0 && (
+            {remainingCount > 0 && (
               <label className="flex items-start gap-2 text-sm">
                 <input
                   type="checkbox"
                   checked={applyToAll}
                   onChange={(e) => setApplyToAll(e.target.checked)}
+                  aria-describedby="crop-apply-all-help"
                   className="mt-1 size-4"
                 />
                 <span>
-                  Apply the same crop to the {remainingSameSize} remaining GIF
-                  {remainingSameSize > 1 ? "s" : ""} of the same size
+                  Apply the same crop to the {remainingCount} remaining GIF
+                  {remainingCount > 1 ? "s" : ""} in the queue
+                  <span id="crop-apply-all-help" className="mt-1 block text-xs text-muted-foreground">
+                    {remainingDifferent > 0
+                      ? `${remainingDifferent} of them ${remainingDifferent > 1 ? "have" : "has"} different dimensions — the crop region is scaled proportionally so it lands on the same part of the frame.`
+                      : "Every queued GIF is the same size, so the exact same pixel region is used."}
+                  </span>
                 </span>
               </label>
             )}
@@ -697,7 +801,10 @@ export function Cropper() {
               </div>
               <a
                 href={item.resultUrl}
-                download={`cropped-${item.file.name}`}
+                download={croppedFileName(
+                  item.file.name,
+                  item.rect ?? { x: 0, y: 0, width: item.width, height: item.height },
+                )}
                 className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <Download className="size-4" aria-hidden="true" /> Download cropped GIF
