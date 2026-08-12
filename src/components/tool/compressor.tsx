@@ -68,9 +68,40 @@ export function Compressor() {
   const [targetValue, setTargetValue] = useState(256);
   const [targetUnit, setTargetUnit] = useState<"KB" | "MB">("KB");
   const [running, setRunning] = useState(false);
+  const [engineState, setEngineState] = useState<"idle" | "loading" | "ready">("idle");
   const workerRef = useRef<Worker | null>(null);
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
+
+  // Prefetch the WASM engine only when the browser is idle — never on page load.
+  useEffect(() => {
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+    };
+    const start = () => {
+      void warmupEngine().then(() => setEngineState((s) => (s === "idle" ? s : "ready")));
+    };
+    if (w.requestIdleCallback) {
+      const handle = w.requestIdleCallback(start, { timeout: 6000 });
+      return () => (window as unknown as { cancelIdleCallback?: (h: number) => void })
+        .cancelIdleCallback?.(handle);
+    }
+    const t = window.setTimeout(start, 3000);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const ensureEngine = useCallback(() => {
+    if (isEngineRequested()) {
+      setEngineState("ready");
+      return;
+    }
+    setEngineState("loading");
+    const started = Date.now();
+    void warmupEngine().then(() => {
+      const wait = Math.max(0, 1000 - (Date.now() - started));
+      window.setTimeout(() => setEngineState("ready"), wait);
+    });
+  }, []);
 
   useEffect(() => {
     const worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
@@ -79,6 +110,7 @@ export function Compressor() {
     workerRef.current = worker;
     return () => worker.terminate();
   }, []);
+
 
   useEffect(
     () => () => {
