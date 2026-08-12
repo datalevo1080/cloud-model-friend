@@ -448,6 +448,17 @@ export function Compressor() {
 
   const readyCount = items.filter((i) => i.status !== "error").length;
   const doneCount = items.filter((i) => i.status === "done").length;
+  const errorCount = items.filter((i) => i.status === "error").length;
+  const analysed = items.filter((i) => i.analysis);
+  // Frame-dropping is meaningless for static GIFs.
+  const allStatic = analysed.length > 0 && analysed.every((i) => i.analysis!.frameCount === 1);
+  const hasHuge = items.some((i) => i.size >= HUGE_BYTES);
+
+  const queueSummary = running
+    ? `Compressing file ${Math.min(doneCount + errorCount + 1, items.length)} of ${items.length}.`
+    : doneCount
+      ? `${doneCount} of ${items.length} files finished${errorCount ? `, ${errorCount} failed` : ""}.`
+      : "";
 
   return (
     <section id="tool" aria-label="GIF compressor" className="scroll-mt-24">
@@ -461,22 +472,59 @@ export function Compressor() {
               Starting compression engine…
             </div>
           )}
+          {engineState === "error" && (
+            <div className="flex flex-wrap items-center gap-3 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+              <span>
+                The compression engine couldn&rsquo;t load. Check your connection or any
+                content-blocking extension.
+              </span>
+              <button
+                type="button"
+                onClick={retryEngine}
+                className="ml-auto inline-flex min-h-9 items-center rounded-lg border border-destructive/40 px-3 text-xs font-semibold text-destructive transition-colors hover:bg-destructive/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-destructive"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+          {engineState !== "error" && workerFailed && (
+            <p className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              Smart analysis isn&rsquo;t available in this browser — manual settings still work.
+            </p>
+          )}
         </div>
 
+        <p className="sr-only" role="status" aria-live="polite">
+          {queueSummary}
+        </p>
 
         {notices.length > 0 && (
-          <ul className="mt-4 space-y-2" role="alert">
-            {notices.map((n) => (
-              <li
-                key={n}
-                className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-              >
-                <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>{n}</span>
-              </li>
-            ))}
-          </ul>
+          <div
+            className="mt-4 rounded-xl border border-warning/40 bg-warning/10 p-3"
+            role="status"
+            aria-live="polite"
+          >
+            <p className="flex items-center gap-2 text-sm font-semibold text-warning-foreground">
+              <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+              Some files were skipped
+            </p>
+            <ul className="mt-2 space-y-1 text-sm text-warning-foreground">
+              {notices.map((n) => (
+                <li key={n}>{n}</li>
+              ))}
+            </ul>
+          </div>
         )}
+
+        {hasHuge && (
+          <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+            One or more files are over 100&nbsp;MB. They are processed one at a time to protect your
+            browser&rsquo;s memory — turn on <strong className="text-foreground">Target file size</strong>{" "}
+            for the most reliable result.
+          </p>
+        )}
+
 
         {items.length > 0 && (
           <>
