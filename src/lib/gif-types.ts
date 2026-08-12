@@ -27,6 +27,11 @@ export type GifAnalysis = {
   motionAverage: number;
   /** 0..1 variance of motion between frames */
   motionVariance: number;
+  /** the file's frame data ended early — analysed on a best-effort basis */
+  truncated?: boolean;
+  /** only header metadata was recoverable */
+  partial?: boolean;
+
 };
 
 export type SmartPlan = {
@@ -50,7 +55,12 @@ export type GifItem = {
   resultUrl?: string;
   resultSize?: number;
   error?: string;
+  /** non-blocking note shown on the card (memory hints, truncated files) */
+  warning?: string;
+  /** compression made it bigger, so the original was kept */
+  keptOriginal?: boolean;
 };
+
 
 export const MAX_FILES = 20;
 export const MAX_BYTES = 200 * 1024 * 1024;

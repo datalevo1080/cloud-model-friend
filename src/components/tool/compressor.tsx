@@ -15,12 +15,15 @@ import { formatBytes, savingsPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import {
   DEFAULT_METHOD,
+  EngineLoadError,
   compressToTarget,
   isEngineRequested,
   planFromAnalysis,
   runGifsicle,
   warmupEngine,
 } from "@/lib/gif-engine";
+import { hasGifMagicBytes } from "@/lib/gif-validate";
+
 
 import {
   MAX_BYTES,
@@ -47,16 +50,28 @@ const TARGET_PRESETS = [
 let idCounter = 0;
 const nextId = () => `gif-${++idCounter}-${Date.now()}`;
 
+const HUGE_BYTES = 100 * 1024 * 1024;
+
 function friendlyError(err: unknown): string {
+  if (err instanceof EngineLoadError) return err.message;
   const raw = err instanceof Error ? err.message : String(err);
-  if (/memory|allocation|abort/i.test(raw)) {
-    return "Your browser ran out of memory on this GIF. Try a smaller file, or compress it on a desktop browser.";
+  if (/memory|allocation|abort|out of bounds/i.test(raw)) {
+    return "Your browser ran out of memory on this GIF. Try Target file size mode, a smaller file, or a desktop browser.";
   }
-  if (/no frames|frame|parse|invalid|magic/i.test(raw)) {
+  if (/no frames|frame|parse|invalid|magic|corrupt/i.test(raw)) {
     return "This file looks corrupted or isn't a real GIF. Try re-exporting it.";
   }
   return "Compression failed for this file. Try adjusting the settings and running it again.";
 }
+
+function analysisError(code?: string): string {
+  if (code === "NOT_GIF")
+    return "This file isn't a real GIF — its contents don't match the .gif extension.";
+  if (code === "MEMORY")
+    return "This GIF is too large for your browser's memory. Try a smaller file or a desktop browser.";
+  return "This GIF looks corrupted or truncated, so it couldn't be read.";
+}
+
 
 export function Compressor() {
   const [items, setItems] = useState<GifItem[]>([]);
@@ -68,10 +83,25 @@ export function Compressor() {
   const [targetValue, setTargetValue] = useState(256);
   const [targetUnit, setTargetUnit] = useState<"KB" | "MB">("KB");
   const [running, setRunning] = useState(false);
-  const [engineState, setEngineState] = useState<"idle" | "loading" | "ready">("idle");
+  const [engineState, setEngineState] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [workerFailed, setWorkerFailed] = useState(false);
   const workerRef = useRef<Worker | null>(null);
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
+
+  // Privacy-preserving engine cache: a service worker keeps the Gifsicle WASM
+  // bundle in Cache Storage so repeat visits start instantly. No file data is
+  // ever cached or sent anywhere.
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !import.meta.env.PROD) return;
+    const register = () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        /* caching is an optimisation only */
+      });
+    };
+    if (document.readyState === "complete") register();
+    else window.addEventListener("load", register, { once: true });
+  }, []);
 
   // Prefetch the WASM engine only when the browser is idle — never on page load.
   useEffect(() => {
@@ -79,7 +109,7 @@ export function Compressor() {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
     };
     const start = () => {
-      void warmupEngine().then(() => setEngineState((s) => (s === "idle" ? s : "ready")));
+      void warmupEngine().then((ok) => setEngineState((s) => (s === "idle" && ok ? s : ok ? "ready" : s)));
     };
     if (w.requestIdleCallback) {
       const handle = w.requestIdleCallback(start, { timeout: 6000 });
@@ -92,24 +122,36 @@ export function Compressor() {
 
   const ensureEngine = useCallback(() => {
     if (isEngineRequested()) {
-      setEngineState("ready");
+      setEngineState((s) => (s === "error" ? s : "ready"));
       return;
     }
     setEngineState("loading");
     const started = Date.now();
-    void warmupEngine().then(() => {
+    void warmupEngine().then((ok) => {
       const wait = Math.max(0, 1000 - (Date.now() - started));
-      window.setTimeout(() => setEngineState("ready"), wait);
+      window.setTimeout(() => setEngineState(ok ? "ready" : "error"), wait);
     });
   }, []);
 
-  useEffect(() => {
-    const worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
-      type: "module",
-    });
-    workerRef.current = worker;
-    return () => worker.terminate();
+  const retryEngine = useCallback(() => {
+    setEngineState("loading");
+    void warmupEngine().then((ok) => setEngineState(ok ? "ready" : "error"));
   }, []);
+
+  useEffect(() => {
+    let worker: Worker | null = null;
+    try {
+      worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
+        type: "module",
+      });
+      worker.addEventListener("error", () => setWorkerFailed(true));
+      workerRef.current = worker;
+    } catch {
+      setWorkerFailed(true);
+    }
+    return () => worker?.terminate();
+  }, []);
+
 
 
   useEffect(
@@ -136,25 +178,50 @@ export function Compressor() {
         () =>
           new Promise<void>((resolve) => {
             const worker = workerRef.current;
-            if (!worker) return resolve();
+            if (!worker) {
+              // No worker available: skip analysis, compression still works.
+              patch(item.id, {
+                status: "ready",
+                warning: "Smart analysis is unavailable in this browser — using manual settings.",
+              });
+              return resolve();
+            }
             item.file
               .arrayBuffer()
               .then((buffer) => {
                 const handler = (e: MessageEvent) => {
-                  const data = e.data as { id: string; analysis?: GifAnalysis; error?: string };
+                  const data = e.data as {
+                    id: string;
+                    analysis?: GifAnalysis;
+                    error?: string;
+                    code?: string;
+                  };
                   if (data.id !== item.id) return;
                   worker.removeEventListener("message", handler);
                   if (data.analysis) {
+                    const a = data.analysis;
+                    const warnings: string[] = [];
+                    if (a.truncated)
+                      warnings.push(
+                        "This GIF looks truncated — we analysed the frames we could read and will still compress it.",
+                      );
+                    if (a.frameCount === 1)
+                      warnings.push(
+                        "Static GIF (1 frame) — frame-dropping options are turned off for this file.",
+                      );
+                    if (item.size >= HUGE_BYTES)
+                      warnings.push(
+                        "Very large file — it is processed on its own to protect memory. Target file size mode gives the most reliable result.",
+                      );
                     patch(item.id, {
                       status: "ready",
-                      analysis: data.analysis,
-                      plan: planFromAnalysis(data.analysis),
+                      analysis: a,
+                      plan: planFromAnalysis(a),
+                      ...(warnings.length ? { warning: warnings.join(" ") } : {}),
                     });
+
                   } else {
-                    patch(item.id, {
-                      status: "error",
-                      error: "This file couldn't be read as a GIF. It may be corrupted.",
-                    });
+                    patch(item.id, { status: "error", error: analysisError(data.code) });
                   }
                   resolve();
                 };
@@ -162,7 +229,11 @@ export function Compressor() {
                 worker.postMessage({ id: item.id, buffer }, [buffer]);
               })
               .catch(() => {
-                patch(item.id, { status: "error", error: "This file couldn't be read from disk." });
+                patch(item.id, {
+                  status: "error",
+                  error:
+                    "This file couldn't be read — it may have been moved, or it's too large for this browser's memory.",
+                });
                 resolve();
               });
           }),
@@ -173,25 +244,45 @@ export function Compressor() {
   );
 
   const addFiles = useCallback(
-    (files: File[]) => {
+    async (files: File[]) => {
       const problems: string[] = [];
       const accepted: GifItem[] = [];
       const room = MAX_FILES - itemsRef.current.length;
+      const existing = new Set(itemsRef.current.map((i) => `${i.file.name}:${i.size}`));
 
       for (const file of files) {
-        const isGif = file.type === "image/gif" || file.name.toLowerCase().endsWith(".gif");
-        if (!isGif) {
-          problems.push(`"${file.name}" isn't a GIF — only .gif files can be compressed here.`);
+        const looksGif = file.type === "image/gif" || file.name.toLowerCase().endsWith(".gif");
+        if (!looksGif) {
+          problems.push(`Skipped "${file.name}" — only .gif files can be compressed here.`);
+          continue;
+        }
+        if (file.size === 0) {
+          problems.push(`Skipped "${file.name}" — the file is empty.`);
           continue;
         }
         if (file.size > MAX_BYTES) {
-          problems.push(`"${file.name}" is ${formatBytes(file.size)} — the limit is 200 MB.`);
+          problems.push(
+            `Skipped "${file.name}" — it's ${formatBytes(file.size)} and the limit is 200 MB.`,
+          );
+          continue;
+        }
+        // Extensions lie: check the real GIF87a/GIF89a header before decoding.
+        if (!(await hasGifMagicBytes(file))) {
+          problems.push(
+            `Skipped "${file.name}" — it's named .gif but its contents aren't a GIF image.`,
+          );
+          continue;
+        }
+        const key = `${file.name}:${file.size}`;
+        if (existing.has(key)) {
+          problems.push(`Skipped "${file.name}" — it's already in the queue.`);
           continue;
         }
         if (accepted.length >= room) {
-          problems.push(`You can compress up to ${MAX_FILES} GIFs at a time.`);
+          problems.push(`Skipped the rest — you can compress up to ${MAX_FILES} GIFs at a time.`);
           break;
         }
+        existing.add(key);
         accepted.push({
           id: nextId(),
           file,
@@ -213,6 +304,7 @@ export function Compressor() {
     [analyze, ensureEngine],
 
   );
+
 
   const remove = useCallback((id: string) => {
     setItems((prev) => {
@@ -297,23 +389,34 @@ export function Compressor() {
         }
 
         window.clearInterval(ticker);
-        const resultUrl = URL.createObjectURL(blob);
-        const saving = savingsPercent(item.size, blob.size);
+
+        // Some GIFs are already optimal — re-encoding can make them bigger.
+        // In that case we hand back the untouched original.
+        const keptOriginal = blob.size >= item.size;
+        const finalBlob: Blob = keptOriginal ? item.file : blob;
+        const resultUrl = URL.createObjectURL(finalBlob);
+        const saving = savingsPercent(item.size, finalBlob.size);
         bestSaving = Math.max(bestSaving, saving);
         patch(item.id, {
           status: "done",
           progress: 100,
-          resultBlob: blob,
+          resultBlob: finalBlob,
           resultUrl,
-          resultSize: blob.size,
-          statusText: hitTarget
-            ? "Done"
-            : "Smallest possible size reached — still above your target.",
+          resultSize: finalBlob.size,
+          keptOriginal,
+          statusText: keptOriginal
+            ? "Already optimized — we kept your original"
+            : hitTarget
+              ? "Done"
+              : "Smallest possible size reached — still above your target.",
         });
       } catch (err) {
+        // One failure must never stop the rest of the queue.
         window.clearInterval(ticker);
         patch(item.id, { status: "error", progress: 0, error: friendlyError(err) });
+        if (err instanceof EngineLoadError) setEngineState("error");
       }
+
     }
 
     setRunning(false);
@@ -345,6 +448,17 @@ export function Compressor() {
 
   const readyCount = items.filter((i) => i.status !== "error").length;
   const doneCount = items.filter((i) => i.status === "done").length;
+  const errorCount = items.filter((i) => i.status === "error").length;
+  const analysed = items.filter((i) => i.analysis);
+  // Frame-dropping is meaningless for static GIFs.
+  const allStatic = analysed.length > 0 && analysed.every((i) => i.analysis!.frameCount === 1);
+  const hasHuge = items.some((i) => i.size >= HUGE_BYTES);
+
+  const queueSummary = running
+    ? `Compressing file ${Math.min(doneCount + errorCount + 1, items.length)} of ${items.length}.`
+    : doneCount
+      ? `${doneCount} of ${items.length} files finished${errorCount ? `, ${errorCount} failed` : ""}.`
+      : "";
 
   return (
     <section id="tool" aria-label="GIF compressor" className="scroll-mt-24">
@@ -358,22 +472,59 @@ export function Compressor() {
               Starting compression engine…
             </div>
           )}
+          {engineState === "error" && (
+            <div className="flex flex-wrap items-center gap-3 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+              <span>
+                The compression engine couldn&rsquo;t load. Check your connection or any
+                content-blocking extension.
+              </span>
+              <button
+                type="button"
+                onClick={retryEngine}
+                className="ml-auto inline-flex min-h-9 items-center rounded-lg border border-destructive/40 px-3 text-xs font-semibold text-destructive transition-colors hover:bg-destructive/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-destructive"
+              >
+                Try again
+              </button>
+            </div>
+          )}
+          {engineState !== "error" && workerFailed && (
+            <p className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              Smart analysis isn&rsquo;t available in this browser — manual settings still work.
+            </p>
+          )}
         </div>
 
+        <p className="sr-only" role="status" aria-live="polite">
+          {queueSummary}
+        </p>
 
         {notices.length > 0 && (
-          <ul className="mt-4 space-y-2" role="alert">
-            {notices.map((n) => (
-              <li
-                key={n}
-                className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-              >
-                <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>{n}</span>
-              </li>
-            ))}
-          </ul>
+          <div
+            className="mt-4 rounded-xl border border-warning/40 bg-warning/10 p-3"
+            role="status"
+            aria-live="polite"
+          >
+            <p className="flex items-center gap-2 text-sm font-semibold text-warning-foreground">
+              <AlertCircle className="size-4 shrink-0" aria-hidden="true" />
+              Some files were skipped
+            </p>
+            <ul className="mt-2 space-y-1 text-sm text-warning-foreground">
+              {notices.map((n) => (
+                <li key={n}>{n}</li>
+              ))}
+            </ul>
+          </div>
         )}
+
+        {hasHuge && (
+          <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+            One or more files are over 100&nbsp;MB. They are processed one at a time to protect your
+            browser&rsquo;s memory — turn on <strong className="text-foreground">Target file size</strong>{" "}
+            for the most reliable result.
+          </p>
+        )}
+
 
         {items.length > 0 && (
           <>
@@ -476,21 +627,24 @@ export function Compressor() {
                       <select
                         id="framestep"
                         value={method.frameStep}
+                        disabled={allStatic}
+                        aria-describedby="framestep-hint"
                         onChange={(e) =>
                           setMethod((m) => ({
                             ...m,
                             frameStep: Number(e.target.value) as CompressMethod["frameStep"],
                           }))
                         }
-                        className="mt-3 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm"
+                        className="mt-3 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         <option value={1}>Keep every frame</option>
                         <option value={2}>Drop every 2nd frame</option>
                         <option value={3}>Drop every 3rd frame</option>
                       </select>
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        Best for: long, high-frame-rate GIFs where smoothness matters less than
-                        size.
+                      <p id="framestep-hint" className="mt-2 text-xs text-muted-foreground">
+                        {allStatic
+                          ? "Turned off: your GIF is static (a single frame), so there are no frames to drop."
+                          : "Best for: long, high-frame-rate GIFs where smoothness matters less than size."}
                       </p>
                     </div>
 
@@ -498,14 +652,16 @@ export function Compressor() {
                       <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium">
                         <input
                           type="checkbox"
-                          checked={method.dropDuplicates}
+                          checked={method.dropDuplicates && !allStatic}
+                          disabled={allStatic}
                           onChange={(e) =>
                             setMethod((m) => ({ ...m, dropDuplicates: e.target.checked }))
                           }
-                          className="size-5 accent-[var(--color-primary)]"
+                          className="size-5 accent-[var(--color-primary)] disabled:opacity-60"
                         />
                         Drop duplicate frames
                       </label>
+
                       <p className="-mt-3 text-xs text-muted-foreground">
                         Best for: screen recordings that pause on the same image.
                       </p>
@@ -628,31 +784,68 @@ export function Compressor() {
   );
 }
 
+const STATUS_LABEL: Record<GifItem["status"], string> = {
+  analyzing: "Analyzing",
+  ready: "Ready",
+  queued: "Queued",
+  processing: "Compressing",
+  done: "Done",
+  error: "Failed",
+};
+
 function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
   const saving =
     item.resultSize !== undefined ? savingsPercent(item.size, item.resultSize) : undefined;
+  const [previewBroken, setPreviewBroken] = useState(false);
 
   return (
-    <article className="rounded-xl border border-border bg-background p-4">
+    <article
+      className="rounded-xl border border-border bg-background p-4"
+      aria-busy={item.status === "processing" || item.status === "analyzing"}
+      aria-label={`${item.file.name} — ${STATUS_LABEL[item.status]}`}
+    >
       <div className="flex flex-col gap-4 sm:flex-row">
-        <img
-          src={item.url}
-          alt={`Preview of ${item.file.name}`}
-          width={128}
-          height={96}
-          decoding="async"
-          className="h-24 w-full rounded-lg border border-border bg-muted object-contain sm:w-32"
-        />
+        {previewBroken ? (
+          <div
+            className="flex h-24 w-full items-center justify-center rounded-lg border border-border bg-muted text-xs text-muted-foreground sm:w-32"
+            role="img"
+            aria-label={`Preview unavailable for ${item.file.name}`}
+          >
+            No preview
+          </div>
+        ) : (
+          <img
+            src={item.url}
+            alt={`Animated preview of ${item.file.name}`}
+            width={128}
+            height={96}
+            decoding="async"
+            onError={() => setPreviewBroken(true)}
+            className="h-24 w-full rounded-lg border border-border bg-muted object-contain sm:w-32"
+          />
+        )}
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-3">
             <h3 className="truncate text-sm font-semibold" title={item.file.name}>
               {item.file.name}
             </h3>
+            <span
+              className={cn(
+                "shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold",
+                item.status === "error"
+                  ? "bg-destructive/15 text-destructive"
+                  : item.status === "done"
+                    ? "bg-success/15 text-success"
+                    : "bg-muted text-muted-foreground",
+              )}
+            >
+              {STATUS_LABEL[item.status]}
+            </span>
             <button
               type="button"
               onClick={onRemove}
-              aria-label={`Remove ${item.file.name}`}
-              className="ml-auto inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              aria-label={`Remove ${item.file.name} from the queue`}
+              className="ml-auto inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               <Trash2 className="size-4" aria-hidden="true" />
             </button>
@@ -665,8 +858,10 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
                 {" · "}
                 {item.analysis.width}×{item.analysis.height}
                 {" · "}
-                {item.analysis.frameCount} frames{" · "}
-                {item.analysis.fps} fps
+                {item.analysis.frameCount === 1
+                  ? "1 frame (static)"
+                  : `${item.analysis.frameCount} frames`}
+                {item.analysis.fps > 0 && ` · ${item.analysis.fps} fps`}
               </>
             )}
             {item.status === "analyzing" && " · analyzing…"}
@@ -679,6 +874,13 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
             </p>
           )}
 
+          {item.warning && item.status !== "error" && (
+            <p className="mt-2 flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
+              <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+              {item.warning}
+            </p>
+          )}
+
           {(item.status === "processing" || item.status === "queued") && (
             <div className="mt-3">
               <div
@@ -686,6 +888,7 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={item.progress}
+                aria-valuetext={`${item.progress}% — ${item.statusText}`}
                 aria-label={`Compressing ${item.file.name}`}
                 className="h-2 w-full overflow-hidden rounded-full bg-muted"
               >
@@ -701,7 +904,10 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
           )}
 
           {item.status === "error" && (
-            <p className="mt-3 flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <p
+              role="alert"
+              className="mt-3 flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            >
               <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               {item.error}
             </p>
@@ -720,14 +926,15 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
                     : "bg-muted text-muted-foreground",
                 )}
               >
-                {saving && saving > 0 ? `−${saving}% smaller` : "Already optimal"}
+                {saving && saving > 0 ? `−${saving}% smaller` : "Already optimized"}
               </span>
               <a
                 href={item.resultUrl}
                 download={item.file.name.replace(/\.gif$/i, "") + "-zipgif.gif"}
-                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lift"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
-                <Download className="size-4" aria-hidden="true" /> Download
+                <Download className="size-4" aria-hidden="true" />
+                {item.keptOriginal ? "Download original" : "Download"}
               </a>
               {item.statusText !== "Done" && (
                 <span className="w-full text-xs text-muted-foreground">{item.statusText}</span>
@@ -737,11 +944,12 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
         </div>
       </div>
 
-      {item.status === "done" && item.resultUrl && (
+      {item.status === "done" && item.resultUrl && !item.keptOriginal && (
         <div className="mt-4">
           <BeforeAfter beforeUrl={item.url} afterUrl={item.resultUrl} alt={item.file.name} />
         </div>
       )}
     </article>
+
   );
 }

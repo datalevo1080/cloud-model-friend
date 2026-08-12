@@ -140,6 +140,19 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    if (import.meta.env.DEV) return;
+    if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
+    const register = () => {
+      // Caches only the immutable Gifsicle engine asset — never user files.
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        /* engine cache is a progressive enhancement */
+      });
+    };
+    if (document.readyState === "complete") register();
+    else window.addEventListener("load", register, { once: true });
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -149,4 +162,5 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+
 

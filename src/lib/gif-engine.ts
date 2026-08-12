@@ -127,12 +127,26 @@ type GifsicleModule = {
   }) => Promise<File[]>;
 };
 
+export class EngineLoadError extends Error {
+  constructor() {
+    super(
+      "The compression engine couldn't be loaded. Check your connection or ad-blocker and try again.",
+    );
+    this.name = "EngineLoadError";
+  }
+}
+
 let gifsiclePromise: Promise<GifsicleModule> | null = null;
 async function getGifsicle(): Promise<GifsicleModule> {
   if (!gifsiclePromise) {
-    gifsiclePromise = import("gifsicle-wasm-browser").then(
-      (m) => ((m as { default?: GifsicleModule }).default ?? m) as GifsicleModule,
-    );
+    gifsiclePromise = import("gifsicle-wasm-browser")
+      .then((m) => ((m as { default?: GifsicleModule }).default ?? m) as GifsicleModule)
+      .catch(() => {
+        // Allow a later retry instead of caching the failure forever.
+        gifsiclePromise = null;
+        throw new EngineLoadError();
+      });
+
   }
   return gifsiclePromise;
 }
@@ -143,9 +157,13 @@ export function isEngineRequested(): boolean {
 }
 
 /** Load the WASM engine ahead of time (idle prefetch or first file added). */
-export function warmupEngine(): Promise<unknown> {
-  return getGifsicle().catch(() => undefined);
+export function warmupEngine(): Promise<boolean> {
+  return getGifsicle().then(
+    () => true,
+    () => false,
+  );
 }
+
 
 
 const SAFE_NAME = "input.gif";

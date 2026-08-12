@@ -6,10 +6,47 @@ const SAMPLE = 48; // downsample edge for motion analysis
 
 type Req = { id: string; buffer: ArrayBuffer };
 
+function isGifHeader(buffer: ArrayBuffer): boolean {
+  if (buffer.byteLength < 6) return false;
+  const sig = String.fromCharCode(...new Uint8Array(buffer, 0, 6));
+  return sig === "GIF87a" || sig === "GIF89a";
+}
+
 function analyze(buffer: ArrayBuffer): GifAnalysis {
+  if (!isGifHeader(buffer)) {
+    throw new Error("NOT_GIF");
+  }
   const gif = parseGIF(buffer);
-  const frames = decompressFrames(gif, true);
-  if (!frames.length) throw new Error("No frames found in this GIF.");
+  let frames: ReturnType<typeof decompressFrames>;
+  let truncated = false;
+  try {
+    frames = decompressFrames(gif, true);
+  } catch {
+    // A truncated file can still parse its header; salvage what we can.
+    truncated = true;
+    frames = [];
+  }
+  if (!frames.length) {
+    // Fall back to header-only metadata so the user can still compress.
+    const w = gif.lsd?.width ?? 0;
+    const h = gif.lsd?.height ?? 0;
+    if (!w || !h) throw new Error("CORRUPT");
+    return {
+      width: w,
+      height: h,
+      frameCount: 1,
+      fps: 0,
+      durationMs: 0,
+      duplicateShare: 0,
+      duplicateIndices: [],
+      paletteDensity: 1,
+      motionAverage: 0.15,
+      motionVariance: 0,
+      truncated: true,
+      partial: true,
+    };
+  }
+
 
   const width = gif.lsd.width;
   const height = gif.lsd.height;
@@ -31,7 +68,10 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
   const duplicateIndices: number[] = [];
   const colorSet = new Set<number>();
 
+  let analysed = 0;
+  try {
   for (let i = 0; i < frames.length; i++) {
+
     const f = frames[i]!;
     if (f.disposalType === 2 && prev) {
       fctx.clearRect(f.dims.left, f.dims.top, f.dims.width, f.dims.height);
@@ -69,6 +109,11 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
       if (ratio < 0.012) duplicateIndices.push(i);
     }
     prev = new Uint8ClampedArray(data);
+    analysed = i + 1;
+  }
+  } catch {
+    // Ran out of memory or hit broken frame data — keep the partial analysis.
+    truncated = true;
   }
 
   const motionAverage = diffs.length ? diffs.reduce((a, b) => a + b, 0) / diffs.length : 0;
@@ -87,8 +132,11 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
     paletteDensity: Math.min(1, colorSet.size / 256),
     motionAverage,
     motionVariance,
+    truncated,
+    partial: analysed < frames.length,
   };
 }
+
 
 self.onmessage = (e: MessageEvent<Req>) => {
   const { id, buffer } = e.data;
@@ -96,9 +144,9 @@ self.onmessage = (e: MessageEvent<Req>) => {
     const analysis = analyze(buffer);
     (self as unknown as Worker).postMessage({ id, analysis });
   } catch (err) {
-    (self as unknown as Worker).postMessage({
-      id,
-      error: err instanceof Error ? err.message : "Could not read this GIF.",
-    });
+    const raw = err instanceof Error ? err.message : "";
+    const code = raw === "NOT_GIF" ? "NOT_GIF" : /memory|allocation/i.test(raw) ? "MEMORY" : "CORRUPT";
+    (self as unknown as Worker).postMessage({ id, error: raw || "CORRUPT", code });
   }
 };
+
