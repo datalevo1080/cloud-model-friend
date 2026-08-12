@@ -560,10 +560,41 @@ export function Cropper() {
               <span>
                 Original {current.width}×{current.height}px · {formatBytes(current.size)}
               </span>
-              <span className="font-medium text-foreground">
-                Output {Math.round(rect.width)}×{Math.round(rect.height)}px
-              </span>
             </div>
+
+            {estimate && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="mt-3 rounded-xl border border-border bg-card p-4 text-sm"
+              >
+                <p className="font-semibold text-foreground">Estimated result before you crop</p>
+                <dl className="mt-2 grid gap-2 sm:grid-cols-3">
+                  <div>
+                    <dt className="text-xs text-muted-foreground">Output dimensions</dt>
+                    <dd className="font-medium text-foreground">
+                      {Math.round(rect.width)}×{Math.round(rect.height)}px
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-muted-foreground">Approx. file size</dt>
+                    <dd className="font-medium text-foreground">
+                      {formatBytes(estimate.low)} – {formatBytes(estimate.high)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-muted-foreground">Pixels kept</dt>
+                    <dd className="font-medium text-foreground">
+                      {Math.round(estimate.areaShare * 100)}%
+                    </dd>
+                  </div>
+                </dl>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Estimated from the pixel area you keep — palettes and frame data don't shrink
+                  perfectly in step, so the real file can land just outside this range.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-5 rounded-xl border border-border bg-card p-5">
