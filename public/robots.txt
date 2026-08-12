@@ -10,5 +10,10 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+
 User-agent: *
 Allow: /
+
+Sitemap: https://zipgif.com/sitemap.xml

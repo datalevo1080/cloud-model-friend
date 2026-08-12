@@ -16,40 +16,85 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Compressor } from "@/components/tool/compressor";
-import { Faq } from "@/components/faq";
+import { Faq, faqs } from "@/components/faq";
+
+const SITE = "https://zipgif.com";
+const TITLE = "GIF Compressor — Compress GIF Online Free (No Upload) | ZipGIF";
+const DESCRIPTION =
+  "Compress GIF files online free — up to 70% smaller in seconds. 100% private: no uploads, no watermark, no signup. AI picks the best settings for you.";
+const OG_IMAGE = `${SITE}/og-image.jpg`;
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "GIF Compressor — Compress GIFs Online Free | ZipGIF" },
-      {
-        name: "description",
-        content:
-          "Compress GIF files up to 70% smaller right in your browser. No uploads, no watermark, no signup — your files never leave your device.",
-      },
-      { property: "og:title", content: "GIF Compressor — Compress GIFs Online Free | ZipGIF" },
-      {
-        property: "og:description",
-        content:
-          "Shrink GIF file size by up to 70% in seconds. 100% private, browser-based GIF compression.",
-      },
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE}/` },
+      { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "ZipGIF — Every GIF tool. Zero uploads." },
       { name: "twitter:card", content: "summary_large_image" },
-      { rel: "canonical", href: "https://zipgif.com/" },
+      { name: "twitter:title", content: TITLE },
+      { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
+    links: [{ rel: "canonical", href: `${SITE}/` }],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "ZipGIF",
+          name: "ZipGIF — GIF Compressor",
+          url: `${SITE}/`,
           applicationCategory: "MultimediaApplication",
-          operatingSystem: "Any",
-          url: "https://zipgif.com/",
-          description:
-            "Privacy-first online GIF compressor that runs entirely in your browser. No uploads.",
+          operatingSystem: "Any (web browser)",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          featureList: [
+            "AI smart compression",
+            "Target file size",
+            "Batch compression",
+            "100% client-side privacy",
+          ],
+          browserRequirements: "Requires JavaScript and WebAssembly",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
+            { "@type": "ListItem", position: 2, name: "GIF Compressor", item: `${SITE}/` },
+          ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "ZipGIF",
+          url: `${SITE}/`,
+          logo: OG_IMAGE,
         }),
       },
     ],

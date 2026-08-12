@@ -17,7 +17,9 @@ export const Route = createFileRoute("/privacy")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://zipgif.com/privacy" },
     ],
+    links: [{ rel: "canonical", href: "https://zipgif.com/privacy" }],
   }),
   component: Privacy,
 });

@@ -17,7 +17,9 @@ export const Route = createFileRoute("/contact")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://zipgif.com/contact" },
     ],
+    links: [{ rel: "canonical", href: "https://zipgif.com/contact" }],
   }),
   component: Contact,
 });

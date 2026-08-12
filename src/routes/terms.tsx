@@ -17,7 +17,9 @@ export const Route = createFileRoute("/terms")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://zipgif.com/terms" },
     ],
+    links: [{ rel: "canonical", href: "https://zipgif.com/terms" }],
   }),
   component: Terms,
 });
