@@ -8,6 +8,7 @@ import {
   Sparkles,
   Trash2,
   Wand2,
+  XCircle,
 } from "lucide-react";
 import { DropZone } from "./drop-zone";
 import { BeforeAfter } from "./before-after";
