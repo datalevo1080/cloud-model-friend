@@ -1,16 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BadgeCheck,
-  Check,
   Cpu,
   Download,
   Gauge,
   Layers,
-  Lock,
   ShieldCheck,
   Sparkles,
   Upload,
-  X,
   Zap,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
