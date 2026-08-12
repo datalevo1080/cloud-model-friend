@@ -942,8 +942,11 @@ function Index() {
                 the seconds that matter; a GIF shortener saves more than any slider.
               </li>
               <li>
-                <strong className="text-foreground">Crop GIF</strong> — a GIF cropper for removing
-                browser chrome from screen captures.
+                <strong className="text-foreground">Crop GIF</strong> — shipped: the{" "}
+                <Link to="/gif-cropper" className="text-primary underline-offset-4 hover:underline">
+                  GIF cropper
+                </Link>{" "}
+                is live for removing browser chrome from screen captures.
               </li>
               <li>
                 <strong className="text-foreground">Speed and quality</strong> — a GIF speed changer
