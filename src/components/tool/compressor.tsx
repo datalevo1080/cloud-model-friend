@@ -16,9 +16,12 @@ import { cn } from "@/lib/utils";
 import {
   DEFAULT_METHOD,
   compressToTarget,
+  isEngineRequested,
   planFromAnalysis,
   runGifsicle,
+  warmupEngine,
 } from "@/lib/gif-engine";
+
 import {
   MAX_BYTES,
   MAX_FILES,
@@ -65,9 +68,40 @@ export function Compressor() {
   const [targetValue, setTargetValue] = useState(256);
   const [targetUnit, setTargetUnit] = useState<"KB" | "MB">("KB");
   const [running, setRunning] = useState(false);
+  const [engineState, setEngineState] = useState<"idle" | "loading" | "ready">("idle");
   const workerRef = useRef<Worker | null>(null);
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
+
+  // Prefetch the WASM engine only when the browser is idle — never on page load.
+  useEffect(() => {
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+    };
+    const start = () => {
+      void warmupEngine().then(() => setEngineState((s) => (s === "idle" ? s : "ready")));
+    };
+    if (w.requestIdleCallback) {
+      const handle = w.requestIdleCallback(start, { timeout: 6000 });
+      return () => (window as unknown as { cancelIdleCallback?: (h: number) => void })
+        .cancelIdleCallback?.(handle);
+    }
+    const t = window.setTimeout(start, 3000);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const ensureEngine = useCallback(() => {
+    if (isEngineRequested()) {
+      setEngineState("ready");
+      return;
+    }
+    setEngineState("loading");
+    const started = Date.now();
+    void warmupEngine().then(() => {
+      const wait = Math.max(0, 1000 - (Date.now() - started));
+      window.setTimeout(() => setEngineState("ready"), wait);
+    });
+  }, []);
 
   useEffect(() => {
     const worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
@@ -76,6 +110,7 @@ export function Compressor() {
     workerRef.current = worker;
     return () => worker.terminate();
   }, []);
+
 
   useEffect(
     () => () => {
@@ -91,38 +126,50 @@ export function Compressor() {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, ...next } : i)));
   }, []);
 
+  // One file at a time: reading + decoding several large GIFs in parallel is the
+  // main out-of-memory risk, so the analysis worker gets a strict serial queue.
+  const analyzeChain = useRef<Promise<void>>(Promise.resolve());
+
   const analyze = useCallback(
     (item: GifItem) => {
-      const worker = workerRef.current;
-      if (!worker) return;
-      item.file
-        .arrayBuffer()
-        .then((buffer) => {
-          const handler = (e: MessageEvent) => {
-            const data = e.data as { id: string; analysis?: GifAnalysis; error?: string };
-            if (data.id !== item.id) return;
-            worker.removeEventListener("message", handler);
-            if (data.analysis) {
-              patch(item.id, {
-                status: "ready",
-                analysis: data.analysis,
-                plan: planFromAnalysis(data.analysis),
+      analyzeChain.current = analyzeChain.current.then(
+        () =>
+          new Promise<void>((resolve) => {
+            const worker = workerRef.current;
+            if (!worker) return resolve();
+            item.file
+              .arrayBuffer()
+              .then((buffer) => {
+                const handler = (e: MessageEvent) => {
+                  const data = e.data as { id: string; analysis?: GifAnalysis; error?: string };
+                  if (data.id !== item.id) return;
+                  worker.removeEventListener("message", handler);
+                  if (data.analysis) {
+                    patch(item.id, {
+                      status: "ready",
+                      analysis: data.analysis,
+                      plan: planFromAnalysis(data.analysis),
+                    });
+                  } else {
+                    patch(item.id, {
+                      status: "error",
+                      error: "This file couldn't be read as a GIF. It may be corrupted.",
+                    });
+                  }
+                  resolve();
+                };
+                worker.addEventListener("message", handler);
+                worker.postMessage({ id: item.id, buffer }, [buffer]);
+              })
+              .catch(() => {
+                patch(item.id, { status: "error", error: "This file couldn't be read from disk." });
+                resolve();
               });
-            } else {
-              patch(item.id, {
-                status: "error",
-                error: "This file couldn't be read as a GIF. It may be corrupted.",
-              });
-            }
-          };
-          worker.addEventListener("message", handler);
-          worker.postMessage({ id: item.id, buffer }, [buffer]);
-        })
-        .catch(() =>
-          patch(item.id, { status: "error", error: "This file couldn't be read from disk." }),
-        );
+          }),
+      );
     },
     [patch],
+
   );
 
   const addFiles = useCallback(
@@ -158,11 +205,13 @@ export function Compressor() {
 
       setNotices(problems);
       if (accepted.length) {
+        ensureEngine();
         setItems((prev) => [...prev, ...accepted]);
         accepted.forEach(analyze);
       }
     },
-    [analyze],
+    [analyze, ensureEngine],
+
   );
 
   const remove = useCallback((id: string) => {
@@ -301,6 +350,16 @@ export function Compressor() {
     <section id="tool" aria-label="GIF compressor" className="scroll-mt-24">
       <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
         <DropZone onFiles={addFiles} disabled={running} />
+
+        <div className="mt-3 min-h-9" aria-live="polite">
+          {engineState === "loading" && (
+            <div className="flex items-center gap-3 overflow-hidden rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              <span className="zg-shimmer h-2 w-24 rounded-full bg-primary/20" aria-hidden="true" />
+              Starting compression engine…
+            </div>
+          )}
+        </div>
+
 
         {notices.length > 0 && (
           <ul className="mt-4 space-y-2" role="alert">
@@ -579,6 +638,9 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
         <img
           src={item.url}
           alt={`Preview of ${item.file.name}`}
+          width={128}
+          height={96}
+          decoding="async"
           className="h-24 w-full rounded-lg border border-border bg-muted object-contain sm:w-32"
         />
         <div className="min-w-0 flex-1">
