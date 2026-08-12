@@ -801,7 +801,10 @@ export function Cropper() {
               </div>
               <a
                 href={item.resultUrl}
-                download={`cropped-${item.file.name}`}
+                download={croppedFileName(
+                  item.file.name,
+                  item.rect ?? { x: 0, y: 0, width: item.width, height: item.height },
+                )}
                 className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 <Download className="size-4" aria-hidden="true" /> Download cropped GIF
