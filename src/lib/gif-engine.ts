@@ -141,11 +141,12 @@ async function getGifsicle(): Promise<GifsicleModule> {
   if (!gifsiclePromise) {
     gifsiclePromise = import("gifsicle-wasm-browser")
       .then((m) => ((m as { default?: GifsicleModule }).default ?? m) as GifsicleModule)
-      .catch((err) => {
+      .catch(() => {
         // Allow a later retry instead of caching the failure forever.
         gifsiclePromise = null;
-        throw new EngineLoadError().initCause?.(err) ?? new EngineLoadError();
+        throw new EngineLoadError();
       });
+
   }
   return gifsiclePromise;
 }
