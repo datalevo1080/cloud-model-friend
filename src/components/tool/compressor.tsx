@@ -1036,7 +1036,7 @@ function FileCard({
   onRemove,
 }: {
   item: GifItem;
-  estimate?: SavingsEstimate;
+  estimate?: SavingsEstimate | undefined;
   onRemove: () => void;
 }) {
   const saving =
