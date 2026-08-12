@@ -217,8 +217,9 @@ export function Compressor() {
                       status: "ready",
                       analysis: a,
                       plan: planFromAnalysis(a),
-                      warning: warnings.join(" ") || undefined,
+                      ...(warnings.length ? { warning: warnings.join(" ") } : {}),
                     });
+
                   } else {
                     patch(item.id, { status: "error", error: analysisError(data.code) });
                   }
