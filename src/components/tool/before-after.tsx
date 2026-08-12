@@ -50,6 +50,9 @@ export function BeforeAfter({
       <img
         src={afterUrl}
         alt={`Compressed preview of ${alt}`}
+        width={1280}
+        height={720}
+        decoding="async"
         className="absolute inset-0 size-full object-contain"
       />
       <div
@@ -60,6 +63,9 @@ export function BeforeAfter({
         <img
           src={beforeUrl}
           alt={`Original preview of ${alt}`}
+          width={1280}
+          height={720}
+          decoding="async"
           className="absolute inset-0 size-full object-contain"
         />
       </div>

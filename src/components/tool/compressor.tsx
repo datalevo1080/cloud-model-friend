@@ -626,6 +626,9 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
         <img
           src={item.url}
           alt={`Preview of ${item.file.name}`}
+          width={128}
+          height={96}
+          decoding="async"
           className="h-24 w-full rounded-lg border border-border bg-muted object-contain sm:w-32"
         />
         <div className="min-w-0 flex-1">
