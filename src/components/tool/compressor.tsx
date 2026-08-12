@@ -83,10 +83,25 @@ export function Compressor() {
   const [targetValue, setTargetValue] = useState(256);
   const [targetUnit, setTargetUnit] = useState<"KB" | "MB">("KB");
   const [running, setRunning] = useState(false);
-  const [engineState, setEngineState] = useState<"idle" | "loading" | "ready">("idle");
+  const [engineState, setEngineState] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [workerFailed, setWorkerFailed] = useState(false);
   const workerRef = useRef<Worker | null>(null);
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
+
+  // Privacy-preserving engine cache: a service worker keeps the Gifsicle WASM
+  // bundle in Cache Storage so repeat visits start instantly. No file data is
+  // ever cached or sent anywhere.
+  useEffect(() => {
+    if (!("serviceWorker" in navigator) || !import.meta.env.PROD) return;
+    const register = () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        /* caching is an optimisation only */
+      });
+    };
+    if (document.readyState === "complete") register();
+    else window.addEventListener("load", register, { once: true });
+  }, []);
 
   // Prefetch the WASM engine only when the browser is idle — never on page load.
   useEffect(() => {
@@ -94,7 +109,7 @@ export function Compressor() {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
     };
     const start = () => {
-      void warmupEngine().then(() => setEngineState((s) => (s === "idle" ? s : "ready")));
+      void warmupEngine().then((ok) => setEngineState((s) => (s === "idle" && ok ? s : ok ? "ready" : s)));
     };
     if (w.requestIdleCallback) {
       const handle = w.requestIdleCallback(start, { timeout: 6000 });
@@ -107,24 +122,36 @@ export function Compressor() {
 
   const ensureEngine = useCallback(() => {
     if (isEngineRequested()) {
-      setEngineState("ready");
+      setEngineState((s) => (s === "error" ? s : "ready"));
       return;
     }
     setEngineState("loading");
     const started = Date.now();
-    void warmupEngine().then(() => {
+    void warmupEngine().then((ok) => {
       const wait = Math.max(0, 1000 - (Date.now() - started));
-      window.setTimeout(() => setEngineState("ready"), wait);
+      window.setTimeout(() => setEngineState(ok ? "ready" : "error"), wait);
     });
   }, []);
 
-  useEffect(() => {
-    const worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
-      type: "module",
-    });
-    workerRef.current = worker;
-    return () => worker.terminate();
+  const retryEngine = useCallback(() => {
+    setEngineState("loading");
+    void warmupEngine().then((ok) => setEngineState(ok ? "ready" : "error"));
   }, []);
+
+  useEffect(() => {
+    let worker: Worker | null = null;
+    try {
+      worker = new Worker(new URL("../../workers/gif-analyze.worker.ts", import.meta.url), {
+        type: "module",
+      });
+      worker.addEventListener("error", () => setWorkerFailed(true));
+      workerRef.current = worker;
+    } catch {
+      setWorkerFailed(true);
+    }
+    return () => worker?.terminate();
+  }, []);
+
 
 
   useEffect(
