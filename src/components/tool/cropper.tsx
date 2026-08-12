@@ -262,6 +262,40 @@ export function Cropper() {
     setRectSafe({ ...rect, x: rect.x + delta[0], y: rect.y + delta[1] });
   };
 
+  /** Keyboard resizing from a specific handle: same maths as pointer dragging. */
+  const onHandleKeyDown = (handle: Handle) => (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 10 : 1;
+    const map: Record<string, [number, number]> = {
+      ArrowLeft: [-step, 0],
+      ArrowRight: [step, 0],
+      ArrowUp: [0, -step],
+      ArrowDown: [0, step],
+    };
+    const delta = map[e.key];
+    if (!delta) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const [dx, dy] = delta;
+    let { x, y, width, height } = rect;
+    if (handle.includes("w")) {
+      x += dx;
+      width -= dx;
+    }
+    if (handle.includes("e")) width += dx;
+    if (handle.includes("n")) {
+      y += dy;
+      height -= dy;
+    }
+    if (handle.includes("s")) height += dy;
+    if (width < 16) width = 16;
+    if (height < 16) height = 16;
+    if (ratio) {
+      if (handle === "n" || handle === "s") width = height * ratio;
+      else height = width / ratio;
+    }
+    setRectSafe({ x, y, width, height });
+  };
+
   // ---- play / pause -----------------------------------------------------
   const togglePlay = () => {
     if (playing) {
