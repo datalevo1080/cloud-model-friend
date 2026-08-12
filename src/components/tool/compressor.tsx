@@ -178,25 +178,49 @@ export function Compressor() {
         () =>
           new Promise<void>((resolve) => {
             const worker = workerRef.current;
-            if (!worker) return resolve();
+            if (!worker) {
+              // No worker available: skip analysis, compression still works.
+              patch(item.id, {
+                status: "ready",
+                warning: "Smart analysis is unavailable in this browser — using manual settings.",
+              });
+              return resolve();
+            }
             item.file
               .arrayBuffer()
               .then((buffer) => {
                 const handler = (e: MessageEvent) => {
-                  const data = e.data as { id: string; analysis?: GifAnalysis; error?: string };
+                  const data = e.data as {
+                    id: string;
+                    analysis?: GifAnalysis;
+                    error?: string;
+                    code?: string;
+                  };
                   if (data.id !== item.id) return;
                   worker.removeEventListener("message", handler);
                   if (data.analysis) {
+                    const a = data.analysis;
+                    const warnings: string[] = [];
+                    if (a.truncated)
+                      warnings.push(
+                        "This GIF looks truncated — we analysed the frames we could read and will still compress it.",
+                      );
+                    if (a.frameCount === 1)
+                      warnings.push(
+                        "Static GIF (1 frame) — frame-dropping options are turned off for this file.",
+                      );
+                    if (item.size >= HUGE_BYTES)
+                      warnings.push(
+                        "Very large file — it is processed on its own to protect memory. Target file size mode gives the most reliable result.",
+                      );
                     patch(item.id, {
                       status: "ready",
-                      analysis: data.analysis,
-                      plan: planFromAnalysis(data.analysis),
+                      analysis: a,
+                      plan: planFromAnalysis(a),
+                      warning: warnings.join(" ") || undefined,
                     });
                   } else {
-                    patch(item.id, {
-                      status: "error",
-                      error: "This file couldn't be read as a GIF. It may be corrupted.",
-                    });
+                    patch(item.id, { status: "error", error: analysisError(data.code) });
                   }
                   resolve();
                 };
@@ -204,7 +228,11 @@ export function Compressor() {
                 worker.postMessage({ id: item.id, buffer }, [buffer]);
               })
               .catch(() => {
-                patch(item.id, { status: "error", error: "This file couldn't be read from disk." });
+                patch(item.id, {
+                  status: "error",
+                  error:
+                    "This file couldn't be read — it may have been moved, or it's too large for this browser's memory.",
+                });
                 resolve();
               });
           }),
@@ -215,25 +243,45 @@ export function Compressor() {
   );
 
   const addFiles = useCallback(
-    (files: File[]) => {
+    async (files: File[]) => {
       const problems: string[] = [];
       const accepted: GifItem[] = [];
       const room = MAX_FILES - itemsRef.current.length;
+      const existing = new Set(itemsRef.current.map((i) => `${i.file.name}:${i.size}`));
 
       for (const file of files) {
-        const isGif = file.type === "image/gif" || file.name.toLowerCase().endsWith(".gif");
-        if (!isGif) {
-          problems.push(`"${file.name}" isn't a GIF — only .gif files can be compressed here.`);
+        const looksGif = file.type === "image/gif" || file.name.toLowerCase().endsWith(".gif");
+        if (!looksGif) {
+          problems.push(`Skipped "${file.name}" — only .gif files can be compressed here.`);
+          continue;
+        }
+        if (file.size === 0) {
+          problems.push(`Skipped "${file.name}" — the file is empty.`);
           continue;
         }
         if (file.size > MAX_BYTES) {
-          problems.push(`"${file.name}" is ${formatBytes(file.size)} — the limit is 200 MB.`);
+          problems.push(
+            `Skipped "${file.name}" — it's ${formatBytes(file.size)} and the limit is 200 MB.`,
+          );
+          continue;
+        }
+        // Extensions lie: check the real GIF87a/GIF89a header before decoding.
+        if (!(await hasGifMagicBytes(file))) {
+          problems.push(
+            `Skipped "${file.name}" — it's named .gif but its contents aren't a GIF image.`,
+          );
+          continue;
+        }
+        const key = `${file.name}:${file.size}`;
+        if (existing.has(key)) {
+          problems.push(`Skipped "${file.name}" — it's already in the queue.`);
           continue;
         }
         if (accepted.length >= room) {
-          problems.push(`You can compress up to ${MAX_FILES} GIFs at a time.`);
+          problems.push(`Skipped the rest — you can compress up to ${MAX_FILES} GIFs at a time.`);
           break;
         }
+        existing.add(key);
         accepted.push({
           id: nextId(),
           file,
@@ -255,6 +303,7 @@ export function Compressor() {
     [analyze, ensureEngine],
 
   );
+
 
   const remove = useCallback((id: string) => {
     setItems((prev) => {
