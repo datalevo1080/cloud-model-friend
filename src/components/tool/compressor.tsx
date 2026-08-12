@@ -594,22 +594,40 @@ export function Compressor() {
         /* confetti is decorative only */
       }
     }
-  }, [method, patch, running, smart, targetBytes, targetOn]);
+  }, [method, patch, running, signatureFor, smart, spawnWorker, targetBytes, targetOn]);
 
+  // Re-downloading the batch reuses the .zip we already built, unless the set
+  // of results changed. Nothing is recompressed.
   const downloadAll = useCallback(async () => {
     const done = itemsRef.current.filter((i) => i.resultBlob);
     if (!done.length) return;
-    const JSZip = (await import("jszip")).default;
-    const zip = new JSZip();
-    done.forEach((i) => zip.file(i.file.name.replace(/\.gif$/i, "") + "-zipgif.gif", i.resultBlob!));
-    const blob = await zip.generateAsync({ type: "blob" });
-    const url = URL.createObjectURL(blob);
+    const key = done.map((i) => `${i.id}:${i.resultSignature ?? ""}:${i.resultSize}`).join("|");
+
+    let url = zipCache && zipCache.key === key ? zipCache.url : null;
+    if (!url) {
+      const JSZip = (await import("jszip")).default;
+      const zip = new JSZip();
+      done.forEach((i) =>
+        zip.file(i.file.name.replace(/\.gif$/i, "") + "-zipgif.gif", i.resultBlob!),
+      );
+      const blob = await zip.generateAsync({ type: "blob" });
+      if (zipCache) URL.revokeObjectURL(zipCache.url);
+      url = URL.createObjectURL(blob);
+      setZipCache({ key, url });
+    }
+
     const a = document.createElement("a");
     a.href = url;
     a.download = "zipgif-compressed.zip";
     a.click();
-    URL.revokeObjectURL(url);
-  }, []);
+  }, [zipCache]);
+
+  useEffect(
+    () => () => {
+      if (zipCache) URL.revokeObjectURL(zipCache.url);
+    },
+    [zipCache],
+  );
 
   const readyCount = items.filter((i) => i.status !== "error").length;
   const doneCount = items.filter((i) => i.status === "done").length;
@@ -618,6 +636,12 @@ export function Compressor() {
   // Frame-dropping is meaningless for static GIFs.
   const allStatic = analysed.length > 0 && analysed.every((i) => i.analysis!.frameCount === 1);
   const hasHuge = items.some((i) => i.size >= HUGE_BYTES);
+  const batchBytes = items.reduce((n, i) => n + i.size, 0);
+  const heavyBatch = batchBytes > BATCH_WARN_BYTES;
+  const cachedCount = items.filter(
+    (i) => i.status === "done" && i.resultSignature === signatureFor(i),
+  ).length;
+  const allCached = cachedCount > 0 && cachedCount === items.filter((i) => i.status !== "error").length;
 
   const queueSummary = running
     ? `Compressing file ${Math.min(doneCount + errorCount + 1, items.length)} of ${items.length}.`
@@ -628,7 +652,7 @@ export function Compressor() {
   return (
     <section id="tool" aria-label="GIF compressor" className="scroll-mt-24">
       <div className="rounded-2xl border border-border bg-card p-4 shadow-soft sm:p-6">
-        <DropZone onFiles={addFiles} disabled={running} />
+        <DropZone onFiles={addFiles} onUrl={addFromUrl} disabled={running} />
 
         <div className="mt-3 min-h-9" aria-live="polite">
           {engineState === "loading" && (
