@@ -627,21 +627,24 @@ export function Compressor() {
                       <select
                         id="framestep"
                         value={method.frameStep}
+                        disabled={allStatic}
+                        aria-describedby="framestep-hint"
                         onChange={(e) =>
                           setMethod((m) => ({
                             ...m,
                             frameStep: Number(e.target.value) as CompressMethod["frameStep"],
                           }))
                         }
-                        className="mt-3 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm"
+                        className="mt-3 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         <option value={1}>Keep every frame</option>
                         <option value={2}>Drop every 2nd frame</option>
                         <option value={3}>Drop every 3rd frame</option>
                       </select>
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        Best for: long, high-frame-rate GIFs where smoothness matters less than
-                        size.
+                      <p id="framestep-hint" className="mt-2 text-xs text-muted-foreground">
+                        {allStatic
+                          ? "Turned off: your GIF is static (a single frame), so there are no frames to drop."
+                          : "Best for: long, high-frame-rate GIFs where smoothness matters less than size."}
                       </p>
                     </div>
 
@@ -649,14 +652,16 @@ export function Compressor() {
                       <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium">
                         <input
                           type="checkbox"
-                          checked={method.dropDuplicates}
+                          checked={method.dropDuplicates && !allStatic}
+                          disabled={allStatic}
                           onChange={(e) =>
                             setMethod((m) => ({ ...m, dropDuplicates: e.target.checked }))
                           }
-                          className="size-5 accent-[var(--color-primary)]"
+                          className="size-5 accent-[var(--color-primary)] disabled:opacity-60"
                         />
                         Drop duplicate frames
                       </label>
+
                       <p className="-mt-3 text-xs text-muted-foreground">
                         Best for: screen recordings that pause on the same image.
                       </p>
