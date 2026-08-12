@@ -109,6 +109,11 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
       if (ratio < 0.012) duplicateIndices.push(i);
     }
     prev = new Uint8ClampedArray(data);
+    analysed = i + 1;
+  }
+  } catch {
+    // Ran out of memory or hit broken frame data — keep the partial analysis.
+    truncated = true;
   }
 
   const motionAverage = diffs.length ? diffs.reduce((a, b) => a + b, 0) / diffs.length : 0;
@@ -127,8 +132,11 @@ function analyze(buffer: ArrayBuffer): GifAnalysis {
     paletteDensity: Math.min(1, colorSet.size / 256),
     motionAverage,
     motionVariance,
+    truncated,
+    partial: analysed < frames.length,
   };
 }
+
 
 self.onmessage = (e: MessageEvent<Req>) => {
   const { id, buffer } = e.data;
