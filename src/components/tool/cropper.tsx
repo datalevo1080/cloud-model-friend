@@ -340,6 +340,11 @@ export function Cropper() {
     const queue = applyToAll ? items.filter((i) => i.status === "ready") : [current];
 
     for (const item of queue) {
+      // Different-sized GIFs get the same crop region proportionally scaled.
+      const itemRect =
+        item.width === current.width && item.height === current.height
+          ? target
+          : scaleRect(target, current.width, current.height, item.width, item.height);
       setItems((prev) =>
         prev.map((i) => {
           if (i.id !== item.id) return i;
@@ -348,7 +353,7 @@ export function Cropper() {
         }),
       );
       try {
-        const blob = await cropGif(item.file, target);
+        const blob = await cropGif(item.file, itemRect);
         const resultUrl = URL.createObjectURL(blob);
         setItems((prev) =>
           prev.map((i) =>
@@ -356,7 +361,7 @@ export function Cropper() {
               ? {
                   ...i,
                   status: "done",
-                  rect: target,
+                  rect: itemRect,
                   resultBlob: blob,
                   resultUrl,
                   resultSize: blob.size,
@@ -382,8 +387,14 @@ export function Cropper() {
     try {
       const { default: JSZip } = await import("jszip");
       const zip = new JSZip();
+      const taken = new Set<string>();
       for (const item of done) {
-        if (item.resultBlob) zip.file(`cropped-${item.file.name}`, item.resultBlob);
+        if (!item.resultBlob) continue;
+        const name = croppedFileName(
+          item.file.name,
+          item.rect ?? { x: 0, y: 0, width: item.width, height: item.height },
+        );
+        zip.file(uniqueName(name, taken), item.resultBlob);
       }
       const blob = await zip.generateAsync({ type: "blob" });
       const url = URL.createObjectURL(blob);
