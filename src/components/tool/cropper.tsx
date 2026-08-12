@@ -496,9 +496,10 @@ export function Cropper() {
               />
 
               <div
-                role="application"
+                role="group"
                 tabIndex={0}
-                aria-label={`Crop box: ${Math.round(rect.width)} by ${Math.round(rect.height)} pixels at ${Math.round(rect.x)}, ${Math.round(rect.y)}. Arrow keys move it by 1 pixel, Shift plus arrows by 10.`}
+                aria-label={`Crop region, ${Math.round(rect.width)} by ${Math.round(rect.height)} pixels, positioned ${Math.round(rect.x)} pixels from the left and ${Math.round(rect.y)} pixels from the top of a ${current.width} by ${current.height} pixel GIF. Press the arrow keys to move the region by 1 pixel, or hold Shift for 10 pixels. Tab to the eight resize handles inside to change its size.`}
+                aria-describedby="crop-keyboard-help"
                 onKeyDown={onKeyDown}
                 onPointerDown={onPointerDown("move")}
                 className="absolute cursor-move border-2 border-primary bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
@@ -510,19 +511,35 @@ export function Cropper() {
                 }}
               >
                 {HANDLES.map((h) => (
-                  <span
+                  <button
                     key={h.id}
-                    role="presentation"
+                    type="button"
+                    aria-label={`Resize crop region from the ${h.label} handle. Arrow keys resize by 1 pixel, Shift plus arrow keys by 10 pixels. Current size ${Math.round(rect.width)} by ${Math.round(rect.height)} pixels.`}
+                    aria-describedby="crop-keyboard-help"
                     onPointerDown={onPointerDown(h.id)}
+                    onKeyDown={onHandleKeyDown(h.id)}
                     style={{ cursor: h.cursor }}
                     className={cn(
-                      "absolute size-6 rounded-full border-2 border-background bg-primary shadow-soft",
+                      "absolute size-6 rounded-full border-2 border-background bg-primary shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
                       h.className,
                     )}
                   />
                 ))}
               </div>
             </div>
+
+            <p id="crop-keyboard-help" className="sr-only">
+              Keyboard instructions: focus the crop region and press the arrow keys to move it one
+              pixel at a time, or hold Shift for ten pixels. Tab into any of the eight resize
+              handles — top left, top, top right, right, bottom right, bottom, bottom left and left
+              — and use the same arrow keys to resize from that edge or corner. The exact pixel
+              fields in the settings panel accept typed values as an alternative.
+            </p>
+
+            <p aria-live="polite" className="sr-only">
+              Crop region {Math.round(rect.width)} by {Math.round(rect.height)} pixels at{" "}
+              {Math.round(rect.x)}, {Math.round(rect.y)}.
+            </p>
 
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               <button
