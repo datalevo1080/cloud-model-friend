@@ -1,0 +1,24 @@
+# ZipGIF
+
+> ZipGIF is a free, privacy-first online GIF toolkit. Every tool runs 100% in the browser using a WebAssembly build of Gifsicle — files are never uploaded to a server. Tagline: "Every GIF tool. Zero uploads."
+
+## Tools
+
+- [GIF Compressor](https://zipgif.com/): Compress GIF files up to 70% smaller. Smart Compress analyses frame count, duplicate frames, palette density and motion on-device, then picks the optimal lossy level and frame handling. Supports manual settings, target file size (e.g. Discord 256KB, Email 1MB, Twitter 15MB), and batch compression of up to 20 GIFs (200 MB each) with a .zip download.
+- GIF Resizer: coming soon.
+- GIF Cropper: coming soon.
+- GIF Converter: coming soon.
+
+## Pages
+
+- [About](https://zipgif.com/about): Why ZipGIF is built without a backend.
+- [Privacy Policy](https://zipgif.com/privacy): No uploads, no accounts, no file storage.
+- [Terms of Use](https://zipgif.com/terms): Plain-language terms.
+- [Contact](https://zipgif.com/contact): Bug reports and feature requests.
+
+## Key facts
+
+- No signup, no account, no watermark, no usage limits.
+- Files never leave the user's device; the tool works offline after the first visit.
+- Requires a modern browser with JavaScript and WebAssembly.
+- Free of charge for personal and commercial use.
