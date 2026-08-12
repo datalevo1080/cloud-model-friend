@@ -1119,6 +1119,49 @@ function FileCard({
             </p>
           )}
 
+          {estimate && (
+            <div
+              className="mt-2 flex flex-wrap items-center gap-2 text-xs"
+              aria-live="polite"
+              aria-label={`Estimated savings for ${item.file.name}`}
+            >
+              <span className="rounded-md bg-muted px-2 py-1 font-semibold text-foreground">
+                Estimated{" "}
+                {estimate.high <= 0
+                  ? "no change"
+                  : estimate.low === estimate.high
+                    ? `−${estimate.high}%`
+                    : `−${estimate.low}% to −${estimate.high}%`}
+                {estimate.high > 0 && (
+                  <span className="font-normal text-muted-foreground">
+                    {" "}
+                    · about {formatBytes(Math.round(item.size * (1 - estimate.high / 100)))}
+                  </span>
+                )}
+              </span>
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium",
+                  estimate.confidence === "high"
+                    ? "bg-success/15 text-success"
+                    : estimate.confidence === "medium"
+                      ? "bg-warning/15 text-warning-foreground"
+                      : "bg-muted text-muted-foreground",
+                )}
+              >
+                <ShieldCheck className="size-3.5" aria-hidden="true" />
+                {estimate.confidence === "high"
+                  ? "High confidence"
+                  : estimate.confidence === "medium"
+                    ? "Medium confidence"
+                    : "Low confidence"}
+              </span>
+              <span className="w-full text-muted-foreground">{estimate.note}</span>
+            </div>
+          )}
+
+
+
           {item.warning && item.status !== "error" && (
             <p className="mt-2 flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
               <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
