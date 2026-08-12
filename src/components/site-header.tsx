@@ -6,7 +6,6 @@ const nav = [
   { label: "GIF Compressor", href: "/" as const, active: true },
   { label: "GIF Cropper", href: "/gif-cropper" as const },
   { label: "Resize", soon: true },
-  { label: "Crop", soon: true },
   { label: "Convert", soon: true },
 ];
 
