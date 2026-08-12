@@ -389,23 +389,34 @@ export function Compressor() {
         }
 
         window.clearInterval(ticker);
-        const resultUrl = URL.createObjectURL(blob);
-        const saving = savingsPercent(item.size, blob.size);
+
+        // Some GIFs are already optimal — re-encoding can make them bigger.
+        // In that case we hand back the untouched original.
+        const keptOriginal = blob.size >= item.size;
+        const finalBlob: Blob = keptOriginal ? item.file : blob;
+        const resultUrl = URL.createObjectURL(finalBlob);
+        const saving = savingsPercent(item.size, finalBlob.size);
         bestSaving = Math.max(bestSaving, saving);
         patch(item.id, {
           status: "done",
           progress: 100,
-          resultBlob: blob,
+          resultBlob: finalBlob,
           resultUrl,
-          resultSize: blob.size,
-          statusText: hitTarget
-            ? "Done"
-            : "Smallest possible size reached — still above your target.",
+          resultSize: finalBlob.size,
+          keptOriginal,
+          statusText: keptOriginal
+            ? "Already optimized — we kept your original"
+            : hitTarget
+              ? "Done"
+              : "Smallest possible size reached — still above your target.",
         });
       } catch (err) {
+        // One failure must never stop the rest of the queue.
         window.clearInterval(ticker);
         patch(item.id, { status: "error", progress: 0, error: friendlyError(err) });
+        if (err instanceof EngineLoadError) setEngineState("error");
       }
+
     }
 
     setRunning(false);
