@@ -470,8 +470,9 @@ function Index() {
 
           <h3 className="mt-8 text-xl font-semibold">Frame rate, duration and resolution</h3>
           <p className="mt-3 leading-relaxed text-muted-foreground">
-            Every frame is a full image, so animation duration and frame rate drive file size more
-            than anything else. Halving 30 fps to 15 fps halves the frame data. Cutting GIF
+            When you compress an animated GIF, duration and frame rate drive file size more than
+            anything else — every frame is a full still image. Halving 30 fps to 15 fps halves the
+            frame data. Cutting GIF
             resolution from 1200px to 600px wide removes three quarters of the pixels. Both feel
             drastic on paper and look completely fine in a chat window.
           </p>
