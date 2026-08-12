@@ -714,6 +714,14 @@ export function Compressor() {
           </p>
         )}
 
+        {heavyBatch && (
+          <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+            This queue adds up to {formatBytes(batchBytes)}. ZipGIF works through it one GIF at a
+            time and frees each preview as it goes — you can cancel at any point without losing the
+            files already finished.
+          </p>
+        )}
+
 
         {items.length > 0 && (
           <>
@@ -940,12 +948,27 @@ export function Compressor() {
                   <>
                     <Loader2 className="size-5 animate-spin" aria-hidden="true" /> Compressing…
                   </>
+                ) : allCached ? (
+                  <>
+                    <Wand2 className="size-5" aria-hidden="true" /> Compressed — change settings to
+                    redo
+                  </>
                 ) : (
                   <>
                     <Wand2 className="size-5" aria-hidden="true" /> Compress GIF →
                   </>
                 )}
               </button>
+
+              {running && (
+                <button
+                  type="button"
+                  onClick={cancel}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-destructive/50 px-6 text-sm font-semibold text-destructive transition-colors hover:bg-destructive/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-destructive"
+                >
+                  <XCircle className="size-4" aria-hidden="true" /> Cancel
+                </button>
+              )}
 
               {doneCount > 1 && (
                 <button
@@ -966,6 +989,13 @@ export function Compressor() {
                 <RotateCcw className="size-4" aria-hidden="true" /> Compress more
               </button>
             </div>
+
+            {allCached && !running && (
+              <p className="mt-3 text-sm text-muted-foreground" role="status">
+                Results are cached for this session — download again as often as you like. Change a
+                setting to recompress.
+              </p>
+            )}
           </>
         )}
       </div>
