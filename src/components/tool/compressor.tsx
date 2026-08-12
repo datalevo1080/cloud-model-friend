@@ -728,7 +728,21 @@ export function Compressor() {
           <>
             <div className="mt-6 space-y-4">
               {items.map((item) => (
-                <FileCard key={item.id} item={item} onRemove={() => remove(item.id)} />
+                <FileCard
+                  key={item.id}
+                  item={item}
+                  estimate={
+                    item.status === "ready" || item.status === "canceled"
+                      ? estimateSavings(
+                          item.size,
+                          item.analysis,
+                          smart && item.plan ? item.plan.method : method,
+                          targetOn ? targetBytes : undefined,
+                        )
+                      : undefined
+                  }
+                  onRemove={() => remove(item.id)}
+                />
               ))}
             </div>
 
