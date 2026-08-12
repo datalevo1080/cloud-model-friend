@@ -18,11 +18,13 @@ import {
   DEFAULT_METHOD,
   EngineLoadError,
   compressToTarget,
+  estimateSavings,
   isEngineRequested,
   planFromAnalysis,
   runGifsicle,
   warmupEngine,
 } from "@/lib/gif-engine";
+import type { SavingsEstimate } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
 import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
 
