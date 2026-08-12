@@ -21,8 +21,12 @@ import {
   ASPECT_PRESETS,
   clampRect,
   cropGif,
+  croppedFileName,
   detectContentBounds,
+  estimateCroppedSize,
+  scaleRect,
   successLine,
+  uniqueName,
   type AspectId,
   type CropRect,
 } from "@/lib/gif-crop";
