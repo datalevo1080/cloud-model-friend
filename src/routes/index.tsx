@@ -564,6 +564,106 @@ function Index() {
           </div>
         </section>
 
+        <section aria-labelledby="x-whatsapp" className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+          <h2 id="x-whatsapp" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Compress a GIF for X (Twitter) and WhatsApp
+          </h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            These two platforms fail in opposite ways. X rejects the upload outright when the file
+            is too large — and silently uses a much smaller cap in its mobile apps than on the web.
+            WhatsApp accepts almost anything under its media ceiling but re-encodes your GIF to MP4
+            on the way, so the quality you send is not the quality that arrives. Compressing to the
+            right target first is what keeps both looking clean.
+          </p>
+
+          <div className="mt-8 overflow-x-auto rounded-2xl border border-border">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <caption className="sr-only">
+                Verified GIF upload limits and recommended ZipGIF target sizes for X and WhatsApp
+              </caption>
+              <thead className="bg-muted/50 text-xs uppercase tracking-wide text-muted-foreground">
+                <tr>
+                  <th scope="col" className="px-4 py-3 font-semibold">
+                    Where you post it
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold">
+                    Published limit
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold">
+                    Target size in ZipGIF
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold">
+                    Why
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {socialLimits.map((row) => (
+                  <tr key={row.where}>
+                    <th scope="row" className="px-4 py-3 font-medium text-foreground">
+                      {row.where}
+                    </th>
+                    <td className="px-4 py-3 text-muted-foreground">{row.limit}</td>
+                    <td className="px-4 py-3 font-semibold text-primary">{row.target}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.why}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-3 text-xs text-muted-foreground">
+            Sources:{" "}
+            <a
+              href="https://developer.x.com/en/docs/x-api/v1/media/upload-media/uploading-media/media-best-practices"
+              rel="nofollow noopener"
+              target="_blank"
+              className="underline underline-offset-4"
+            >
+              X media best practices
+            </a>{" "}
+            and{" "}
+            <a
+              href="https://faq.whatsapp.com/"
+              rel="nofollow noopener"
+              target="_blank"
+              className="underline underline-offset-4"
+            >
+              the WhatsApp Help Center
+            </a>
+            . Platform limits change; re-check before a launch that depends on them.
+          </p>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="text-lg font-semibold">Posting to X without the upload failing</h3>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Compress to 5&nbsp;MB even when you are posting from a desktop browser. The 15&nbsp;MB
+                allowance only applies on the web, and a thread you start on a laptop is often
+                re-shared from a phone. Keep the longest edge at or under 1280&nbsp;px and the frame
+                count under 350 — X drops GIFs that exceed either, regardless of file size, and
+                converts everything it accepts into a looping MP4 anyway. A 5&nbsp;MB, 1280&nbsp;px
+                GIF survives that conversion with far fewer blocking artifacts than a 14&nbsp;MB one
+                that gets crushed on the server.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="text-lg font-semibold">Sending on WhatsApp so it still looks sharp</h3>
+              <p className="mt-3 text-sm text-muted-foreground">
+                WhatsApp&rsquo;s in-chat media ceiling is 16&nbsp;MB, but the practical target is
+                12&nbsp;MB: the app transcodes GIFs to MP4 and applies its own compression on top of
+                yours. Every megabyte you remove first is a megabyte WhatsApp does not have to strip
+                more aggressively. If quality matters more than the inline autoplay, send the GIF as
+                a document instead — that path skips the re-encode entirely and accepts files far
+                larger than 16&nbsp;MB. For animated stickers, the hard ceiling is 500&nbsp;KB at
+                512×512.
+              </p>
+            </div>
+          </div>
+        </section>
+
+
+
         <section aria-labelledby="targets" className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
           <h2 id="targets" className="text-3xl font-bold tracking-tight sm:text-4xl">
             Compress a GIF to 256KB, 512KB, 1MB or 8MB
