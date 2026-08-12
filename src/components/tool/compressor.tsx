@@ -1134,6 +1134,14 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
             </p>
           )}
 
+          {item.status === "canceled" && (
+            <p role="status" className="mt-3 text-sm text-muted-foreground">
+              Canceled — memory released. Press Compress GIF to run it again.
+            </p>
+          )}
+
+
+
           {item.status === "done" && item.resultUrl && item.resultSize !== undefined && (
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <span className="text-sm text-muted-foreground">
