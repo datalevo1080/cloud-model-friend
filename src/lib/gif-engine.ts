@@ -328,3 +328,11 @@ export function estimateSavings(
 
   return { low: clampPct(low), high: clampPct(Math.max(high, low + 5)), confidence, note };
 }
+
+/**
+ * Some GIFs are already at their floor — re-encoding then makes them *bigger*.
+ * When that happens we hand the untouched original back instead.
+ */
+export function shouldKeepOriginal(originalBytes: number, compressedBytes: number): boolean {
+  return compressedBytes >= originalBytes;
+}

@@ -23,6 +23,7 @@ import {
   isEngineRequested,
   planFromAnalysis,
   runGifsicle,
+  shouldKeepOriginal,
   warmupEngine,
 } from "@/lib/gif-engine";
 import type { SavingsEstimate } from "@/lib/gif-engine";
@@ -539,7 +540,7 @@ export function Compressor() {
 
         // Some GIFs are already optimal — re-encoding can make them bigger.
         // In that case we hand back the untouched original.
-        const keptOriginal = blob.size >= item.size;
+        const keptOriginal = shouldKeepOriginal(item.size, blob.size);
         const finalBlob: Blob = keptOriginal ? item.file : blob;
         const resultUrl = URL.createObjectURL(finalBlob);
         const saving = savingsPercent(item.size, finalBlob.size);
