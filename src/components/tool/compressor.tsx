@@ -7,6 +7,7 @@ import {
   RotateCcw,
   Sparkles,
   Trash2,
+  ShieldCheck,
   Wand2,
   XCircle,
 } from "lucide-react";
@@ -987,7 +988,7 @@ export function Compressor() {
                 </button>
               )}
 
-              {doneCount > 1 && (
+              {doneCount > 0 && (
                 <button
                   type="button"
                   onClick={downloadAll}
