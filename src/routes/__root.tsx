@@ -19,7 +19,10 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <p className="font-mono text-6xl font-bold tracking-tighter text-primary" aria-hidden="true">
+        <p
+          className="font-mono text-6xl font-bold tracking-tighter text-primary"
+          aria-hidden="true"
+        >
           4<span className="inline-block scale-x-50">0</span>4
         </p>
         <h1 className="mt-4 text-2xl font-bold text-foreground">
@@ -47,7 +50,6 @@ function NotFoundComponent() {
     </div>
   );
 }
-
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
@@ -174,5 +176,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-
-

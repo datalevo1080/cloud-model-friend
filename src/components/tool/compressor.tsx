@@ -30,8 +30,6 @@ import type { SavingsEstimate } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
 import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
 
-
-
 import {
   MAX_BYTES,
   MAX_FILES,
@@ -85,7 +83,6 @@ function analysisError(code?: string): string {
   return "This GIF looks corrupted or truncated, so it couldn't be read.";
 }
 
-
 export function Compressor() {
   const [items, setItems] = useState<GifItem[]>([]);
   const [notices, setNotices] = useState<string[]>([]);
@@ -124,12 +121,16 @@ export function Compressor() {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
     };
     const start = () => {
-      void warmupEngine().then((ok) => setEngineState((s) => (s === "idle" && ok ? s : ok ? "ready" : s)));
+      void warmupEngine().then((ok) =>
+        setEngineState((s) => (s === "idle" && ok ? s : ok ? "ready" : s)),
+      );
     };
     if (w.requestIdleCallback) {
       const handle = w.requestIdleCallback(start, { timeout: 6000 });
-      return () => (window as unknown as { cancelIdleCallback?: (h: number) => void })
-        .cancelIdleCallback?.(handle);
+      return () =>
+        (window as unknown as { cancelIdleCallback?: (h: number) => void }).cancelIdleCallback?.(
+          handle,
+        );
     }
     const t = window.setTimeout(start, 3000);
     return () => window.clearTimeout(t);
@@ -204,7 +205,10 @@ export function Compressor() {
 
   /** Runs one analysis pass with a hard timeout. Resolves null on stall/failure. */
   const analyzeOnce = useCallback(
-    (item: GifItem, buffer: ArrayBuffer): Promise<{ analysis?: GifAnalysis; code?: string } | null> =>
+    (
+      item: GifItem,
+      buffer: ArrayBuffer,
+    ): Promise<{ analysis?: GifAnalysis; code?: string } | null> =>
       new Promise((resolve) => {
         const worker = workerRef.current ?? spawnWorker();
         if (!worker) return resolve(null);
@@ -226,7 +230,10 @@ export function Compressor() {
         const handler = (e: MessageEvent) => {
           const data = e.data as { id: string; analysis?: GifAnalysis; code?: string };
           if (data.id !== item.id) return;
-          finish({ ...(data.analysis ? { analysis: data.analysis } : {}), ...(data.code ? { code: data.code } : {}) });
+          finish({
+            ...(data.analysis ? { analysis: data.analysis } : {}),
+            ...(data.code ? { code: data.code } : {}),
+          });
         };
         worker.addEventListener("message", handler);
         try {
@@ -380,7 +387,6 @@ export function Compressor() {
     },
     [addFiles],
   );
-
 
   const remove = useCallback((id: string) => {
     setItems((prev) => {
@@ -594,7 +600,12 @@ export function Compressor() {
     ) {
       try {
         const confetti = (await import("canvas-confetti")).default;
-        confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 }, disableForReducedMotion: true });
+        confetti({
+          particleCount: 70,
+          spread: 65,
+          origin: { y: 0.7 },
+          disableForReducedMotion: true,
+        });
       } catch {
         /* confetti is decorative only */
       }
@@ -646,7 +657,8 @@ export function Compressor() {
   const cachedCount = items.filter(
     (i) => i.status === "done" && i.resultSignature === signatureFor(i),
   ).length;
-  const allCached = cachedCount > 0 && cachedCount === items.filter((i) => i.status !== "error").length;
+  const allCached =
+    cachedCount > 0 && cachedCount === items.filter((i) => i.status !== "error").length;
 
   const queueSummary = running
     ? `Compressing file ${Math.min(doneCount + errorCount + 1, items.length)} of ${items.length}.`
@@ -714,8 +726,9 @@ export function Compressor() {
         {hasHuge && (
           <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
             One or more files are over 100&nbsp;MB. They are processed one at a time to protect your
-            browser&rsquo;s memory — turn on <strong className="text-foreground">Target file size</strong>{" "}
-            for the most reliable result.
+            browser&rsquo;s memory — turn on{" "}
+            <strong className="text-foreground">Target file size</strong> for the most reliable
+            result.
           </p>
         )}
 
@@ -726,7 +739,6 @@ export function Compressor() {
             files already finished.
           </p>
         )}
-
 
         {items.length > 0 && (
           <>
@@ -1162,8 +1174,6 @@ function FileCard({
             </div>
           )}
 
-
-
           {item.warning && item.status !== "error" && (
             <p className="mt-2 flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
               <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
@@ -1209,12 +1219,11 @@ function FileCard({
             </p>
           )}
 
-
-
           {item.status === "done" && item.resultUrl && item.resultSize !== undefined && (
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <span className="text-sm text-muted-foreground">
-                {formatBytes(item.size)} → <strong className="text-foreground">{formatBytes(item.resultSize)}</strong>
+                {formatBytes(item.size)} →{" "}
+                <strong className="text-foreground">{formatBytes(item.resultSize)}</strong>
               </span>
               <span
                 className={cn(
@@ -1255,6 +1264,5 @@ function FileCard({
         </div>
       )}
     </article>
-
   );
 }
