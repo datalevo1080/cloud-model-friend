@@ -1099,6 +1099,32 @@ export function Compressor() {
                 </button>
               )}
 
+              {doneCount > 0 && (
+                <button
+                  type="button"
+                  onClick={downloadReport}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border px-6 text-sm font-semibold transition-colors hover:bg-accent"
+                >
+                  <FileSpreadsheet className="size-4" aria-hidden="true" /> Download report (.csv)
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={copySettingsLink}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-border px-6 text-sm font-semibold transition-colors hover:bg-accent"
+              >
+                {linkCopied ? (
+                  <>
+                    <Check className="size-4 text-success" aria-hidden="true" /> Link copied
+                  </>
+                ) : (
+                  <>
+                    <Link2 className="size-4" aria-hidden="true" /> Copy settings link
+                  </>
+                )}
+              </button>
+
               <button
                 type="button"
                 onClick={reset}
@@ -1109,12 +1135,19 @@ export function Compressor() {
               </button>
             </div>
 
+            <p className="mt-3 text-sm text-muted-foreground" aria-live="polite">
+              {linkCopied
+                ? "Settings link copied — open it any time to load this exact mode and frame options."
+                : "The settings link stores your mode, strength, colours, frame options and target size in the URL. No files are ever included."}
+            </p>
+
             {allCached && !running && (
               <p className="mt-3 text-sm text-muted-foreground" role="status">
                 Results are cached for this session — download again as often as you like. Change a
                 setting to recompress.
               </p>
             )}
+
           </>
         )}
       </div>
