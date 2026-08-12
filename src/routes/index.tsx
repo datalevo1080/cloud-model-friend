@@ -1,16 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BadgeCheck,
-  Check,
   Cpu,
   Download,
   Gauge,
   Layers,
-  Lock,
   ShieldCheck,
   Sparkles,
   Upload,
-  X,
   Zap,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -19,16 +16,177 @@ import { Compressor } from "@/components/tool/compressor";
 import { Faq, faqs } from "@/components/faq";
 
 const SITE = "https://zipgif.com";
-const TITLE = "GIF Compressor — Compress GIF Online Free (No Upload) | ZipGIF";
+const TITLE = "GIF Compressor — Compress GIFs Online Free (No Watermark)";
 const DESCRIPTION =
-  "Compress GIF files online free — up to 70% smaller in seconds. 100% private: no uploads, no watermark, no signup. AI picks the best settings for you.";
+  "Free online GIF compressor. Reduce GIF file size without losing quality — for Discord, email and the web. No signup, no watermark, nothing uploaded.";
 const OG_IMAGE = `${SITE}/og-image.jpg`;
+const LAST_UPDATED = "August 2026";
+const MODIFIED = "2026-08-12";
+
+const howToSteps = [
+  {
+    icon: Upload,
+    title: "Add your GIF",
+    body: "Drop your GIF onto the box above, paste it from your clipboard, or click to browse — up to 20 files at once.",
+  },
+  {
+    icon: Sparkles,
+    title: "Pick your settings (or don't)",
+    body: "Leave Smart Compress on to let the tool read your frames and choose, or open Advanced settings and drive the lossy slider yourself.",
+  },
+  {
+    icon: Download,
+    title: "Compare and download",
+    body: "Drag the before/after divider to check quality, then download the smaller GIF or grab the whole batch as a .zip.",
+  },
+];
+
+const methods = [
+  {
+    method: "Lossy LZW compression",
+    what: "Nudges pixels toward neighbouring palette colours so the LZW encoder finds longer repeated runs.",
+    saving: "15–50%",
+    impact: "Invisible up to ~80. Faint noise in gradients above ~120.",
+  },
+  {
+    method: "Colour palette reduction",
+    what: "Cuts the palette from 256 colours to 128, 64 or 32, shrinking both the palette table and the frame data.",
+    saving: "10–45%",
+    impact: "None on flat art or UI. Banding on photographic GIFs.",
+  },
+  {
+    method: "Transparency optimization (-O3)",
+    what: "Stores only the rectangle of pixels that changed between frames and marks the rest transparent.",
+    saving: "10–40%",
+    impact: "None. It's completely lossless.",
+  },
+  {
+    method: "Remove duplicate frames",
+    what: "Deletes frames identical to the one before them and extends the previous frame's delay instead.",
+    saving: "5–65%",
+    impact: "None. The animation plays the same.",
+  },
+  {
+    method: "Frame rate reduction",
+    what: "Keeps every second or third frame and doubles or triples the delay to hold the same duration.",
+    saving: "35–60%",
+    impact: "Slightly choppier motion. Fine for chat and README clips.",
+  },
+  {
+    method: "Scaling dimensions",
+    what: "Lowers GIF resolution — a 1200px-wide capture rarely needs to stay 1200px in a chat window.",
+    saving: "40–75%",
+    impact: "Sharpness drops. Text can get mushy below 50% scale.",
+  },
+];
+
+const discordLimits = [
+  { thing: "Attachment (default, all users)", limit: "10 MiB", note: "Higher with Nitro or server Boost Tier" },
+  { thing: "Custom emoji (static or animated)", limit: "256 KiB", note: "128×128 renders best" },
+  { thing: "Sticker (PNG, APNG, GIF, Lottie)", limit: "512 KiB", note: "320×320 canvas" },
+];
+
+const platformLimits = [
+  {
+    platform: "Discord attachment",
+    limit: "10 MiB default",
+    target: "8 MB",
+    href: "https://discord.com/developers/docs/reference",
+  },
+  {
+    platform: "Discord emoji",
+    limit: "256 KiB",
+    target: "256 KB",
+    href: "https://discord.com/developers/docs/resources/emoji",
+  },
+  {
+    platform: "Discord sticker",
+    limit: "512 KiB",
+    target: "512 KB",
+    href: "https://discord.com/developers/docs/resources/sticker",
+  },
+  {
+    platform: "Gmail attachment (personal)",
+    limit: "25 MB",
+    target: "10 MB",
+    href: "https://support.google.com/mail/answer/6584",
+  },
+  {
+    platform: "Slack file upload",
+    limit: "1 GB",
+    target: "2 MB for inline playback",
+    href: "https://slack.com/help/articles/201330736-Add-files-to-Slack",
+  },
+];
+
+const comparison = [
+  { label: "Price", zip: "Free, unlimited", other: "Free tier with daily caps" },
+  { label: "Watermark on output", zip: "Never", other: "Common on free tiers" },
+  { label: "Signup or email", zip: "Not required", other: "Often required" },
+  { label: "File size limit", zip: "200 MB per GIF", other: "Typically 5–50 MB" },
+  { label: "Batch support", zip: "20 GIFs, one .zip", other: "Usually one at a time" },
+  { label: "Where files are processed", zip: "Your browser", other: "Their server" },
+  { label: "Exact target file size", zip: "Yes, iterative passes", other: "Rare" },
+];
+
+const study = [
+  { name: "Screen recording, 800×450, 60 frames", before: "100 KB", after: "70 KB", cut: "30.4%" },
+  { name: "Screen recording, 1000×560, 90 frames", before: "181 KB", after: "125 KB", cut: "31.2%" },
+  { name: "Talking head, 480×480, 48 frames", before: "30 KB", after: "11 KB", cut: "62.4%" },
+  { name: "Talking head, 320×320, 30 frames", before: "19 KB", after: "8 KB", cut: "60.0%" },
+  { name: "Flat logo loop, 600×300, 30 frames", before: "10 KB", after: "8 KB", cut: "19.9%" },
+  { name: "Flat logo loop, 900×300, 40 frames", before: "14 KB", after: "11 KB", cut: "19.6%" },
+  { name: "Photographic pan, 640×360, 40 frames", before: "1.68 MB", after: "843 KB", cut: "50.9%" },
+  { name: "Photographic pan, 320×180, 25 frames", before: "339 KB", after: "161 KB", cut: "52.5%" },
+  { name: "Camera noise, 320×240, 30 frames", before: "881 KB", after: "584 KB", cut: "33.7%" },
+  { name: "Camera noise, 480×360, 40 frames", before: "2.54 MB", after: "1.70 MB", cut: "33.0%" },
+  { name: "UI capture with cursor, 900×500", before: "8 KB", after: "6 KB", cut: "28.3%" },
+  { name: "UI capture with cursor, 600×340", before: "5 KB", after: "4 KB", cut: "28.0%" },
+  { name: "Progress bar, 60 frames, many duplicates", before: "6 KB", after: "2 KB", cut: "69.4%" },
+  { name: "Progress bar, 800×450, 72 frames", before: "7 KB", after: "2 KB", cut: "67.5%" },
+  { name: "Confetti burst, 400×400, 45 frames", before: "174 KB", after: "167 KB", cut: "4.4%" },
+  { name: "Confetti burst, 640×640, 60 frames", before: "285 KB", after: "275 KB", cut: "3.6%" },
+];
+
+const useCases = [
+  {
+    icon: Zap,
+    title: "Discord and gaming chats",
+    body: "The single most common reason people compress a GIF. A 14 MB clip of a clutch round won't send; the same clip at 6 MB posts instantly and still looks fine at chat size.",
+  },
+  {
+    icon: Layers,
+    title: "Email signatures and newsletters",
+    body: "Mail clients are brutal about weight, and Gmail caps personal attachments at 25 MB. Keep an animated signature under 200 KB and it loads before the reader scrolls past it.",
+  },
+  {
+    icon: Gauge,
+    title: "Website speed and Core Web Vitals",
+    body: "A hero GIF is often the heaviest thing on a landing page. Shrinking a 4 MB loop to 900 KB pulls your Largest Contentful Paint down on mobile connections where it actually hurts.",
+  },
+  {
+    icon: Sparkles,
+    title: "Social posts",
+    body: "Platforms re-encode what you upload, and they re-encode a bloated GIF badly. Send a cleaner, smaller file and their encoder has less damage to do to your colours.",
+  },
+  {
+    icon: Cpu,
+    title: "Docs, READMEs and tutorials",
+    body: "GitHub renders GIFs inline, which makes them perfect for showing a CLI flow. Drop the frame rate to 12 fps and a 9 MB terminal recording lands near 2 MB.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Messaging apps and NDAs",
+    body: "If the GIF shows an unreleased product or a client's dashboard, a server-side compressor is a data transfer. This one isn't — the file never leaves your laptop.",
+  },
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: TITLE },
       { name: "description", content: DESCRIPTION },
+      { name: "author", content: "Shafiullah Tareen" },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
@@ -37,7 +195,10 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: OG_IMAGE },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "ZipGIF — Every GIF tool. Zero uploads." },
+      {
+        property: "og:image:alt",
+        content: "ZipGIF GIF compressor — compress GIFs online free in your browser",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
@@ -49,19 +210,57 @@ export const Route = createFileRoute("/")({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "ZipGIF",
+          url: `${SITE}/`,
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "ZipGIF",
+          url: `${SITE}/`,
+          logo: OG_IMAGE,
+          founder: { "@type": "Person", name: "Shafiullah Tareen" },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
           "@type": "WebApplication",
-          name: "ZipGIF — GIF Compressor",
+          name: "ZipGIF GIF Compressor",
           url: `${SITE}/`,
           applicationCategory: "MultimediaApplication",
-          operatingSystem: "Any (web browser)",
+          operatingSystem: "Web",
+          dateModified: MODIFIED,
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           featureList: [
-            "AI smart compression",
-            "Target file size",
-            "Batch compression",
-            "100% client-side privacy",
+            "Lossy GIF compression",
+            "Colour palette reduction",
+            "Duplicate frame removal",
+            "Exact target file size",
+            "Batch of 20 GIFs",
+            "Runs entirely in the browser",
           ],
           browserRequirements: "Requires JavaScript and WebAssembly",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "How to Compress a GIF",
+          totalTime: "PT1M",
+          step: howToSteps.map((s, i) => ({
+            "@type": "HowToStep",
+            position: i + 1,
+            name: s.title,
+            text: s.body,
+          })),
         }),
       },
       {
@@ -87,88 +286,28 @@ export const Route = createFileRoute("/")({
           ],
         }),
       },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "ZipGIF",
-          url: `${SITE}/`,
-          logo: OG_IMAGE,
-        }),
-      },
     ],
   }),
   component: Index,
 });
 
-const badges = ["No uploads", "No watermark", "No signup", "Unlimited & free"];
-
-const steps = [
-  {
-    icon: Upload,
-    title: "Add your GIF",
-    body: "Drag and drop, click to browse, or paste from your clipboard. Up to 20 GIFs at once, 200 MB each — nothing is uploaded anywhere.",
-  },
-  {
-    icon: Sparkles,
-    title: "Let Smart Compress choose",
-    body: "ZipGIF measures motion, palette density and duplicate frames on your device, then picks the strongest settings that still look good. Or open Advanced settings and drive it yourself.",
-  },
-  {
-    icon: Download,
-    title: "Compare and download",
-    body: "Drag the before/after slider to check quality, see exactly how much you saved, then download a single GIF or a .zip of the whole batch.",
-  },
-];
-
-const features = [
-  {
-    icon: Lock,
-    title: "Nothing ever leaves your device",
-    body: "Compression runs on WebAssembly inside your browser tab. There is no server, no upload, and no copy of your GIF anywhere but your own disk.",
-  },
-  {
-    icon: Cpu,
-    title: "Real Gifsicle, not a re-encode",
-    body: "ZipGIF ships the same Gifsicle engine trusted by developers for decades, compiled to WebAssembly — so the output is a properly optimized GIF.",
-  },
-  {
-    icon: Sparkles,
-    title: "Smart Compress",
-    body: "Frame-by-frame analysis detects duplicate frames, flat palettes and motion levels, then explains exactly which settings it picked and why.",
-  },
-  {
-    icon: Gauge,
-    title: "Target file size",
-    body: "Need it under 256 KB for Discord or 1 MB for email? ZipGIF runs iterative passes until the output fits your limit.",
-  },
-  {
-    icon: Layers,
-    title: "Batch of 20",
-    body: "Queue up to 20 GIFs, watch per-file progress, then grab everything at once as a .zip archive.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Free, forever, unbranded",
-    body: "No account, no credits, no watermark and no daily cap. Your compressed GIF is exactly your GIF, only smaller.",
-  },
-];
-
-const comparison = [
-  { label: "Files uploaded to a server", zip: false, other: true },
-  { label: "Works offline after first load", zip: true, other: false },
-  { label: "Watermark on output", zip: false, other: true },
-  { label: "Signup or email required", zip: false, other: true },
-  { label: "Daily limits or file caps under 100 MB", zip: false, other: true },
-  { label: "Automatic settings based on real frame analysis", zip: true, other: false },
-  { label: "Target file size mode", zip: true, other: false },
-  { label: "Batch download as .zip", zip: true, other: false },
+const trustBullets = [
+  "Nothing is uploaded — compression runs on your device",
+  "No watermark, no signup, no daily limit",
+  "200 MB per GIF, 20 GIFs per batch",
 ];
 
 function Index() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
+      {/* eslint-disable-next-line react/no-danger */}
+      <div
+        hidden
+        dangerouslySetInnerHTML={{
+          __html:
+            "<!-- 256 colours ought to be enough for anybody. — the GIF spec, 1989 (paraphrased, badly) -->",
+        }}
+      />
       <SiteHeader />
 
       <main className="flex-1">
@@ -184,225 +323,517 @@ function Index() {
                 Every GIF tool. Zero uploads.
               </span>
               <h1 className="mt-5 text-4xl font-bold tracking-tight text-balance sm:text-5xl md:text-6xl">
-                GIF Compressor — <span className="gradient-text">Compress GIFs Online Free</span>
+                GIF Compressor — <span className="gradient-text">shrink GIFs without killing quality</span>
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground text-pretty">
-                Shrink GIF file size by up to 70% in seconds. 100% private — your files never leave
-                your device.
+                Drop a GIF in, get a much smaller one back in seconds — free, no watermark, no
+                signup, and your file never leaves your device.
               </p>
-              <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                {badges.map((b) => (
-                  <li key={b} className="inline-flex items-center gap-1.5">
-                    <BadgeCheck className="size-4 text-success" aria-hidden="true" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
             </div>
 
             <div className="mx-auto mt-10 max-w-4xl">
               <Compressor />
             </div>
-          </div>
-        </section>
 
-        <section aria-labelledby="how-to" className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <h2 id="how-to" className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-            How to compress a GIF
-          </h2>
-          <ol className="mt-10 grid gap-6 md:grid-cols-3">
-            {steps.map((s, i) => (
-              <li key={s.title} className="rounded-2xl border border-border bg-card p-6">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <s.icon className="size-5" aria-hidden="true" />
-                  </span>
-                  <span className="text-sm font-semibold text-muted-foreground">Step {i + 1}</span>
-                </div>
-                <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section aria-labelledby="features" className="border-y border-border bg-muted/30">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-            <h2 id="features" className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-              Built for people who care about their GIFs
-            </h2>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {features.map((f) => (
-                <article key={f.title} className="rounded-2xl border border-border bg-card p-6">
-                  <span className="inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <f.icon className="size-5" aria-hidden="true" />
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
-                </article>
+            <ul className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+              {trustBullets.map((b) => (
+                <li key={b} className="inline-flex items-center gap-1.5">
+                  <BadgeCheck className="size-4 text-success" aria-hidden="true" />
+                  {b}
+                </li>
               ))}
-            </div>
+            </ul>
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              Last updated: {LAST_UPDATED} · Built and maintained by Shafiullah Tareen
+            </p>
           </div>
         </section>
 
-        <section aria-labelledby="compare" className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-          <h2 id="compare" className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
-            ZipGIF vs typical online compressors
+        <section aria-labelledby="what-it-does" className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+          <h2 id="what-it-does" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            What this GIF compressor does to your file
           </h2>
+          <p className="mt-5 text-lg leading-relaxed">
+            This free online GIF compressor reduces GIF file size directly in your browser using
+            Gifsicle compiled to WebAssembly. In our own tests it cut a mixed set of GIFs by 37% on
+            average, with the best result at 69%. Nothing is uploaded, nothing is watermarked, and
+            there's no signup or limit on how many GIFs you compress.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            We built it because every other GIF size reducer we tried wanted an email address, an
+            upload of a client's screen recording, or both. So the compression engine here runs on
+            your CPU. You can watch your network tab stay empty while a 40 MB file gets crunched.
+          </p>
+        </section>
+
+        <section aria-labelledby="how-to" className="border-y border-border bg-muted/30">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+            <h2 id="how-to" className="text-center text-3xl font-bold tracking-tight sm:text-4xl">
+              How to Compress a GIF
+            </h2>
+            <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed">
+              To compress a GIF, add it to the tool above, keep Smart Compress on or set your own
+              lossy strength, then download the result. Most GIFs finish in under five seconds, and
+              you can compare the before and after side by side before you keep the smaller file.
+            </p>
+            <ol className="mt-10 grid gap-6 md:grid-cols-3">
+              {howToSteps.map((s, i) => (
+                <li key={s.title} className="rounded-2xl border border-border bg-card p-6">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <s.icon className="size-5" aria-hidden="true" />
+                    </span>
+                    <span className="text-sm font-semibold text-muted-foreground">
+                      Step {i + 1}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mx-auto mt-8 max-w-3xl leading-relaxed text-muted-foreground">
+              Pro tip on the size-versus-quality trade: lossy 80 with transparency optimization is
+              the sweet spot for almost everything. If the result is still too heavy, cut frames
+              before you cut colours — dropping every second frame usually saves more than going
+              from 256 to 64 colours, and viewers notice it less. Only push lossy past 120 on fast
+              motion, where nobody can freeze a frame long enough to see the noise.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="methods" className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+          <h2 id="methods" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            What GIF compression actually does
+          </h2>
+          <p className="mt-5 text-lg leading-relaxed">
+            GIF compression works on five levers: lossy LZW encoding, the 256 colour palette, frame
+            rate, duplicate frames, and GIF dimensions. Each one trades a different kind of fidelity
+            for bytes. A good GIF optimizer picks the levers your specific footage tolerates instead
+            of applying the same preset to everything.
+          </p>
+
+          <h3 className="mt-10 text-xl font-semibold">Lossless first, lossy second</h3>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Two of those levers cost you nothing. Inter-frame transparency stores only the pixels
+            that changed since the last frame — on a talking-head clip with a static background,
+            that's often half the file, gone, with zero visual difference. Removing duplicate frames
+            is equally free. Exporters produce duplicates constantly whenever a source video holds
+            still.
+          </p>
+
+          <h3 className="mt-8 text-xl font-semibold">The 256 colours problem</h3>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            A GIF can only reference 256 colours per palette. That sounds like a constraint on
+            quality, and it is, but it's also where savings hide. Fewer distinct colours means
+            longer runs of repeated bytes, and LZW compression eats repetition for breakfast. Flat
+            illustrations, logos and UI recordings often look identical at 64 colours.
+          </p>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Photographic GIFs are the opposite. Push their palette down and you get visible banding
+            in every sky and every skin tone. That's the judgement call Smart Compress makes for you
+            by measuring how densely your frames actually use the palette.
+          </p>
+
+          <h3 className="mt-8 text-xl font-semibold">Frame rate, duration and resolution</h3>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Every frame is a full image, so animation duration and frame rate drive file size more
+            than anything else. Halving 30 fps to 15 fps halves the frame data. Cutting GIF
+            resolution from 1200px to 600px wide removes three quarters of the pixels. Both feel
+            drastic on paper and look completely fine in a chat window.
+          </p>
+
           <div className="mt-8 overflow-x-auto rounded-2xl border border-border">
-            <table className="w-full min-w-[520px] border-collapse text-left text-sm">
+            <table className="w-full min-w-[720px] border-collapse text-left text-sm">
               <caption className="sr-only">
-                Feature comparison between ZipGIF and typical server-based GIF compressors
+                GIF compression methods, typical size saving and quality impact
               </caption>
               <thead>
                 <tr className="bg-muted/50">
-                  <th scope="col" className="px-4 py-3 font-semibold">
-                    Feature
-                  </th>
-                  <th scope="col" className="px-4 py-3 font-semibold text-primary">
-                    ZipGIF
-                  </th>
-                  <th scope="col" className="px-4 py-3 font-semibold text-muted-foreground">
-                    Typical compressor
-                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Method</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">What it does</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Typical saving</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Quality impact</th>
                 </tr>
               </thead>
               <tbody>
-                {comparison.map((row) => (
-                  <tr key={row.label} className="border-t border-border">
-                    <th scope="row" className="px-4 py-3 font-normal">
-                      {row.label}
-                    </th>
+                {methods.map((m) => (
+                  <tr key={m.method} className="border-t border-border align-top">
+                    <th scope="row" className="px-4 py-3 font-medium">{m.method}</th>
+                    <td className="px-4 py-3 text-muted-foreground">{m.what}</td>
+                    <td className="px-4 py-3 font-medium text-primary">{m.saving}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{m.impact}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Saving ranges are what we see across our own test files; your GIF will land somewhere in
+            those bands depending on content.
+          </p>
+        </section>
+
+        <section aria-labelledby="discord" className="border-y border-border bg-muted/30">
+          <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+            <h2 id="discord" className="text-3xl font-bold tracking-tight sm:text-4xl">
+              GIF Compressor for Discord
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed">
+              Discord's default attachment limit is 10 MiB for all users, higher only with Nitro or a
+              server's Boost Tier. GIFs fail to send because Discord won't re-encode them for you —
+              it accepts the file or rejects it. Compress the GIF to about 8 MB first and it posts
+              on the first try.
+            </p>
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-card">
+              <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+                <caption className="sr-only">Discord size limits for attachments, emoji and stickers</caption>
+                <thead>
+                  <tr className="bg-muted/50">
+                    <th scope="col" className="px-4 py-3 font-semibold">Upload type</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Discord limit</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {discordLimits.map((d) => (
+                    <tr key={d.thing} className="border-t border-border">
+                      <th scope="row" className="px-4 py-3 font-normal">{d.thing}</th>
+                      <td className="px-4 py-3 font-medium text-primary">{d.limit}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{d.note}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Figures published by Discord in its{" "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://discord.com/developers/docs/reference"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                developer reference
+              </a>
+              ,{" "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://discord.com/developers/docs/resources/emoji"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                emoji docs
+              </a>{" "}
+              and{" "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://discord.com/developers/docs/resources/sticker"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                sticker docs
+              </a>
+              . Checked {LAST_UPDATED}.
+            </p>
+            <ul className="mt-6 space-y-3 text-muted-foreground">
+              <li>
+                <strong className="text-foreground">Aim below the line, not at it.</strong> Target 8
+                MB rather than 10 MiB — Discord counts the whole request, so a caption and embed
+                metadata ride along with your file.
+              </li>
+              <li>
+                <strong className="text-foreground">Size emotes properly.</strong> A 128×128 emoji
+                under 256 KiB and a 320×320 sticker under 512 KiB will always be accepted; anything
+                larger gets rejected at upload with no explanation.
+              </li>
+              <li>
+                <strong className="text-foreground">Trim before you compress.</strong> Discord GIF
+                size problems are usually duration problems. Four seconds of the good part beats
+                twelve seconds compressed into mush.
+              </li>
+            </ul>
+            <p className="mt-6">
+              <Link
+                to="/compress-gif-for-discord"
+                className="font-medium text-primary underline underline-offset-4"
+              >
+                Read the full guide to compressing a GIF for Discord
+              </Link>
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="targets" className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+          <h2 id="targets" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Compress a GIF to 256KB, 512KB, 1MB or 8MB
+          </h2>
+          <p className="mt-5 text-lg leading-relaxed">
+            Type a number into Target size and the tool compresses repeatedly, binary-searching the
+            lossy level until the output fits under your limit. Use 256 KB for a Discord emoji, 512
+            KB for a sticker, 1 MB for email-friendly signatures, and 8 MB for a Discord attachment.
+            If it can't reach your target, it says so instead of quietly failing.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            Hitting an exact size is genuinely a search problem, not a formula. There's no way to
+            predict what setting turns a 12 MB screen-recording GIF into a 500 KB one, because it
+            depends entirely on what's moving in your frames. So we compress, measure, adjust, and
+            repeat — which costs nothing when it's your own CPU doing the passes.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            Want a tiny GIF? Under 2 MB is easy for most clips. Making a GIF less KB than about 100
+            usually means going small in dimensions too — that's when you resize the GIF rather than
+            just squeeze it.
+          </p>
+          <div className="mt-8 overflow-x-auto rounded-2xl border border-border">
+            <table className="w-full min-w-[600px] border-collapse text-left text-sm">
+              <caption className="sr-only">Verified platform file size limits and the target we recommend</caption>
+              <thead>
+                <tr className="bg-muted/50">
+                  <th scope="col" className="px-4 py-3 font-semibold">Platform</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Published limit</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Target we'd set</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                {platformLimits.map((p) => (
+                  <tr key={p.platform} className="border-t border-border">
+                    <th scope="row" className="px-4 py-3 font-normal">{p.platform}</th>
+                    <td className="px-4 py-3 font-medium">{p.limit}</td>
+                    <td className="px-4 py-3 text-primary">{p.target}</td>
                     <td className="px-4 py-3">
-                      <Mark yes={row.zip} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <Mark yes={row.other} muted />
+                      <a
+                        className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                        href={p.href}
+                        rel="noopener nofollow"
+                        target="_blank"
+                      >
+                        Official docs
+                      </a>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Only limits we could verify against official documentation are listed. Checked{" "}
+            {LAST_UPDATED}.
+          </p>
         </section>
 
-        <section aria-labelledby="learn" className="border-y border-border bg-muted/30">
+        <section aria-labelledby="why-huge" className="border-y border-border bg-muted/30">
           <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-            <h2 id="learn" className="text-3xl font-bold tracking-tight sm:text-4xl">
-              How GIF compression works
+            <h2 id="why-huge" className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Why GIF files are so ridiculously huge
             </h2>
-            <div className="mt-6 space-y-5 leading-relaxed text-muted-foreground">
-              <p>
-                A GIF is not a video. It is a container of still images — frames — stacked in
-                sequence, each one drawn from a colour palette of at most 256 entries, and each one
-                squeezed with a lossless algorithm called LZW. That design dates back to 1987, and
-                almost everything that makes GIFs large today is a consequence of it. Modern codecs
-                like H.264 or AV1 describe motion mathematically: they store how blocks of pixels
-                move between frames. GIF cannot do that. It can only store pixels. So a five-second
-                screen recording that would be 300 KB as an MP4 can easily be 12 MB as a GIF.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">Frames and the palette</h3>
-              <p>
-                Every frame in a GIF references a palette: either one global palette shared by the
-                whole file, or a local palette attached to that single frame. Local palettes give
-                better colour fidelity but cost bytes. Reducing the number of colours — from 256
-                down to 128, 64 or 32 — shrinks both the palette tables and, more importantly, the
-                data each frame has to encode, because fewer distinct colours means longer runs of
-                repeated values for LZW to collapse. Flat illustrations, logos, UI recordings and
-                line art often look identical at 64 colours and can lose 40% of their file size.
-                Photographic or heavily dithered GIFs, on the other hand, band badly when you push
-                the palette too far.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">Transparency optimization</h3>
-              <p>
-                The single most effective lossless trick is inter-frame transparency. If two
-                consecutive frames share most of their pixels — which is nearly always true for a
-                talking head, a screen recording, or a looping animation with a static background —
-                the second frame only needs to store the pixels that actually changed. Everything
-                else becomes transparent and the previous frame shows through. Gifsicle's{" "}
-                <code className="rounded bg-background px-1 py-0.5 text-xs">-O3</code>{" "}
-                optimization does exactly this: it computes the minimal rectangle of change per
-                frame and marks the rest transparent. It removes no information at all, yet often
-                cuts a naive GIF export in half.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">Lossy LZW</h3>
-              <p>
-                LZW compression works best when the same byte sequences repeat. Lossy GIF
-                compression exploits that by allowing each pixel to shift to a nearby palette
-                colour when doing so creates a longer repeated run. The strength value — 5 to 200
-                in ZipGIF — controls how far a pixel is allowed to drift. At low values the change
-                is invisible. At high values you start to see faint noise in smooth gradients, but
-                the savings can be dramatic: 60 to 80% is common on video-derived GIFs. The key
-                insight is that the acceptable strength depends on the content. Fast motion hides
-                artifacts, because no single frame is on screen long enough to inspect. A static
-                logo with crisp edges shows them immediately. That is precisely the judgement Smart
-                Compress automates.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">Frames you do not need</h3>
-              <p>
-                Many GIFs contain frames that are byte-for-byte, or near enough, identical to the
-                frame before them. Exporters produce these when a source video holds still, or when
-                a recording captures at a fixed rate while nothing happens on screen. Removing a
-                duplicate frame and extending the delay of the one before it is completely
-                invisible to the viewer and pure profit in file size. When there are no duplicates
-                but the GIF runs at a high frame rate over many frames, dropping every second frame
-                and doubling the delay halves the frame data at a modest cost in smoothness — a
-                trade most people accept for a chat attachment or a README animation.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">What Smart Compress measures</h3>
-              <p>
-                Before touching a single byte, ZipGIF decodes your GIF in a background worker and
-                measures four things. Motion average: the share of pixels that change between
-                consecutive frames. Motion variance: how uneven that change is across the
-                animation. Palette density: how many distinct colours the frames actually use
-                relative to the 256 available. And duplicate share: how many frames are
-                near-identical to their predecessor. Those four numbers map directly onto the four
-                levers above — lossy strength, colour count, transparency optimization and frame
-                dropping — which is why the explanation chip can tell you not just what it chose,
-                but the measurement that drove the choice.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">Hitting a specific size</h3>
-              <p>
-                Platforms impose hard limits: 256 KB for a Discord emoji, 15 MB for a Twitter GIF,
-                whatever your mail server allows for an attachment. There is no formula that turns
-                a target size into a lossy value, because the relationship depends entirely on the
-                content. The practical approach is search: compress, measure, adjust, repeat.
-                ZipGIF binary-searches the lossy range, narrowing in on the highest quality setting
-                whose output still fits under your limit, and falls back to palette reduction when
-                lossy alone cannot get there. Because everything runs locally, those repeated
-                passes cost you nothing but a few seconds of CPU.
-              </p>
-              <h3 className="text-xl font-semibold text-foreground">When not to use a GIF</h3>
-              <p>
-                It is worth saying plainly: if your destination supports MP4, WebM or animated WebP,
-                those formats will beat an optimized GIF by an order of magnitude. GIF survives
-                because it plays everywhere, autoplays silently, and pastes into places video
-                cannot. Compression is about making that compatibility affordable — getting the
-                file small enough to send, embed or upload without giving up the one thing GIF is
-                still uniquely good at.
-              </p>
+            <p className="mt-5 text-lg leading-relaxed">
+              GIF files are huge because the format stores every frame as a complete still image
+              with no motion prediction. The GIF89a specification dates from 1989 and was designed
+              for small looping graphics on dial-up, not for five seconds of 30 fps screen capture.
+              Modern codecs describe how pixels move; GIF can only describe pixels.
+            </p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              You can read the{" "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                original GIF89a specification
+              </a>{" "}
+              in about twenty minutes. It's a lovely document. It also never once anticipated
+              somebody pasting a 4K window recording into it.
+            </p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              The cost lands on page weight. The HTTP Archive's{" "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://almanac.httparchive.org/en/2022/page-weight"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                Web Almanac page weight chapter
+              </a>{" "}
+              tracks how images dominate transferred bytes across the web, and animated GIFs are the
+              worst offenders per second of content.
+            </p>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              So here's the honest part. If your destination supports MP4 or WebP, use them — Google's{" "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://web.dev/articles/replace-gifs-with-videos"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                replace GIFs with videos
+              </a>{" "}
+              guide exists for good reason, and the difference is an order of magnitude, not a few
+              percent. GIF survives because it autoplays silently and pastes anywhere. Compression is
+              how you make that convenience affordable.
+            </p>
+          </div>
+        </section>
+
+        <section aria-labelledby="compare" className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+          <h2 id="compare" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            ZipGIF vs other online GIF compressors
+          </h2>
+          <p className="mt-5 text-lg leading-relaxed">
+            Most online GIF compressors upload your file to their server, cap free use with daily
+            limits, and sometimes stamp output with a watermark. ZipGIF processes files in your
+            browser, accepts up to 200 MB per GIF, batches 20 at a time, and never adds branding.
+            The table below states what we do; competitor columns describe common free tiers, not any
+            named service.
+          </p>
+          <div className="mt-8 overflow-x-auto rounded-2xl border border-border">
+            <table className="w-full min-w-[620px] border-collapse text-left text-sm">
+              <caption className="sr-only">Feature comparison with typical online GIF compressors</caption>
+              <thead>
+                <tr className="bg-muted/50">
+                  <th scope="col" className="px-4 py-3 font-semibold">Feature</th>
+                  <th scope="col" className="px-4 py-3 font-semibold text-primary">ZipGIF</th>
+                  <th scope="col" className="px-4 py-3 font-semibold text-muted-foreground">
+                    Typical free compressor
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparison.map((row) => (
+                  <tr key={row.label} className="border-t border-border">
+                    <th scope="row" className="px-4 py-3 font-normal">{row.label}</th>
+                    <td className="px-4 py-3 font-medium">{row.zip}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{row.other}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-6 leading-relaxed text-muted-foreground">
+            What genuinely differs is the architecture, not a feature list. Because there's no
+            server, there's no queue, no upload wait on a slow connection, no file sitting in someone
+            else's bucket, and no reason for us to meter you. It also means the tool keeps working
+            when your wifi drops mid-flight.
+          </p>
+        </section>
+
+        <section aria-labelledby="study" className="border-y border-border bg-muted/30">
+          <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+            <h2 id="study" className="text-3xl font-bold tracking-tight sm:text-4xl">
+              We compressed 16 test GIFs and published every number
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed">
+              Across 16 GIFs covering screen recordings, talking heads, flat animation, photographic
+              pans and camera noise, our default settings cut the batch from 6.23 MB to 3.93 MB — a
+              37.0% reduction overall, 37.2% on average per file, with a median of 33.0%. The best
+              file dropped 69.4%. The worst dropped 3.6%.
+            </p>
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-card">
+              <table className="w-full min-w-[620px] border-collapse text-left text-sm">
+                <caption className="sr-only">Per-file results from our GIF compression test</caption>
+                <thead>
+                  <tr className="bg-muted/50">
+                    <th scope="col" className="px-4 py-3 font-semibold">Test GIF</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Before</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">After</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Reduction</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {study.map((s) => (
+                    <tr key={s.name} className="border-t border-border">
+                      <th scope="row" className="px-4 py-3 font-normal">{s.name}</th>
+                      <td className="px-4 py-3 text-muted-foreground">{s.before}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{s.after}</td>
+                      <td className="px-4 py-3 font-medium text-success">−{s.cut}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Method: 16 GIFs generated to represent common real-world content types, then processed
+              with Gifsicle 1.96 — the same engine this tool runs as WebAssembly — using{" "}
+              <code className="rounded bg-background px-1 py-0.5 text-xs">-O3 --lossy=120 --colors=64</code>
+              . Sizes are the actual bytes on disk before and after. Two takeaways surprised us:
+              duplicate-heavy progress bars gave the biggest wins, and dense confetti-style animation
+              barely compresses at all.
+            </p>
+            <p className="mt-2 text-sm font-medium">Last tested: {LAST_UPDATED}</p>
+          </div>
+        </section>
+
+        <section aria-labelledby="use-cases" className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <h2 id="use-cases" className="text-3xl font-bold tracking-tight sm:text-4xl">
+            When people reach for a GIF size reducer
+          </h2>
+          <p className="mt-5 max-w-3xl text-lg leading-relaxed">
+            Most people compress a GIF for one of six reasons: a chat app rejected the upload, an
+            email client choked, a page loaded slowly, a social platform mangled the colours, a
+            README needed a demo, or the footage was confidential. Each one wants slightly different
+            settings, and all six take about ten seconds here.
+          </p>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {useCases.map((u) => (
+              <article key={u.title} className="rounded-2xl border border-border bg-card p-6">
+                <span className="inline-flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <u.icon className="size-5" aria-hidden="true" />
+                </span>
+                <h3 className="mt-4 text-lg font-semibold">{u.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{u.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="coming" className="border-y border-border bg-muted/30">
+          <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6">
+            <h2 id="coming" className="text-3xl font-bold tracking-tight sm:text-4xl">
+              What we're building next
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed">
+              Compression is the first tool, not the last one. A GIF resizer, a GIF cropper, a GIF
+              trimmer and a speed changer are all in progress, and each will run client-side exactly
+              like this one. Everything below is honest roadmap, not a live feature.
+            </p>
+            <ul className="mt-6 grid gap-3 text-muted-foreground sm:grid-cols-2">
+              <li>
+                <strong className="text-foreground">Resize GIF</strong> — change GIF dimensions for
+                emotes and thumbnails, including an animated GIF resizer for Discord sizes.
+              </li>
+              <li>
+                <strong className="text-foreground">Trim GIF</strong> — cut a GIF or shorten a GIF to
+                the seconds that matter; a GIF shortener saves more than any slider.
+              </li>
+              <li>
+                <strong className="text-foreground">Crop GIF</strong> — a GIF cropper for removing
+                browser chrome from screen captures.
+              </li>
+              <li>
+                <strong className="text-foreground">Speed and quality</strong> — a GIF speed changer
+                to slow down or speed up a GIF, plus a GIF upscaler for tiny sources.
+              </li>
+            </ul>
           </div>
         </section>
 
         <Faq />
+
+        <section aria-labelledby="cta" className="mx-auto max-w-3xl px-4 pb-20 text-center sm:px-6">
+          <h2 id="cta" className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Go make that GIF smaller
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+            Scroll back up, drop your file into the GIF compressor, and you'll have a lighter version
+            before you've finished reading this sentence. Nothing to install, nothing to sign, and
+            nothing leaves your laptop.
+          </p>
+        </section>
       </main>
 
       <SiteFooter />
     </div>
-  );
-}
-
-function Mark({ yes }: { yes: boolean; muted?: boolean }) {
-  return yes ? (
-    <span className="inline-flex items-center gap-1.5 font-medium text-success">
-      <Check className="size-4" aria-hidden="true" />
-      Yes
-    </span>
-  ) : (
-    <span className="inline-flex items-center gap-1.5 font-medium text-muted-foreground">
-      <X className="size-4" aria-hidden="true" />
-      No
-    </span>
   );
 }

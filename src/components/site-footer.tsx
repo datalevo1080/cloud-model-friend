@@ -10,9 +10,13 @@ export function SiteFooter() {
             <span className="-ml-2 text-foreground">GIF</span>
           </div>
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <Link to="/compress-gif-for-discord" className="text-muted-foreground hover:text-foreground">
+              Compress GIF for Discord
+            </Link>
             <Link to="/about" className="text-muted-foreground hover:text-foreground">
               About
             </Link>
+
             <Link to="/privacy" className="text-muted-foreground hover:text-foreground">
               Privacy Policy
             </Link>
