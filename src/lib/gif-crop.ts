@@ -137,6 +137,81 @@ export async function detectContentBounds(file: File): Promise<CropRect | null> 
   return rect;
 }
 
+/**
+ * Maps a crop rect from one GIF's pixel space into another's, keeping the
+ * relative position and size. Used by "apply to all" when queued GIFs have
+ * different dimensions.
+ */
+export function scaleRect(
+  rect: CropRect,
+  fromW: number,
+  fromH: number,
+  toW: number,
+  toH: number,
+): CropRect {
+  if (!fromW || !fromH) return clampRect(rect, toW, toH);
+  const sx = toW / fromW;
+  const sy = toH / fromH;
+  return clampRect(
+    {
+      x: rect.x * sx,
+      y: rect.y * sy,
+      width: rect.width * sx,
+      height: rect.height * sy,
+    },
+    toW,
+    toH,
+  );
+}
+
+/**
+ * Rough output-size prediction before the crop runs. GIF bytes scale close to
+ * the kept pixel area, but headers, palettes and the re-optimization pass mean
+ * small crops never shrink fully proportionally — hence the floor and the
+ * deliberately wide low/high band.
+ */
+export function estimateCroppedSize(
+  originalBytes: number,
+  rect: CropRect,
+  width: number,
+  height: number,
+): { low: number; high: number; areaShare: number } {
+  const area = Math.max(1, width * height);
+  const share = Math.max(0, Math.min(1, (rect.width * rect.height) / area));
+  const overhead = Math.min(originalBytes, 1024 + originalBytes * 0.04);
+  const scalable = Math.max(0, originalBytes - overhead);
+  const mid = overhead + scalable * Math.pow(share, 0.92);
+  return {
+    low: Math.round(Math.min(originalBytes, mid * 0.82)),
+    high: Math.round(Math.min(originalBytes, mid * 1.15)),
+    areaShare: share,
+  };
+}
+
+/** `clip.gif` + 300x200 -> `clip-cropped-300x200.gif` */
+export function croppedFileName(name: string, rect: CropRect): string {
+  const dot = name.lastIndexOf(".");
+  const base = (dot > 0 ? name.slice(0, dot) : name).replace(/[\\/:*?"<>|]+/g, "_") || "gif";
+  const ext = dot > 0 ? name.slice(dot) : ".gif";
+  return `${base}-cropped-${Math.round(rect.width)}x${Math.round(rect.height)}${ext}`;
+}
+
+/** Ensures no two files in the same ZIP collide. */
+export function uniqueName(name: string, taken: Set<string>): string {
+  if (!taken.has(name)) {
+    taken.add(name);
+    return name;
+  }
+  const dot = name.lastIndexOf(".");
+  const base = dot > 0 ? name.slice(0, dot) : name;
+  const ext = dot > 0 ? name.slice(dot) : "";
+  let n = 2;
+  while (taken.has(`${base}-${n}${ext}`)) n++;
+  const out = `${base}-${n}${ext}`;
+  taken.add(out);
+  return out;
+}
+
 export const CROP_SUCCESS_LINES = [
   "Cropped. The boring pixels are gone.",
   "Trimmed to the good part. Animation intact.",
