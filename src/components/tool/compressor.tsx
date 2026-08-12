@@ -126,38 +126,50 @@ export function Compressor() {
     setItems((prev) => prev.map((i) => (i.id === id ? { ...i, ...next } : i)));
   }, []);
 
+  // One file at a time: reading + decoding several large GIFs in parallel is the
+  // main out-of-memory risk, so the analysis worker gets a strict serial queue.
+  const analyzeChain = useRef<Promise<void>>(Promise.resolve());
+
   const analyze = useCallback(
     (item: GifItem) => {
-      const worker = workerRef.current;
-      if (!worker) return;
-      item.file
-        .arrayBuffer()
-        .then((buffer) => {
-          const handler = (e: MessageEvent) => {
-            const data = e.data as { id: string; analysis?: GifAnalysis; error?: string };
-            if (data.id !== item.id) return;
-            worker.removeEventListener("message", handler);
-            if (data.analysis) {
-              patch(item.id, {
-                status: "ready",
-                analysis: data.analysis,
-                plan: planFromAnalysis(data.analysis),
+      analyzeChain.current = analyzeChain.current.then(
+        () =>
+          new Promise<void>((resolve) => {
+            const worker = workerRef.current;
+            if (!worker) return resolve();
+            item.file
+              .arrayBuffer()
+              .then((buffer) => {
+                const handler = (e: MessageEvent) => {
+                  const data = e.data as { id: string; analysis?: GifAnalysis; error?: string };
+                  if (data.id !== item.id) return;
+                  worker.removeEventListener("message", handler);
+                  if (data.analysis) {
+                    patch(item.id, {
+                      status: "ready",
+                      analysis: data.analysis,
+                      plan: planFromAnalysis(data.analysis),
+                    });
+                  } else {
+                    patch(item.id, {
+                      status: "error",
+                      error: "This file couldn't be read as a GIF. It may be corrupted.",
+                    });
+                  }
+                  resolve();
+                };
+                worker.addEventListener("message", handler);
+                worker.postMessage({ id: item.id, buffer }, [buffer]);
+              })
+              .catch(() => {
+                patch(item.id, { status: "error", error: "This file couldn't be read from disk." });
+                resolve();
               });
-            } else {
-              patch(item.id, {
-                status: "error",
-                error: "This file couldn't be read as a GIF. It may be corrupted.",
-              });
-            }
-          };
-          worker.addEventListener("message", handler);
-          worker.postMessage({ id: item.id, buffer }, [buffer]);
-        })
-        .catch(() =>
-          patch(item.id, { status: "error", error: "This file couldn't be read from disk." }),
-        );
+          }),
+      );
     },
     [patch],
+
   );
 
   const addFiles = useCallback(
