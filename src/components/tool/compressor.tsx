@@ -784,31 +784,68 @@ export function Compressor() {
   );
 }
 
+const STATUS_LABEL: Record<GifItem["status"], string> = {
+  analyzing: "Analyzing",
+  ready: "Ready",
+  queued: "Queued",
+  processing: "Compressing",
+  done: "Done",
+  error: "Failed",
+};
+
 function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
   const saving =
     item.resultSize !== undefined ? savingsPercent(item.size, item.resultSize) : undefined;
+  const [previewBroken, setPreviewBroken] = useState(false);
 
   return (
-    <article className="rounded-xl border border-border bg-background p-4">
+    <article
+      className="rounded-xl border border-border bg-background p-4"
+      aria-busy={item.status === "processing" || item.status === "analyzing"}
+      aria-label={`${item.file.name} — ${STATUS_LABEL[item.status]}`}
+    >
       <div className="flex flex-col gap-4 sm:flex-row">
-        <img
-          src={item.url}
-          alt={`Preview of ${item.file.name}`}
-          width={128}
-          height={96}
-          decoding="async"
-          className="h-24 w-full rounded-lg border border-border bg-muted object-contain sm:w-32"
-        />
+        {previewBroken ? (
+          <div
+            className="flex h-24 w-full items-center justify-center rounded-lg border border-border bg-muted text-xs text-muted-foreground sm:w-32"
+            role="img"
+            aria-label={`Preview unavailable for ${item.file.name}`}
+          >
+            No preview
+          </div>
+        ) : (
+          <img
+            src={item.url}
+            alt={`Animated preview of ${item.file.name}`}
+            width={128}
+            height={96}
+            decoding="async"
+            onError={() => setPreviewBroken(true)}
+            className="h-24 w-full rounded-lg border border-border bg-muted object-contain sm:w-32"
+          />
+        )}
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-3">
             <h3 className="truncate text-sm font-semibold" title={item.file.name}>
               {item.file.name}
             </h3>
+            <span
+              className={cn(
+                "shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold",
+                item.status === "error"
+                  ? "bg-destructive/15 text-destructive"
+                  : item.status === "done"
+                    ? "bg-success/15 text-success"
+                    : "bg-muted text-muted-foreground",
+              )}
+            >
+              {STATUS_LABEL[item.status]}
+            </span>
             <button
               type="button"
               onClick={onRemove}
-              aria-label={`Remove ${item.file.name}`}
-              className="ml-auto inline-flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              aria-label={`Remove ${item.file.name} from the queue`}
+              className="ml-auto inline-flex size-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               <Trash2 className="size-4" aria-hidden="true" />
             </button>
@@ -821,8 +858,10 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
                 {" · "}
                 {item.analysis.width}×{item.analysis.height}
                 {" · "}
-                {item.analysis.frameCount} frames{" · "}
-                {item.analysis.fps} fps
+                {item.analysis.frameCount === 1
+                  ? "1 frame (static)"
+                  : `${item.analysis.frameCount} frames`}
+                {item.analysis.fps > 0 && ` · ${item.analysis.fps} fps`}
               </>
             )}
             {item.status === "analyzing" && " · analyzing…"}
@@ -835,6 +874,13 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
             </p>
           )}
 
+          {item.warning && item.status !== "error" && (
+            <p className="mt-2 flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
+              <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+              {item.warning}
+            </p>
+          )}
+
           {(item.status === "processing" || item.status === "queued") && (
             <div className="mt-3">
               <div
@@ -842,6 +888,7 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={item.progress}
+                aria-valuetext={`${item.progress}% — ${item.statusText}`}
                 aria-label={`Compressing ${item.file.name}`}
                 className="h-2 w-full overflow-hidden rounded-full bg-muted"
               >
@@ -857,7 +904,10 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
           )}
 
           {item.status === "error" && (
-            <p className="mt-3 flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            <p
+              role="alert"
+              className="mt-3 flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+            >
               <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               {item.error}
             </p>
@@ -876,14 +926,15 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
                     : "bg-muted text-muted-foreground",
                 )}
               >
-                {saving && saving > 0 ? `−${saving}% smaller` : "Already optimal"}
+                {saving && saving > 0 ? `−${saving}% smaller` : "Already optimized"}
               </span>
               <a
                 href={item.resultUrl}
                 download={item.file.name.replace(/\.gif$/i, "") + "-zipgif.gif"}
-                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lift"
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lift focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
-                <Download className="size-4" aria-hidden="true" /> Download
+                <Download className="size-4" aria-hidden="true" />
+                {item.keptOriginal ? "Download original" : "Download"}
               </a>
               {item.statusText !== "Done" && (
                 <span className="w-full text-xs text-muted-foreground">{item.statusText}</span>
@@ -893,11 +944,12 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
         </div>
       </div>
 
-      {item.status === "done" && item.resultUrl && (
+      {item.status === "done" && item.resultUrl && !item.keptOriginal && (
         <div className="mt-4">
           <BeforeAfter beforeUrl={item.url} afterUrl={item.resultUrl} alt={item.file.name} />
         </div>
       )}
     </article>
+
   );
 }
