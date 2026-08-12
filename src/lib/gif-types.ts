@@ -55,7 +55,12 @@ export type GifItem = {
   resultUrl?: string;
   resultSize?: number;
   error?: string;
+  /** non-blocking note shown on the card (memory hints, truncated files) */
+  warning?: string;
+  /** compression made it bigger, so the original was kept */
+  keptOriginal?: boolean;
 };
+
 
 export const MAX_FILES = 20;
 export const MAX_BYTES = 200 * 1024 * 1024;
