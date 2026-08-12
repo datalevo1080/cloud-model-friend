@@ -16,9 +16,12 @@ import { cn } from "@/lib/utils";
 import {
   DEFAULT_METHOD,
   compressToTarget,
+  isEngineRequested,
   planFromAnalysis,
   runGifsicle,
+  warmupEngine,
 } from "@/lib/gif-engine";
+
 import {
   MAX_BYTES,
   MAX_FILES,
