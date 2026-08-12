@@ -512,11 +512,27 @@ export function Compressor() {
       if (!item) continue;
       // Drop the previous result before making a new one — no orphan blob URLs.
       if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
+      const passes = targetOn ? 6 : 1;
+      const startedAt = Date.now();
+      let predicted = throughput.current.predict(item.size, passes);
+      const remaining = () => Math.max(400, predicted - (Date.now() - startedAt));
+      const estimateForItem = estimateSavings(
+        item.size,
+        item.analysis,
+        smart && item.plan ? item.plan.method : method,
+        targetOn ? targetBytes : undefined,
+      );
       setItems((prev) =>
         prev.map((i) => {
           if (i.id !== item.id) return i;
           const { resultBlob: _b, resultUrl: _u, resultSize: _s, resultSignature: _g, ...rest } = i;
-          return { ...rest, status: "processing", progress: 4, statusText: STATUS_TEXTS[0]! };
+          return {
+            ...rest,
+            status: "processing",
+            progress: 4,
+            statusText: STATUS_TEXTS[0]!,
+            etaMs: predicted,
+          };
         }),
       );
 
@@ -530,6 +546,7 @@ export function Compressor() {
                   ...i,
                   statusText: STATUS_TEXTS[textIdx]!,
                   progress: Math.min(92, i.progress + 6),
+                  etaMs: remaining(),
                 }
               : i,
           ),
@@ -548,11 +565,16 @@ export function Compressor() {
             targetBytes,
             base,
             item.analysis,
-            (pass, maxPasses) =>
+            (pass, maxPasses) => {
+              // Re-anchor the countdown on measured pass time.
+              const elapsed = Date.now() - startedAt;
+              predicted = Math.max(predicted, (elapsed / pass) * maxPasses);
               patch(item.id, {
                 progress: Math.round((pass / maxPasses) * 95),
                 statusText: `Target pass ${pass} of ${maxPasses}…`,
-              }),
+                etaMs: remaining(),
+              });
+            },
             () => cancelRef.current,
           );
           blob = res.blob;
@@ -562,10 +584,11 @@ export function Compressor() {
         }
 
         window.clearInterval(ticker);
+        throughput.current.record(item.size, Date.now() - startedAt, passes);
 
         if (cancelRef.current) {
           canceledAny = true;
-          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled" });
+          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled", etaMs: 0 });
           break;
         }
 
@@ -579,17 +602,25 @@ export function Compressor() {
         patch(item.id, {
           status: "done",
           progress: 100,
+          etaMs: 0,
           resultBlob: finalBlob,
           resultUrl,
           resultSize: finalBlob.size,
           resultSignature: signature,
           keptOriginal,
+          reportMode: targetOn
+            ? `Target size ${formatBytes(targetBytes)}`
+            : smart && item.plan
+              ? "Smart Compress (AI)"
+              : "Manual",
+          reportConfidence: estimateForItem.confidence,
           statusText: keptOriginal
             ? "Already optimized — we kept your original"
             : hitTarget
               ? "Done"
               : "Smallest possible size reached — still above your target.",
         });
+
       } catch (err) {
         window.clearInterval(ticker);
         if (cancelRef.current || (err instanceof DOMException && err.name === "AbortError")) {
