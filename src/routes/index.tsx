@@ -86,6 +86,39 @@ const discordLimits = [
   { thing: "Sticker (PNG, APNG, GIF, Lottie)", limit: "512 KiB", note: "320×320 canvas" },
 ];
 
+const socialLimits = [
+  {
+    where: "X (Twitter) — web upload",
+    limit: "15 MB",
+    target: "5 MB",
+    why: "Also capped at 1280×1080 and 350 frames",
+  },
+  {
+    where: "X (Twitter) — iOS / Android app",
+    limit: "5 MB",
+    target: "5 MB",
+    why: "The mobile cap, and the safe number everywhere",
+  },
+  {
+    where: "WhatsApp — photo & video in chat",
+    limit: "16 MB",
+    target: "12 MB",
+    why: "WhatsApp re-encodes to MP4 and compresses again",
+  },
+  {
+    where: "WhatsApp — sent as a document",
+    limit: "2 GB",
+    target: "No limit in practice",
+    why: "No re-encode, but no inline autoplay either",
+  },
+  {
+    where: "WhatsApp — animated sticker",
+    limit: "500 KB",
+    target: "500 KB",
+    why: "512×512 animated WebP",
+  },
+];
+
 const platformLimits = [
   {
     platform: "Discord attachment",
