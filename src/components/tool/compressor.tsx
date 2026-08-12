@@ -15,12 +15,15 @@ import { formatBytes, savingsPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import {
   DEFAULT_METHOD,
+  EngineLoadError,
   compressToTarget,
   isEngineRequested,
   planFromAnalysis,
   runGifsicle,
   warmupEngine,
 } from "@/lib/gif-engine";
+import { hasGifMagicBytes } from "@/lib/gif-validate";
+
 
 import {
   MAX_BYTES,
@@ -47,16 +50,28 @@ const TARGET_PRESETS = [
 let idCounter = 0;
 const nextId = () => `gif-${++idCounter}-${Date.now()}`;
 
+const HUGE_BYTES = 100 * 1024 * 1024;
+
 function friendlyError(err: unknown): string {
+  if (err instanceof EngineLoadError) return err.message;
   const raw = err instanceof Error ? err.message : String(err);
-  if (/memory|allocation|abort/i.test(raw)) {
-    return "Your browser ran out of memory on this GIF. Try a smaller file, or compress it on a desktop browser.";
+  if (/memory|allocation|abort|out of bounds/i.test(raw)) {
+    return "Your browser ran out of memory on this GIF. Try Target file size mode, a smaller file, or a desktop browser.";
   }
-  if (/no frames|frame|parse|invalid|magic/i.test(raw)) {
+  if (/no frames|frame|parse|invalid|magic|corrupt/i.test(raw)) {
     return "This file looks corrupted or isn't a real GIF. Try re-exporting it.";
   }
   return "Compression failed for this file. Try adjusting the settings and running it again.";
 }
+
+function analysisError(code?: string): string {
+  if (code === "NOT_GIF")
+    return "This file isn't a real GIF — its contents don't match the .gif extension.";
+  if (code === "MEMORY")
+    return "This GIF is too large for your browser's memory. Try a smaller file or a desktop browser.";
+  return "This GIF looks corrupted or truncated, so it couldn't be read.";
+}
+
 
 export function Compressor() {
   const [items, setItems] = useState<GifItem[]>([]);
