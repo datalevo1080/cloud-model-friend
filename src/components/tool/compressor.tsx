@@ -793,7 +793,18 @@ export function Compressor() {
           {queueSummary}
         </p>
 
+        {settingsRestored && (
+          <p
+            className="mt-4 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary"
+            role="status"
+          >
+            Settings loaded from your shared link — mode, strength and frame options are already
+            set. Just add your GIFs.
+          </p>
+        )}
+
         {notices.length > 0 && (
+
           <div
             className="mt-4 rounded-xl border border-warning/40 bg-warning/10 p-3"
             role="status"
