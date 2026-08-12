@@ -1331,7 +1331,14 @@ function FileCard({
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
                 {item.progress}% · {item.statusText}
+                {item.status === "processing" && item.etaMs !== undefined && item.etaMs > 0 && (
+                  <>
+                    {" · "}
+                    <span className="font-medium text-foreground">{formatEta(item.etaMs)}</span>
+                  </>
+                )}
               </p>
+
             </div>
           )}
 
