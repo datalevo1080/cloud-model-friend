@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const faqs = [
+export const faqs = [
   {
     q: "Are my GIFs uploaded to a server?",
     a: "No. ZipGIF loads a WebAssembly build of Gifsicle into your browser and does all the work locally. Open your network tab while compressing — you will not see your file go anywhere. After the first visit the tool even works offline.",
