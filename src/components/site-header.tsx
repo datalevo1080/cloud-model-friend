@@ -3,9 +3,9 @@ import { Moon, Sun, Zap } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 
 const nav = [
-  { label: "GIF Compressor", href: "/", active: true },
+  { label: "GIF Compressor", href: "/" as const, active: true },
+  { label: "GIF Cropper", href: "/gif-cropper" as const },
   { label: "Resize", soon: true },
-  { label: "Crop", soon: true },
   { label: "Convert", soon: true },
 ];
 
@@ -42,9 +42,10 @@ export function SiteHeader() {
             ) : (
               <Link
                 key={item.label}
-                to="/"
-                aria-current="page"
-                className="rounded-lg bg-accent px-3 py-2 text-sm font-medium text-accent-foreground"
+                to={item.href!}
+                activeOptions={{ exact: true }}
+                activeProps={{ "aria-current": "page", className: "bg-accent text-accent-foreground" }}
+                className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
               >
                 {item.label}
               </Link>

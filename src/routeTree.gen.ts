@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CompressGifForDiscordRouteImport } from './routes/compress-gif-for-discord'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GifCropperRouteImport } from './routes/gif-cropper'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 
@@ -36,6 +37,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GifCropperRoute = GifCropperRouteImport.update({
+  id: '/gif-cropper',
+  path: '/gif-cropper',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/compress-gif-for-discord': typeof CompressGifForDiscordRoute
   '/contact': typeof ContactRoute
+  '/gif-cropper': typeof GifCropperRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/compress-gif-for-discord': typeof CompressGifForDiscordRoute
   '/contact': typeof ContactRoute
+  '/gif-cropper': typeof GifCropperRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/compress-gif-for-discord': typeof CompressGifForDiscordRoute
   '/contact': typeof ContactRoute
+  '/gif-cropper': typeof GifCropperRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compress-gif-for-discord'
     | '/contact'
+    | '/gif-cropper'
     | '/privacy'
     | '/terms'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compress-gif-for-discord'
     | '/contact'
+    | '/gif-cropper'
     | '/privacy'
     | '/terms'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compress-gif-for-discord'
     | '/contact'
+    | '/gif-cropper'
     | '/privacy'
     | '/terms'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CompressGifForDiscordRoute: typeof CompressGifForDiscordRoute
   ContactRoute: typeof ContactRoute
+  GifCropperRoute: typeof GifCropperRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
 }
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gif-cropper': {
+      id: '/gif-cropper'
+      path: '/gif-cropper'
+      fullPath: '/gif-cropper'
+      preLoaderRoute: typeof GifCropperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CompressGifForDiscordRoute: CompressGifForDiscordRoute,
   ContactRoute: ContactRoute,
+  GifCropperRoute: GifCropperRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
 }
