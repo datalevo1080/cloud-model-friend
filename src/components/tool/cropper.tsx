@@ -337,12 +337,7 @@ export function Cropper() {
   const runCrop = async () => {
     if (!current) return;
     const target = clampRect(rect, current.width, current.height);
-    const queue = applyToAll
-      ? items.filter(
-          (i) =>
-            i.status === "ready" && i.width === current.width && i.height === current.height,
-        )
-      : [current];
+    const queue = applyToAll ? items.filter((i) => i.status === "ready") : [current];
 
     for (const item of queue) {
       setItems((prev) =>
