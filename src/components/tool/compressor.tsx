@@ -193,11 +193,13 @@ export function Compressor() {
 
       setNotices(problems);
       if (accepted.length) {
+        ensureEngine();
         setItems((prev) => [...prev, ...accepted]);
         accepted.forEach(analyze);
       }
     },
-    [analyze],
+    [analyze, ensureEngine],
+
   );
 
   const remove = useCallback((id: string) => {
