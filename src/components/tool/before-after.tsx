@@ -10,10 +10,19 @@ export function BeforeAfter({
   beforeUrl,
   afterUrl,
   alt,
+  beforeLabel,
+  afterLabel,
+  savingLabel,
 }: {
   beforeUrl: string;
   afterUrl: string;
   alt: string;
+  /** original file size, shown on the "Original" chip */
+  beforeLabel?: string;
+  /** compressed file size, shown on the "Compressed" chip */
+  afterLabel?: string;
+  /** e.g. "−67% smaller", shown under the compressed side */
+  savingLabel?: string;
 }) {
   const [pos, setPos] = useState(50);
   const wrapRef = useRef<HTMLDivElement>(null);
