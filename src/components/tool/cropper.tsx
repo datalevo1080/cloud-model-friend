@@ -429,15 +429,21 @@ export function Cropper() {
     };
   }, [rect, current]);
 
-  const remainingSameSize = current
-    ? items.filter(
-        (i) =>
-          i.status === "ready" &&
-          i.id !== current.id &&
-          i.width === current.width &&
-          i.height === current.height,
-      ).length
-    : 0;
+  const estimate = useMemo(
+    () =>
+      current
+        ? estimateCroppedSize(current.size, rect, current.width, current.height)
+        : null,
+    [current, rect],
+  );
+
+  const remaining = current
+    ? items.filter((i) => i.status === "ready" && i.id !== current.id)
+    : [];
+  const remainingCount = remaining.length;
+  const remainingDifferent = remaining.filter(
+    (i) => current && (i.width !== current.width || i.height !== current.height),
+  ).length;
 
   const busy = items.some((i) => i.status === "cropping");
 
