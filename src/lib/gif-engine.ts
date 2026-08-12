@@ -137,6 +137,17 @@ async function getGifsicle(): Promise<GifsicleModule> {
   return gifsiclePromise;
 }
 
+/** True once the WASM engine chunk has been requested at least once. */
+export function isEngineRequested(): boolean {
+  return gifsiclePromise !== null;
+}
+
+/** Load the WASM engine ahead of time (idle prefetch or first file added). */
+export function warmupEngine(): Promise<unknown> {
+  return getGifsicle().catch(() => undefined);
+}
+
+
 const SAFE_NAME = "input.gif";
 
 export async function runGifsicle(
