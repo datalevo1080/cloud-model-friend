@@ -1243,7 +1243,14 @@ function FileCard({
 
       {item.status === "done" && item.resultUrl && !item.keptOriginal && (
         <div className="mt-4">
-          <BeforeAfter beforeUrl={item.url} afterUrl={item.resultUrl} alt={item.file.name} />
+          <BeforeAfter
+            beforeUrl={item.url}
+            afterUrl={item.resultUrl}
+            alt={item.file.name}
+            beforeLabel={formatBytes(item.size)}
+            {...(item.resultSize !== undefined ? { afterLabel: formatBytes(item.resultSize) } : {})}
+            {...(saving && saving > 0 ? { savingLabel: `−${saving}% smaller` } : {})}
+          />
         </div>
       )}
     </article>
