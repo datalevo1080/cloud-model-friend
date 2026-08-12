@@ -308,7 +308,11 @@ export function Cropper() {
 
     for (const item of queue) {
       setItems((prev) =>
-        prev.map((i) => (i.id === item.id ? { ...i, status: "cropping", error: undefined } : i)),
+        prev.map((i) => {
+          if (i.id !== item.id) return i;
+          const { error: _e, ...rest } = i;
+          return { ...rest, status: "cropping" as const };
+        }),
       );
       try {
         const blob = await cropGif(item.file, target);
