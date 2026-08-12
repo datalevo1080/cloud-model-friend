@@ -104,9 +104,27 @@ export function Compressor() {
   const [workerFailed, setWorkerFailed] = useState(false);
   // Session-only cache of the last generated .zip, keyed by the result set.
   const [zipCache, setZipCache] = useState<{ key: string; url: string } | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [settingsRestored, setSettingsRestored] = useState(false);
   const workerRef = useRef<Worker | null>(null);
+  // Learns this device's compression speed so the per-file countdown is real.
+  const throughput = useRef(new ThroughputModel());
   const itemsRef = useRef<GifItem[]>([]);
   itemsRef.current = items;
+
+  // Shareable settings links: read once on the client so SSR markup is stable.
+  useEffect(() => {
+    const restored = settingsFromSearch(window.location.search);
+    if (!restored) return;
+    setSmart(restored.smart);
+    setMethod(restored.method);
+    setTargetOn(restored.targetOn);
+    setTargetValue(restored.targetValue);
+    setTargetUnit(restored.targetUnit);
+    if (!restored.smart || restored.targetOn) setAdvancedOpen(true);
+    setSettingsRestored(true);
+  }, []);
+
 
   // Privacy-preserving engine cache: a service worker keeps the Gifsicle WASM
   // bundle in Cache Storage so repeat visits start instantly. No file data is
