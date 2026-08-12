@@ -205,7 +205,7 @@ const useCases = [
   {
     icon: Cpu,
     title: "Docs, READMEs and tutorials",
-    body: "GitHub renders GIFs inline, which makes them perfect for showing a CLI flow. Drop the frame rate to 12 fps and a 9 MB terminal recording lands near 2 MB.",
+    body: "GitHub renders GIFs inline, which makes them perfect for showing a CLI flow. Drop the frame rate to 12 fps and downsize the GIF to 800px wide, and a 9 MB terminal recording lands near 2 MB.",
   },
   {
     icon: ShieldCheck,
@@ -815,7 +815,7 @@ function Index() {
             ZipGIF vs other online GIF compressors
           </h2>
           <p className="mt-5 text-lg leading-relaxed">
-            Most online GIF compressors upload your file to their server, cap free use with daily
+            Most animated GIF compressors upload your file to their server, cap free use with daily
             limits, and sometimes stamp output with a watermark. ZipGIF processes files in your
             browser, accepts up to 200 MB per GIF, batches 20 at a time, and never adds branding.
             The table below states what we do; competitor columns describe common free tiers, not any
