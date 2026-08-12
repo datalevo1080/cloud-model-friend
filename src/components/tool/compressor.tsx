@@ -400,23 +400,89 @@ export function Compressor() {
     [targetValue, targetUnit],
   );
 
-  const compressAll = useCallback(async () => {
-    const queue = itemsRef.current.filter((i) => i.status === "ready" || i.status === "done");
-    if (!queue.length || running) return;
-    setRunning(true);
-    setNotices([]);
+  /**
+   * Fingerprint of the settings that produced a result. While it matches, the
+   * cached blob is reused for re-downloads and the .zip — no recompression.
+   */
+  const signatureFor = useCallback(
+    (item: GifItem) => {
+      const base: CompressMethod = smart && item.plan ? item.plan.method : method;
+      return JSON.stringify({ base, targetOn, targetBytes: targetOn ? targetBytes : 0 });
+    },
+    [method, smart, targetBytes, targetOn],
+  );
+
+  const cancelRef = useRef(false);
+
+  const cancel = useCallback(() => {
+    cancelRef.current = true;
+    // Free the analysis worker (and its decoded frames) right away.
+    killWorker();
     setItems((prev) =>
       prev.map((i) =>
-        i.status === "error" ? i : { ...i, status: "queued", progress: 0, statusText: "Queued…" },
+        i.status === "processing" || i.status === "queued"
+          ? { ...i, status: "canceled", progress: 0, statusText: "Canceled" }
+          : i,
+      ),
+    );
+  }, [killWorker]);
+
+  const compressAll = useCallback(async () => {
+    const candidates = itemsRef.current.filter(
+      (i) => i.status === "ready" || i.status === "done" || i.status === "canceled",
+    );
+    if (!candidates.length || running) return;
+
+    // Cache hit: everything already compressed with these exact settings.
+    const stale = candidates.filter((i) => i.resultSignature !== signatureFor(i));
+    if (!stale.length) {
+      setNotices([]);
+      setZipCache(null);
+      setItems((prev) =>
+        prev.map((i) =>
+          i.resultBlob ? { ...i, statusText: "Using your cached result — settings unchanged." } : i,
+        ),
+      );
+      return;
+    }
+
+    cancelRef.current = false;
+    setRunning(true);
+    setNotices([]);
+    setZipCache(null);
+    setItems((prev) =>
+      prev.map((i) =>
+        stale.some((s) => s.id === i.id)
+          ? { ...i, status: "queued", progress: 0, statusText: "Queued…" }
+          : i,
       ),
     );
 
     let bestSaving = 0;
+    let canceledAny = false;
 
-    for (const queued of queue) {
+    // MAX_CONCURRENCY is 1 by design: one GIF is decoded and encoded at a time
+    // so peak memory stays bounded no matter how big the batch is.
+    void MAX_CONCURRENCY;
+
+    for (const queued of stale) {
+      if (cancelRef.current) {
+        canceledAny = true;
+        break;
+      }
       const item = itemsRef.current.find((i) => i.id === queued.id);
       if (!item) continue;
-      patch(item.id, { status: "processing", progress: 4, statusText: STATUS_TEXTS[0]! });
+      // Drop the previous result before making a new one — no orphan blob URLs.
+      if (item.resultUrl) URL.revokeObjectURL(item.resultUrl);
+      patch(item.id, {
+        status: "processing",
+        progress: 4,
+        statusText: STATUS_TEXTS[0]!,
+        resultBlob: undefined,
+        resultUrl: undefined,
+        resultSize: undefined,
+        resultSignature: undefined,
+      });
 
       let textIdx = 0;
       const ticker = window.setInterval(() => {
@@ -436,6 +502,7 @@ export function Compressor() {
 
       try {
         const base: CompressMethod = smart && item.plan ? item.plan.method : method;
+        const signature = signatureFor(item);
         let blob: Blob;
         let hitTarget = true;
 
@@ -450,6 +517,7 @@ export function Compressor() {
                 progress: Math.round((pass / maxPasses) * 95),
                 statusText: `Target pass ${pass} of ${maxPasses}…`,
               }),
+            () => cancelRef.current,
           );
           blob = res.blob;
           hitTarget = res.hitTarget;
@@ -458,6 +526,12 @@ export function Compressor() {
         }
 
         window.clearInterval(ticker);
+
+        if (cancelRef.current) {
+          canceledAny = true;
+          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled" });
+          break;
+        }
 
         // Some GIFs are already optimal — re-encoding can make them bigger.
         // In that case we hand back the untouched original.
@@ -472,6 +546,7 @@ export function Compressor() {
           resultBlob: finalBlob,
           resultUrl,
           resultSize: finalBlob.size,
+          resultSignature: signature,
           keptOriginal,
           statusText: keptOriginal
             ? "Already optimized — we kept your original"
@@ -480,17 +555,38 @@ export function Compressor() {
               : "Smallest possible size reached — still above your target.",
         });
       } catch (err) {
-        // One failure must never stop the rest of the queue.
         window.clearInterval(ticker);
+        if (cancelRef.current || (err instanceof DOMException && err.name === "AbortError")) {
+          canceledAny = true;
+          patch(item.id, { status: "canceled", progress: 0, statusText: "Canceled" });
+          break;
+        }
+        // One failure must never stop the rest of the queue.
         patch(item.id, { status: "error", progress: 0, error: friendlyError(err) });
         if (err instanceof EngineLoadError) setEngineState("error");
       }
-
     }
 
+    if (cancelRef.current) {
+      setItems((prev) =>
+        prev.map((i) =>
+          i.status === "queued" || i.status === "processing"
+            ? { ...i, status: "canceled", progress: 0, statusText: "Canceled" }
+            : i,
+        ),
+      );
+      // A canceled worker was terminated — bring a fresh one back for the next run.
+      spawnWorker();
+    }
+
+    cancelRef.current = false;
     setRunning(false);
 
-    if (bestSaving > 50 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      !canceledAny &&
+      bestSaving > 50 &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 }, disableForReducedMotion: true });
