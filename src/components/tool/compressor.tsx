@@ -7,6 +7,7 @@ import {
   RotateCcw,
   Sparkles,
   Trash2,
+  ShieldCheck,
   Wand2,
   XCircle,
 } from "lucide-react";
@@ -18,15 +19,16 @@ import {
   DEFAULT_METHOD,
   EngineLoadError,
   compressToTarget,
+  estimateSavings,
   isEngineRequested,
   planFromAnalysis,
   runGifsicle,
+  shouldKeepOriginal,
   warmupEngine,
 } from "@/lib/gif-engine";
+import type { SavingsEstimate } from "@/lib/gif-engine";
 import { hasGifMagicBytes } from "@/lib/gif-validate";
 import { UrlFetchError, fetchGifFromUrl } from "@/lib/gif-url";
-
-
 
 import {
   MAX_BYTES,
@@ -81,7 +83,6 @@ function analysisError(code?: string): string {
   return "This GIF looks corrupted or truncated, so it couldn't be read.";
 }
 
-
 export function Compressor() {
   const [items, setItems] = useState<GifItem[]>([]);
   const [notices, setNotices] = useState<string[]>([]);
@@ -120,12 +121,16 @@ export function Compressor() {
       requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
     };
     const start = () => {
-      void warmupEngine().then((ok) => setEngineState((s) => (s === "idle" && ok ? s : ok ? "ready" : s)));
+      void warmupEngine().then((ok) =>
+        setEngineState((s) => (s === "idle" && ok ? s : ok ? "ready" : s)),
+      );
     };
     if (w.requestIdleCallback) {
       const handle = w.requestIdleCallback(start, { timeout: 6000 });
-      return () => (window as unknown as { cancelIdleCallback?: (h: number) => void })
-        .cancelIdleCallback?.(handle);
+      return () =>
+        (window as unknown as { cancelIdleCallback?: (h: number) => void }).cancelIdleCallback?.(
+          handle,
+        );
     }
     const t = window.setTimeout(start, 3000);
     return () => window.clearTimeout(t);
@@ -200,7 +205,10 @@ export function Compressor() {
 
   /** Runs one analysis pass with a hard timeout. Resolves null on stall/failure. */
   const analyzeOnce = useCallback(
-    (item: GifItem, buffer: ArrayBuffer): Promise<{ analysis?: GifAnalysis; code?: string } | null> =>
+    (
+      item: GifItem,
+      buffer: ArrayBuffer,
+    ): Promise<{ analysis?: GifAnalysis; code?: string } | null> =>
       new Promise((resolve) => {
         const worker = workerRef.current ?? spawnWorker();
         if (!worker) return resolve(null);
@@ -222,7 +230,10 @@ export function Compressor() {
         const handler = (e: MessageEvent) => {
           const data = e.data as { id: string; analysis?: GifAnalysis; code?: string };
           if (data.id !== item.id) return;
-          finish({ ...(data.analysis ? { analysis: data.analysis } : {}), ...(data.code ? { code: data.code } : {}) });
+          finish({
+            ...(data.analysis ? { analysis: data.analysis } : {}),
+            ...(data.code ? { code: data.code } : {}),
+          });
         };
         worker.addEventListener("message", handler);
         try {
@@ -376,7 +387,6 @@ export function Compressor() {
     },
     [addFiles],
   );
-
 
   const remove = useCallback((id: string) => {
     setItems((prev) => {
@@ -536,7 +546,7 @@ export function Compressor() {
 
         // Some GIFs are already optimal — re-encoding can make them bigger.
         // In that case we hand back the untouched original.
-        const keptOriginal = blob.size >= item.size;
+        const keptOriginal = shouldKeepOriginal(item.size, blob.size);
         const finalBlob: Blob = keptOriginal ? item.file : blob;
         const resultUrl = URL.createObjectURL(finalBlob);
         const saving = savingsPercent(item.size, finalBlob.size);
@@ -590,7 +600,12 @@ export function Compressor() {
     ) {
       try {
         const confetti = (await import("canvas-confetti")).default;
-        confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 }, disableForReducedMotion: true });
+        confetti({
+          particleCount: 70,
+          spread: 65,
+          origin: { y: 0.7 },
+          disableForReducedMotion: true,
+        });
       } catch {
         /* confetti is decorative only */
       }
@@ -642,7 +657,8 @@ export function Compressor() {
   const cachedCount = items.filter(
     (i) => i.status === "done" && i.resultSignature === signatureFor(i),
   ).length;
-  const allCached = cachedCount > 0 && cachedCount === items.filter((i) => i.status !== "error").length;
+  const allCached =
+    cachedCount > 0 && cachedCount === items.filter((i) => i.status !== "error").length;
 
   const queueSummary = running
     ? `Compressing file ${Math.min(doneCount + errorCount + 1, items.length)} of ${items.length}.`
@@ -710,8 +726,9 @@ export function Compressor() {
         {hasHuge && (
           <p className="mt-4 rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
             One or more files are over 100&nbsp;MB. They are processed one at a time to protect your
-            browser&rsquo;s memory — turn on <strong className="text-foreground">Target file size</strong>{" "}
-            for the most reliable result.
+            browser&rsquo;s memory — turn on{" "}
+            <strong className="text-foreground">Target file size</strong> for the most reliable
+            result.
           </p>
         )}
 
@@ -723,12 +740,25 @@ export function Compressor() {
           </p>
         )}
 
-
         {items.length > 0 && (
           <>
             <div className="mt-6 space-y-4">
               {items.map((item) => (
-                <FileCard key={item.id} item={item} onRemove={() => remove(item.id)} />
+                <FileCard
+                  key={item.id}
+                  item={item}
+                  estimate={
+                    item.status === "ready" || item.status === "canceled"
+                      ? estimateSavings(
+                          item.size,
+                          item.analysis,
+                          smart && item.plan ? item.plan.method : method,
+                          targetOn ? targetBytes : undefined,
+                        )
+                      : undefined
+                  }
+                  onRemove={() => remove(item.id)}
+                />
               ))}
             </div>
 
@@ -971,7 +1001,7 @@ export function Compressor() {
                 </button>
               )}
 
-              {doneCount > 1 && (
+              {doneCount > 0 && (
                 <button
                   type="button"
                   onClick={downloadAll}
@@ -1014,7 +1044,15 @@ const STATUS_LABEL: Record<GifItem["status"], string> = {
   canceled: "Canceled",
 };
 
-function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
+function FileCard({
+  item,
+  estimate,
+  onRemove,
+}: {
+  item: GifItem;
+  estimate?: SavingsEstimate | undefined;
+  onRemove: () => void;
+}) {
   const saving =
     item.resultSize !== undefined ? savingsPercent(item.size, item.resultSize) : undefined;
   const [previewBroken, setPreviewBroken] = useState(false);
@@ -1095,6 +1133,47 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
             </p>
           )}
 
+          {estimate && (
+            <div
+              className="mt-2 flex flex-wrap items-center gap-2 text-xs"
+              aria-live="polite"
+              aria-label={`Estimated savings for ${item.file.name}`}
+            >
+              <span className="rounded-md bg-muted px-2 py-1 font-semibold text-foreground">
+                Estimated{" "}
+                {estimate.high <= 0
+                  ? "no change"
+                  : estimate.low === estimate.high
+                    ? `−${estimate.high}%`
+                    : `−${estimate.low}% to −${estimate.high}%`}
+                {estimate.high > 0 && (
+                  <span className="font-normal text-muted-foreground">
+                    {" "}
+                    · about {formatBytes(Math.round(item.size * (1 - estimate.high / 100)))}
+                  </span>
+                )}
+              </span>
+              <span
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium",
+                  estimate.confidence === "high"
+                    ? "bg-success/15 text-success"
+                    : estimate.confidence === "medium"
+                      ? "bg-warning/15 text-warning-foreground"
+                      : "bg-muted text-muted-foreground",
+                )}
+              >
+                <ShieldCheck className="size-3.5" aria-hidden="true" />
+                {estimate.confidence === "high"
+                  ? "High confidence"
+                  : estimate.confidence === "medium"
+                    ? "Medium confidence"
+                    : "Low confidence"}
+              </span>
+              <span className="w-full text-muted-foreground">{estimate.note}</span>
+            </div>
+          )}
+
           {item.warning && item.status !== "error" && (
             <p className="mt-2 flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/10 px-3 py-2 text-xs text-warning-foreground">
               <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
@@ -1140,12 +1219,11 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
             </p>
           )}
 
-
-
           {item.status === "done" && item.resultUrl && item.resultSize !== undefined && (
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <span className="text-sm text-muted-foreground">
-                {formatBytes(item.size)} → <strong className="text-foreground">{formatBytes(item.resultSize)}</strong>
+                {formatBytes(item.size)} →{" "}
+                <strong className="text-foreground">{formatBytes(item.resultSize)}</strong>
               </span>
               <span
                 className={cn(
@@ -1175,10 +1253,16 @@ function FileCard({ item, onRemove }: { item: GifItem; onRemove: () => void }) {
 
       {item.status === "done" && item.resultUrl && !item.keptOriginal && (
         <div className="mt-4">
-          <BeforeAfter beforeUrl={item.url} afterUrl={item.resultUrl} alt={item.file.name} />
+          <BeforeAfter
+            beforeUrl={item.url}
+            afterUrl={item.resultUrl}
+            alt={item.file.name}
+            beforeLabel={formatBytes(item.size)}
+            {...(item.resultSize !== undefined ? { afterLabel: formatBytes(item.resultSize) } : {})}
+            {...(saving && saving > 0 ? { savingLabel: `−${saving}% smaller` } : {})}
+          />
         </div>
       )}
     </article>
-
   );
 }

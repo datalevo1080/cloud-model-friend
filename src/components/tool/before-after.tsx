@@ -10,10 +10,19 @@ export function BeforeAfter({
   beforeUrl,
   afterUrl,
   alt,
+  beforeLabel,
+  afterLabel,
+  savingLabel,
 }: {
   beforeUrl: string;
   afterUrl: string;
   alt: string;
+  /** original file size, shown on the "Original" chip */
+  beforeLabel?: string;
+  /** compressed file size, shown on the "Compressed" chip */
+  afterLabel?: string;
+  /** e.g. "−67% smaller", shown under the compressed side */
+  savingLabel?: string;
 }) {
   const [pos, setPos] = useState(50);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -103,11 +112,16 @@ export function BeforeAfter({
       </div>
 
       <span className="pointer-events-none absolute left-3 top-3 rounded-md bg-foreground/80 px-2 py-1 text-xs font-medium text-background">
-        Original
+        Original{beforeLabel ? ` · ${beforeLabel}` : ""}
       </span>
       <span className="pointer-events-none absolute right-3 top-3 rounded-md bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
-        Compressed
+        Compressed{afterLabel ? ` · ${afterLabel}` : ""}
       </span>
+      {savingLabel && (
+        <span className="pointer-events-none absolute bottom-3 right-3 rounded-md bg-success px-2 py-1 text-xs font-semibold text-success-foreground">
+          {savingLabel}
+        </span>
+      )}
 
       <div
         className="pointer-events-none absolute inset-y-0 w-0.5 bg-background shadow-[0_0_0_1px_var(--color-border)]"

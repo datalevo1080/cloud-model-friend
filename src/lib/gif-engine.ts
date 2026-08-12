@@ -225,3 +225,114 @@ export async function compressToTarget(
   if (lastAny) return { ...lastAny, hitTarget: false };
   throw new Error("Compression failed.");
 }
+
+export type SavingsEstimate = {
+  /** conservative end of the predicted reduction, 0-95 */
+  low: number;
+  /** optimistic end of the predicted reduction, 0-95 */
+  high: number;
+  confidence: "high" | "medium" | "low";
+  /** why the range and the confidence look the way they do */
+  note: string;
+};
+
+const clampPct = (n: number) => Math.max(0, Math.min(95, Math.round(n)));
+
+/**
+ * Predicts the reduction *before* any compression runs, from the measured GIF
+ * and the settings currently selected. Deliberately conservative: the estimate
+ * is only as good as the analysis behind it, which is what `confidence` says.
+ */
+export function estimateSavings(
+  sizeBytes: number,
+  analysis: GifAnalysis | undefined,
+  method: CompressMethod,
+  targetBytes?: number,
+): SavingsEstimate {
+  if (targetBytes && targetBytes > 0) {
+    const wanted = clampPct((1 - targetBytes / sizeBytes) * 100);
+    if (wanted <= 0) {
+      return {
+        low: 0,
+        high: 0,
+        confidence: "high",
+        note: "Already under your target size — nothing to do.",
+      };
+    }
+    const reachable = analysis ? (analysis.frameCount > 1 ? 80 : 55) : 70;
+    return {
+      low: wanted,
+      high: wanted,
+      confidence: wanted <= reachable ? "high" : "low",
+      note:
+        wanted <= reachable
+          ? "Target mode compresses in passes until the file fits."
+          : "That target is very aggressive for this file — expect quality loss or a near miss.",
+    };
+  }
+
+  // Lossy 5 barely moves the needle; 200 is destructive. Roughly linear between.
+  let low = 8 + (method.lossy / 200) * 42;
+  let high = low + 14;
+
+  if (method.colors && method.colors < 256) {
+    const bonus = method.colors <= 32 ? 18 : method.colors <= 64 ? 12 : 6;
+    low += bonus * 0.6;
+    high += bonus;
+  }
+
+  const frames = analysis?.frameCount ?? 0;
+  if (frames > 1) {
+    if (method.frameStep > 1) {
+      const dropped = (1 - 1 / method.frameStep) * 100;
+      low += dropped * 0.5;
+      high += dropped * 0.75;
+    }
+    if (method.dropDuplicates && analysis) {
+      low += analysis.duplicateShare * 60;
+      high += analysis.duplicateShare * 90;
+    }
+    if (!method.optimizeTransparency) {
+      low -= 6;
+      high -= 6;
+    }
+  }
+
+  let confidence: SavingsEstimate["confidence"];
+  let note: string;
+  if (!analysis || analysis.partial) {
+    confidence = "low";
+    note = "We couldn't fully read this GIF's frames, so this is a rough guess.";
+    low -= 10;
+    high += 10;
+  } else if (frames <= 1) {
+    confidence = "medium";
+    // A single-frame GIF has no inter-frame redundancy to exploit.
+    low = Math.min(low, 30);
+    high = Math.min(high, 45);
+    note = "Static GIF — only palette and lossy settings can help here.";
+  } else if (analysis.truncated) {
+    confidence = "medium";
+    note = "This GIF's frame data ends early, so the estimate is approximate.";
+  } else {
+    confidence = "high";
+    note = `Based on ${frames} analyzed frames at ${analysis.width}×${analysis.height}.`;
+  }
+
+  // Big files carry more redundancy, tiny ones are usually near their floor.
+  if (sizeBytes < 200 * 1024) {
+    low -= 8;
+    high -= 8;
+    if (confidence === "high") confidence = "medium";
+  }
+
+  return { low: clampPct(low), high: clampPct(Math.max(high, low + 5)), confidence, note };
+}
+
+/**
+ * Some GIFs are already at their floor — re-encoding then makes them *bigger*.
+ * When that happens we hand the untouched original back instead.
+ */
+export function shouldKeepOriginal(originalBytes: number, compressedBytes: number): boolean {
+  return compressedBytes >= originalBytes;
+}

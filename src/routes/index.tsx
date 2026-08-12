@@ -205,7 +205,7 @@ const useCases = [
   {
     icon: Cpu,
     title: "Docs, READMEs and tutorials",
-    body: "GitHub renders GIFs inline, which makes them perfect for showing a CLI flow. Drop the frame rate to 12 fps and a 9 MB terminal recording lands near 2 MB.",
+    body: "GitHub renders GIFs inline, which makes them perfect for showing a CLI flow. Drop the frame rate to 12 fps and downsize the GIF to 800px wide, and a 9 MB terminal recording lands near 2 MB.",
   },
   {
     icon: ShieldCheck,
@@ -470,8 +470,9 @@ function Index() {
 
           <h3 className="mt-8 text-xl font-semibold">Frame rate, duration and resolution</h3>
           <p className="mt-3 leading-relaxed text-muted-foreground">
-            Every frame is a full image, so animation duration and frame rate drive file size more
-            than anything else. Halving 30 fps to 15 fps halves the frame data. Cutting GIF
+            When you compress an animated GIF, duration and frame rate drive file size more than
+            anything else — every frame is a full still image. Halving 30 fps to 15 fps halves the
+            frame data. Cutting GIF
             resolution from 1200px to 600px wide removes three quarters of the pixels. Both feel
             drastic on paper and look completely fine in a chat window.
           </p>
@@ -815,7 +816,7 @@ function Index() {
             ZipGIF vs other online GIF compressors
           </h2>
           <p className="mt-5 text-lg leading-relaxed">
-            Most online GIF compressors upload your file to their server, cap free use with daily
+            Most animated GIF compressors upload your file to their server, cap free use with daily
             limits, and sometimes stamp output with a watermark. ZipGIF processes files in your
             browser, accepts up to 200 MB per GIF, batches 20 at a time, and never adds branding.
             The table below states what we do; competitor columns describe common free tiers, not any
