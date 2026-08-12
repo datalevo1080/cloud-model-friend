@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { filesFromDataTransfer } from "@/lib/gif-validate";
 
 export function DropZone({
   onFiles,
   disabled,
 }: {
-  onFiles: (files: File[]) => void;
+  onFiles: (files: File[]) => void | Promise<void>;
   disabled?: boolean;
 }) {
   const [dragging, setDragging] = useState(false);
@@ -16,7 +17,7 @@ export function DropZone({
     (list: FileList | File[] | null) => {
       if (!list) return;
       const files = Array.from(list);
-      if (files.length) onFiles(files);
+      if (files.length) void onFiles(files);
     },
     [onFiles],
   );
@@ -52,8 +53,14 @@ export function DropZone({
       onDrop={(e) => {
         e.preventDefault();
         setDragging(false);
-        if (!disabled) handle(e.dataTransfer.files);
+        if (disabled) return;
+        // Dropped folders arrive as directory entries — walk them for GIFs.
+        const dt = e.dataTransfer;
+        void filesFromDataTransfer(dt)
+          .then((files) => handle(files))
+          .catch(() => handle(dt.files));
       }}
+
       className={cn(
         "group relative flex min-h-52 w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-muted/30 px-6 py-10 text-center transition-colors",
         "hover:border-primary/60 hover:bg-primary/5",
