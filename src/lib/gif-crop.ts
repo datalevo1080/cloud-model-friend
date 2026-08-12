@@ -8,7 +8,12 @@ export type CropRect = { x: number; y: number; width: number; height: number };
 
 export const ASPECT_PRESETS = [
   { id: "free", label: "Free", ratio: null as number | null, hint: "No constraint — drag freely" },
-  { id: "1:1", label: "1:1", ratio: 1, hint: "Square — emotes and PFPs" },
+  {
+    id: "1:1",
+    label: "1:1",
+    ratio: 1,
+    hint: "Square now, circle later — platforms do the rounding.",
+  },
   { id: "16:9", label: "16:9", ratio: 16 / 9, hint: "Widescreen — screen recordings" },
   { id: "9:16", label: "9:16", ratio: 9 / 16, hint: "Vertical — phone and stories" },
   { id: "4:3", label: "4:3", ratio: 4 / 3, hint: "Classic — older captures" },
