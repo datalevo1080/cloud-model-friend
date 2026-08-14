@@ -17,6 +17,7 @@ export default defineConfig({
       { path: "/", prerender: { enabled: true } },
       { path: "/compress-gif-for-discord", prerender: { enabled: true } },
       { path: "/gif-cropper", prerender: { enabled: true } },
+      { path: "/gif-resizer", prerender: { enabled: true } },
       { path: "/about", prerender: { enabled: true } },
       { path: "/privacy", prerender: { enabled: true } },
       { path: "/terms", prerender: { enabled: true } },

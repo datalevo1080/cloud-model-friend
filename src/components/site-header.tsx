@@ -5,7 +5,7 @@ import { useTheme } from "@/lib/theme";
 const nav = [
   { label: "GIF Compressor", href: "/" as const, active: true },
   { label: "GIF Cropper", href: "/gif-cropper" as const },
-  { label: "Resize", soon: true },
+  { label: "GIF Resizer", href: "/gif-resizer" as const },
   { label: "Convert", soon: true },
 ];
 

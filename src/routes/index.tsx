@@ -958,6 +958,23 @@ function Index() {
 
         <Faq />
 
+        {/* Related tool */}
+        <section aria-labelledby="related-resizer" className="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 id="related-resizer" className="text-xl font-bold tracking-tight">
+              Need different dimensions instead?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              The{" "}
+              <Link to="/gif-resizer" className="text-primary underline-offset-4 hover:underline">
+                GIF resizer
+              </Link>{" "}
+              scales an animated GIF to exact pixels, a percentage, or a platform preset — same
+              engine, same browser-only privacy.
+            </p>
+          </div>
+        </section>
+
         <section aria-labelledby="cta" className="mx-auto max-w-3xl px-4 pb-20 text-center sm:px-6">
           <h2 id="cta" className="text-2xl font-bold tracking-tight sm:text-3xl">
             Go make that GIF smaller
