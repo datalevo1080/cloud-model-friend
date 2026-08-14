@@ -165,35 +165,26 @@ export function buildSpeedCommand(
 
   if (!plan.frames.length) {
     parts.push(inputName);
-  } else {
+  } else if (plan.keepEvery === 1) {
+    // Group consecutive frames that share a delay into one range.
     let runStart = 0;
-    for (let i = 0; i <= plan.frames.length; i++) {
+    for (let i = 1; i <= plan.frames.length; i++) {
       const cur = plan.frames[i];
-      const prev = plan.frames[i - 1];
+      const prev = plan.frames[i - 1]!;
+      if (cur && cur.delay === prev.delay) continue;
       const first = plan.frames[runStart]!;
-      const contiguous =
-        cur && prev && cur.delay === prev.delay && cur.index === prev.index + plan.keepEvery;
-      if (contiguous) continue;
-      if (prev) {
-        parts.push(`--delay ${first.delay}`, inputName);
-        parts.push(
-          first.index === prev.index
-            ? `#${first.index}`
-            : plan.keepEvery === 1
-              ? `#${first.index}-${prev.index}`
-              : rangeList(plan.frames.slice(runStart, i)),
-        );
-      }
+      parts.push(`--delay ${first.delay}`, inputName);
+      parts.push(first.index === prev.index ? `#${first.index}` : `#${first.index}-${prev.index}`);
       runStart = i;
+    }
+  } else {
+    for (const f of plan.frames) {
+      parts.push(`--delay ${f.delay}`, inputName, `#${f.index}`);
     }
   }
 
   parts.push("-O3", "-o", "/out/out.gif");
   return parts.join(" ");
-}
-
-function rangeList(frames: { index: number }[]): string {
-  return frames.map((f) => `#${f.index}`).join(" ");
 }
 
 export async function changeGifSpeed(
