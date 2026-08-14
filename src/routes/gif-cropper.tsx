@@ -545,6 +545,22 @@ function GifCropperPage() {
           <CropFaq />
         </section>
 
+        <section aria-labelledby="related-speed" className="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <h2 id="related-speed" className="text-xl font-bold tracking-tight">
+              Need it faster or slower instead?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              The{" "}
+              <Link to="/gif-speed-changer" className="text-primary underline-offset-4 hover:underline">
+                GIF speed changer
+              </Link>{" "}
+              re-times an animated GIF from 0.1× to 8× and sets how it loops — same engine, same
+              browser-only privacy.
+            </p>
+          </div>
+        </section>
+
         {/* Related tool */}
         <section aria-labelledby="related-resizer" className="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
           <div className="rounded-2xl border border-border bg-card p-6">

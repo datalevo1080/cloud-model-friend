@@ -633,6 +633,19 @@ function GifResizerPage() {
             </div>
             <div className="rounded-2xl border border-border bg-card p-6">
               <h3 className="text-lg font-semibold">
+                <Link
+                  to="/gif-speed-changer"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  GIF speed changer
+                </Link>
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Re-time the animation from 0.1× to 8× and pick how many times it loops.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <h3 className="text-lg font-semibold">
                 <Link to="/gif-cropper" className="text-primary underline-offset-4 hover:underline">
                   GIF cropper
                 </Link>

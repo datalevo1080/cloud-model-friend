@@ -16,6 +16,9 @@ export function SiteFooter() {
             <Link to="/gif-resizer" className="text-muted-foreground hover:text-foreground">
               GIF Resizer
             </Link>
+            <Link to="/gif-speed-changer" className="text-muted-foreground hover:text-foreground">
+              GIF Speed Changer
+            </Link>
             <Link to="/compress-gif-for-discord" className="text-muted-foreground hover:text-foreground">
               Compress GIF for Discord
             </Link>
