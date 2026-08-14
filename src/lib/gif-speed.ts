@@ -198,6 +198,7 @@ export async function changeGifSpeed(
 export function formatSeconds(ms: number): string {
   if (!Number.isFinite(ms) || ms <= 0) return "0s";
   const s = ms / 1000;
+  if (s < 1) return `${s.toFixed(2)}s`;
   return `${s < 10 ? s.toFixed(1) : Math.round(s)}s`;
 }
 
