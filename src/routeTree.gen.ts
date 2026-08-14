@@ -15,6 +15,7 @@ import { Route as CompressGifForDiscordRouteImport } from './routes/compress-gif
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GifCropperRouteImport } from './routes/gif-cropper'
 import { Route as GifResizerRouteImport } from './routes/gif-resizer'
+import { Route as GifSpeedChangerRouteImport } from './routes/gif-speed-changer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 
@@ -48,6 +49,11 @@ const GifResizerRoute = GifResizerRouteImport.update({
   path: '/gif-resizer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GifSpeedChangerRoute = GifSpeedChangerRouteImport.update({
+  id: '/gif-speed-changer',
+  path: '/gif-speed-changer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
+  '/gif-speed-changer': typeof GifSpeedChangerRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
+  '/gif-speed-changer': typeof GifSpeedChangerRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
+  '/gif-speed-changer': typeof GifSpeedChangerRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gif-cropper'
     | '/gif-resizer'
+    | '/gif-speed-changer'
     | '/privacy'
     | '/terms'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gif-cropper'
     | '/gif-resizer'
+    | '/gif-speed-changer'
     | '/privacy'
     | '/terms'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/gif-cropper'
     | '/gif-resizer'
+    | '/gif-speed-changer'
     | '/privacy'
     | '/terms'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   GifCropperRoute: typeof GifCropperRoute
   GifResizerRoute: typeof GifResizerRoute
+  GifSpeedChangerRoute: typeof GifSpeedChangerRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GifResizerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gif-speed-changer': {
+      id: '/gif-speed-changer'
+      path: '/gif-speed-changer'
+      fullPath: '/gif-speed-changer'
+      preLoaderRoute: typeof GifSpeedChangerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   GifCropperRoute: GifCropperRoute,
   GifResizerRoute: GifResizerRoute,
+  GifSpeedChangerRoute: GifSpeedChangerRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
 }
