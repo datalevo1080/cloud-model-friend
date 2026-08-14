@@ -616,6 +616,63 @@ export function Resizer() {
         </div>
       )}
 
+      {items.length > 0 && (
+        <section aria-labelledby="rs-queue" className="rounded-xl border border-border bg-card p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 id="rs-queue" className="text-sm font-semibold">
+              Queue ({items.length} {items.length === 1 ? "GIF" : "GIFs"})
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Settings above apply to every GIF in the queue. Files are resized one at a time.
+            </p>
+          </div>
+          <ul className="mt-4 divide-y divide-border">
+            {items.map((i) => {
+              const dims = predictDimensions(spec, i.width, i.height);
+              return (
+                <li key={i.id} className="flex flex-wrap items-center gap-3 py-3 text-sm">
+                  <img
+                    src={i.url}
+                    alt=""
+                    width={40}
+                    height={40}
+                    decoding="async"
+                    className="size-10 shrink-0 rounded-md border border-border object-cover"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-medium text-foreground">
+                      {i.file.name}
+                    </span>
+                    <span className="block text-xs text-muted-foreground">
+                      {i.width}×{i.height}px · {formatBytes(i.size)} → {dims.width}×{dims.height}px
+                      {i.status === "working" && ` · ${i.statusText ?? "Working…"}`}
+                      {i.status === "done" && ` · done, ${formatBytes(i.resultSize ?? 0)}`}
+                      {i.status === "error" && " · failed"}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(i.id)}
+                    disabled={busy}
+                    className="min-h-11 rounded-lg px-3 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-50"
+                  >
+                    Remove
+                    <span className="sr-only"> {i.file.name} from the queue</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          {items.length < MAX_FILES && (
+            <div className="mt-4">
+              <DropZone onFiles={addFiles} onUrl={addFromUrl} compact />
+            </div>
+          )}
+        </section>
+      )}
+
+
+
       {items.some((i) => i.status === "working") && (
         <ul aria-live="polite" className="space-y-2">
           {items
