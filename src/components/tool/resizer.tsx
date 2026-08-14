@@ -267,7 +267,19 @@ export function Resizer() {
     }
   };
 
+  const removeItem = (id: string) => {
+    setItems((prev) => {
+      const gone = prev.find((i) => i.id === id);
+      if (gone) {
+        URL.revokeObjectURL(gone.url);
+        if (gone.resultUrl) URL.revokeObjectURL(gone.resultUrl);
+      }
+      return prev.filter((i) => i.id !== id);
+    });
+  };
+
   const reset = () => {
+
     for (const i of itemsRef.current) {
       URL.revokeObjectURL(i.url);
       if (i.resultUrl) URL.revokeObjectURL(i.resultUrl);
