@@ -665,7 +665,7 @@ export function Resizer() {
           </ul>
           {items.length < MAX_FILES && (
             <div className="mt-4">
-              <DropZone onFiles={addFiles} onUrl={addFromUrl} compact />
+              <DropZone onFiles={addFiles} disabled={busy} />
             </div>
           )}
         </section>
