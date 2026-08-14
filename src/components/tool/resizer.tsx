@@ -34,13 +34,13 @@ type ResizeItem = {
   width: number;
   height: number;
   status: "ready" | "working" | "done" | "error";
-  statusText?: string;
-  resultUrl?: string;
-  resultBlob?: Blob;
-  resultSize?: number;
-  outWidth?: number;
-  outHeight?: number;
-  error?: string;
+  statusText?: string | undefined;
+  resultUrl?: string | undefined;
+  resultBlob?: Blob | undefined;
+  resultSize?: number | undefined;
+  outWidth?: number | undefined;
+  outHeight?: number | undefined;
+  error?: string | undefined;
 };
 
 async function readDimensions(url: string): Promise<{ width: number; height: number }> {
