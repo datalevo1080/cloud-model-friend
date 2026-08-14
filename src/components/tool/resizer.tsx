@@ -101,7 +101,9 @@ export function Resizer() {
     const accepted: ResizeItem[] = [];
     const existing = itemsRef.current.length;
 
+    console.log('DBG addFiles', files.length, files.map(f=>f.name));
     for (const file of files) {
+      console.log('DBG loop', file.name);
       if (existing + accepted.length >= MAX_FILES) {
         skips.push(`"${file.name}" — the queue is full at ${MAX_FILES} GIFs.`);
         continue;
@@ -121,6 +123,7 @@ export function Resizer() {
       const url = URL.createObjectURL(file);
       try {
         const { width: w, height: h } = await readDimensions(url);
+        console.log('DBG dims', file.name, w, h);
         accepted.push({
           id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
           file,
