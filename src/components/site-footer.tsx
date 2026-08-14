@@ -13,6 +13,9 @@ export function SiteFooter() {
             <Link to="/gif-cropper" className="text-muted-foreground hover:text-foreground">
               GIF Cropper
             </Link>
+            <Link to="/gif-resizer" className="text-muted-foreground hover:text-foreground">
+              GIF Resizer
+            </Link>
             <Link to="/compress-gif-for-discord" className="text-muted-foreground hover:text-foreground">
               Compress GIF for Discord
             </Link>
