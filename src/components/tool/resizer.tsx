@@ -388,7 +388,10 @@ export function Resizer() {
 
             {upscaling && (
               <p className="mt-3 rounded-xl border border-warning/50 bg-warning/10 px-4 py-3 text-sm text-warning-foreground">
-                Upscaling can't add detail — your GIF may look blurry and the file will get bigger.
+                <span title="We checked. Physics said no.">
+                  Upscaling can't add detail — your GIF may look blurry and the file will get
+                  bigger.
+                </span>
               </p>
             )}
 
@@ -708,6 +711,9 @@ export function Resizer() {
 
       {done.length > 0 && (
         <section aria-label="Resized results" aria-live="polite" className="space-y-4">
+          {done.length >= 5 && (
+            <p className="text-sm text-muted-foreground">That's a lot of GIFs. Respect.</p>
+          )}
           {done.length > 1 && (
             <button
               type="button"

@@ -63,6 +63,14 @@ export const PRESETS: Preset[] = [
   },
   { id: "slack-emoji", label: "Slack Emoji", width: 128, height: 128, square: true, note: "128×128" },
   {
+    id: "twitch-emote",
+    label: "Twitch Emote",
+    width: 112,
+    height: 112,
+    square: true,
+    note: "112×112 · Twitch scales to 56 and 28",
+  },
+  {
     id: "telegram-sticker",
     label: "Telegram Sticker",
     width: 512,
