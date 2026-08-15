@@ -254,7 +254,13 @@ export function Trimmer() {
             >
               Keeping frames {range.start + 1}–{range.end + 1} ({kept} of {frames.length}) —{" "}
               {formatDuration(keptMs)} of {formatDuration(totalMs)}
+              {kept === frames.length && frames.length > 0 && (
+                <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                  That's the whole GIF. Nothing to trim.
+                </span>
+              )}
             </p>
+
 
             {/* timeline strip */}
             <div
