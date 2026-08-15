@@ -307,11 +307,13 @@ export function SpeedChanger() {
                   <button
                     type="button"
                     onClick={download}
+                    aria-label={`Download ${speedFileName(item.file.name, factor)}`}
                     className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   >
                     <Download className="size-4" aria-hidden="true" /> Download GIF
                   </button>
                 </div>
+
               </div>
             )}
           </div>
