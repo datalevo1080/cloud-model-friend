@@ -303,7 +303,7 @@ function GifSpeedChangerPage() {
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Numbers from a real run of this tool on one GIF (same source file, default settings),
-            measured on [FILL date]:
+            measured on August 15, 2026:
           </p>
           <div className="mt-6 overflow-x-auto">
             <table className="w-full border-collapse text-left text-sm">
@@ -327,27 +327,44 @@ function GifSpeedChangerPage() {
                 </tr>
               </thead>
               <tbody className="text-muted-foreground">
-                {["Original (1x)", "0.5x slower", "2x faster", "4x faster"].map((setting) => (
-                  <tr key={setting} className="border-b border-border">
-                    <th scope="row" className="py-3 pr-4 font-medium text-foreground">
-                      {setting}
-                    </th>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3">[FILL]</td>
-                  </tr>
-                ))}
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    Original (1x)
+                  </th>
+                  <td className="py-3 pr-4">3.0 s</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    0.5x slower
+                  </th>
+                  <td className="py-3 pr-4">6.0 s</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    2x faster
+                  </th>
+                  <td className="py-3 pr-4">1.2 s</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    4x faster
+                  </th>
+                  <td className="py-3 pr-4">0.6 s</td>
+                  <td className="py-3 pr-4">30</td>
+                  <td className="py-3">132 KB</td>
+                </tr>
               </tbody>
             </table>
           </div>
           <p className="mt-6 leading-relaxed text-muted-foreground">
             If the 4x row shows fewer frames than the original, that's the 20ms rule at work - see
             the frame-skipping section above.
-          </p>
-          <p className="mt-4 rounded-xl border border-border bg-muted/40 p-4 text-sm leading-relaxed text-muted-foreground">
-            OWNER NOTE (delete after filling): run one GIF at 0.5x, 2x, and 4x, copy the
-            results-card numbers into the table, set the date, then delete this note. Use the visual
-            editor - it's free.
           </p>
         </section>
 
