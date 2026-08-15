@@ -25,6 +25,12 @@ export function SiteFooter() {
             <Link to="/gif-trimmer" className="text-muted-foreground hover:text-foreground">
               GIF Trimmer
             </Link>
+            <Link to="/png-to-gif" className="text-muted-foreground hover:text-foreground">
+              PNG to GIF
+            </Link>
+            <Link to="/gif-to-png" className="text-muted-foreground hover:text-foreground">
+              GIF to PNG
+            </Link>
             <Link to="/compress-gif-for-discord" className="text-muted-foreground hover:text-foreground">
               Compress GIF for Discord
             </Link>
