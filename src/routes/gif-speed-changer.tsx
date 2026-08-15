@@ -366,9 +366,6 @@ function GifSpeedChangerPage() {
             If the 4x row shows fewer frames than the original, that's the 20ms rule at work - see
             the frame-skipping section above.
           </p>
-          <p className="mt-4 rounded-xl border border-border bg-muted/40 p-4 text-sm leading-relaxed text-muted-foreground">
-            {"\n"}
-          </p>
         </section>
 
         <section aria-labelledby="faqs" className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">
