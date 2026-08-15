@@ -603,7 +603,7 @@ function GifCropperPage() {
             one click away.
           </p>
           <p className="mt-6 text-sm text-muted-foreground">
-            Last updated: {LAST_UPDATED} — written and maintained by Shafiullah Tareen.
+            Last updated: August 14, 2026&nbsp;- Built by Shafiullah Tareen.
           </p>
         </section>
       </main>
