@@ -370,7 +370,7 @@ function GifTrimmerPage() {
             support.google.com - measurements from this tool.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Last updated: [FILL date] - Built by Shafiullah Tareen.
+            Last updated: August 14, 2026&nbsp;- Built by Shafiullah Tareen.
           </p>
         </section>
       </main>
