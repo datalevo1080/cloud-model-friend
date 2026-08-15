@@ -177,7 +177,7 @@ export function PngToGif() {
             : "That conversion failed. Try fewer or smaller images.",
       );
     } finally {
-      setStatus("working" === status ? "idle" : "idle");
+      setStatus("idle");
       setProgress(100);
     }
   };
