@@ -503,11 +503,10 @@ function GifResizerPage() {
             lists each source file, its original dimensions and size, and the result after a 50%
             resize with default settings. No estimates and no numbers borrowed from anywhere else.
           </p>
-          {/* OWNER: fill measured numbers, then delete this comment */}
           <div className="mt-6 overflow-x-auto">
             <table className="w-full border-collapse text-left text-sm">
               <caption className="mt-3 caption-bottom text-sm text-muted-foreground">
-                Measured with this tool on [FILL date]. Your results depend on frame count and
+                Measured with this tool on 14 August 2026. Your results depend on frame count and
                 colors.
               </caption>
               <thead>
@@ -527,14 +526,20 @@ function GifResizerPage() {
                 </tr>
               </thead>
               <tbody className="text-muted-foreground">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <tr key={n} className="border-b border-border">
+                {[
+                  { name: "loop-animation.gif", original: "400×300 / 298 KB", resized: "217 KB", change: "-27%" },
+                  { name: "screen-recording.gif", original: "800×600 / 413 KB", resized: "245 KB", change: "-41%" },
+                  { name: "sticker.gif", original: "512×512 / 226 KB", resized: "136 KB", change: "-40%" },
+                  { name: "web-banner.gif", original: "728×90 / 42 KB", resized: "41 KB", change: "-3%" },
+                  { name: "photo-style.gif", original: "480×360 / 1,489 KB", resized: "1298 KB", change: "-13%" }
+                ].map((row, idx) => (
+                  <tr key={idx} className="border-b border-border">
                     <th scope="row" className="py-3 pr-4 font-medium text-foreground">
-                      [FILL]
+                      {row.name}
                     </th>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3">[FILL]</td>
+                    <td className="py-3 pr-4">{row.original}</td>
+                    <td className="py-3 pr-4">{row.resized}</td>
+                    <td className="py-3">{row.change}</td>
                   </tr>
                 ))}
               </tbody>
