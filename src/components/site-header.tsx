@@ -9,7 +9,8 @@ const nav = [
   { label: "GIF Speed Changer", href: "/gif-speed-changer" as const },
   { label: "GIF Splitter", href: "/gif-splitter" as const },
   { label: "GIF Trimmer", href: "/gif-trimmer" as const },
-  { label: "Convert", soon: true },
+  { label: "PNG to GIF", href: "/png-to-gif" as const },
+  { label: "GIF to PNG", href: "/gif-to-png" as const },
 ];
 
 export function SiteHeader() {
