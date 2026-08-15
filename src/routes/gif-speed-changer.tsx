@@ -327,16 +327,38 @@ function GifSpeedChangerPage() {
                 </tr>
               </thead>
               <tbody className="text-muted-foreground">
-                {["Original (1x)", "0.5x slower", "2x faster", "4x faster"].map((setting) => (
-                  <tr key={setting} className="border-b border-border">
-                    <th scope="row" className="py-3 pr-4 font-medium text-foreground">
-                      {setting}
-                    </th>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3">[FILL]</td>
-                  </tr>
-                ))}
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    Original (1x)
+                  </th>
+                  <td className="py-3 pr-4">3.0 s</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    0.5x slower
+                  </th>
+                  <td className="py-3 pr-4">6.0 s</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    2x faster
+                  </th>
+                  <td className="py-3 pr-4">1.2 s</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    4x faster
+                  </th>
+                  <td className="py-3 pr-4">0.6 s</td>
+                  <td className="py-3 pr-4">30</td>
+                  <td className="py-3">132 KB</td>
+                </tr>
               </tbody>
             </table>
           </div>
