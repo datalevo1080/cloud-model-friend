@@ -7,6 +7,8 @@ const nav = [
   { label: "GIF Cropper", href: "/gif-cropper" as const },
   { label: "GIF Resizer", href: "/gif-resizer" as const },
   { label: "GIF Speed Changer", href: "/gif-speed-changer" as const },
+  { label: "GIF Splitter", href: "/gif-splitter" as const },
+  { label: "GIF Trimmer", href: "/gif-trimmer" as const },
   { label: "Convert", soon: true },
 ];
 
