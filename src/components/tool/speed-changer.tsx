@@ -321,13 +321,18 @@ export function SpeedChanger() {
           {/* controls */}
           <div className="space-y-5 rounded-xl border border-border bg-card p-5">
             <div>
-              <h3 className="text-sm font-semibold">Speed</h3>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <h3 id="sp-speed-heading" className="text-sm font-semibold">Speed</h3>
+              <div
+                className="mt-2 flex flex-wrap gap-2"
+                role="group"
+                aria-labelledby="sp-speed-heading"
+              >
                 {SPEED_CHIPS.map((s) => (
                   <button
                     key={s}
                     type="button"
                     aria-pressed={factor === s}
+                    aria-label={`Set speed to ${s} times`}
                     onClick={() => setFactor(s)}
                     className={cn(
                       "min-h-11 rounded-lg border px-3 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
@@ -351,11 +356,18 @@ export function SpeedChanger() {
                 max={MAX_FACTOR}
                 step={0.05}
                 value={factor}
+                title="Past 8x, physics files a complaint."
+                aria-label="Custom speed factor"
+                aria-describedby="sp-custom-hint"
+                aria-valuetext={`${factor} times speed`}
                 onChange={(e) => setFactor(Number(e.target.value))}
                 className="mt-2 w-full accent-[var(--color-primary)]"
               />
-              <p className="mt-1 text-xs text-muted-foreground">0.1× to 8×</p>
+              <p id="sp-custom-hint" className="mt-1 text-xs text-muted-foreground">
+                0.1× to 8× — past 8x, physics files a complaint.
+              </p>
             </div>
+
 
             <div>
               <h3 className="text-sm font-semibold">Looping</h3>
