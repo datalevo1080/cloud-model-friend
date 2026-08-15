@@ -611,8 +611,9 @@ function GifResizerPage() {
               </a>
             </li>
           </ul>
-          <p className="mt-4 text-sm text-muted-foreground">Last updated: {UPDATED_LABEL}</p>
-          <p className="mt-1 text-sm text-muted-foreground">by Shafiullah Tareen</p>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Last updated: August 14, 2026&nbsp;- Built by Shafiullah Tareen.
+          </p>
         </section>
 
         {/* S12 */}

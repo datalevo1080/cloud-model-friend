@@ -20,7 +20,7 @@ const TITLE = "GIF Compressor — Compress GIFs Online Free (No Watermark)";
 const DESCRIPTION =
   "Free online GIF compressor. Reduce GIF file size without losing quality — for Discord, email and the web. No signup, no watermark, nothing uploaded.";
 const OG_IMAGE = `${SITE}/og-image.jpg`;
-const LAST_UPDATED = "August 2026";
+const LAST_UPDATED = "August 14, 2026";
 const MODIFIED = "2026-08-12";
 
 const howToSteps = [
@@ -999,6 +999,9 @@ function Index() {
             Scroll back up, drop your file into the GIF compressor, and you'll have a lighter version
             before you've finished reading this sentence. Nothing to install, nothing to sign, and
             nothing leaves your laptop.
+          </p>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Last updated: August 14, 2026&nbsp;- Built by Shafiullah Tareen.
           </p>
         </section>
       </main>
