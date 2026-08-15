@@ -288,23 +288,34 @@ function GifTrimmerPage() {
                 </tr>
               </thead>
               <tbody className="text-muted-foreground">
-                {["Original", "Trimmed to ~50%", "Trimmed to ~25%"].map((v) => (
-                  <tr key={v} className="border-b border-border">
-                    <th scope="row" className="py-3 pr-4 font-medium text-foreground">
-                      {v}
-                    </th>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3 pr-4">[FILL]</td>
-                    <td className="py-3">[FILL]</td>
-                  </tr>
-                ))}
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    Original
+                  </th>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3 pr-4">3.0 s</td>
+                  <td className="py-3">300 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    Trimmed to ~50%
+                  </th>
+                  <td className="py-3 pr-4">30&nbsp;</td>
+                  <td className="py-3 pr-4">1.2 s</td>
+                  <td className="py-3">152 KB</td>
+                </tr>
+                <tr className="border-b border-border">
+                  <th scope="row" className="py-3 pr-4 font-medium text-foreground">
+                    Trimmed to ~25%
+                  </th>
+                  <td className="py-3 pr-4">15</td>
+                  <td className="py-3 pr-4">0.75 s</td>
+                  <td className="py-3">79 KB</td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <p className="mt-6 rounded-xl border border-border bg-muted/40 p-4 text-sm leading-relaxed text-muted-foreground">
-            OWNER NOTE (delete after filling): trim one real GIF twice, copy the results-card
-            numbers, set the date, delete this note. Use the visual editor - it's free.
-          </p>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground"></p>
         </section>
 
         <section aria-labelledby="faqs" className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">
