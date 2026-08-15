@@ -303,7 +303,7 @@ function GifSpeedChangerPage() {
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Numbers from a real run of this tool on one GIF (same source file, default settings),
-            measured on [FILL date]:
+            measured on August 15, 2026:
           </p>
           <div className="mt-6 overflow-x-auto">
             <table className="w-full border-collapse text-left text-sm">
