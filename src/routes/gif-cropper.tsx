@@ -9,7 +9,7 @@ const PATH = "/gif-cropper";
 const TITLE = "GIF Cropper — Crop GIFs Online Free (No Watermark)";
 const DESCRIPTION =
   "Free online GIF cropper. Crop animated GIFs in your browser — keep the animation, lose the borders. Square, 16:9 and PFP presets. No signup, no watermark.";
-const LAST_UPDATED = "August 2026";
+const LAST_UPDATED = "August 14, 2026";
 const DATE_MODIFIED = "2026-08-12";
 
 const HOW_TO_STEPS = [

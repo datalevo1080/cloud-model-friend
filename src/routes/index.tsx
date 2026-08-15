@@ -20,7 +20,7 @@ const TITLE = "GIF Compressor — Compress GIFs Online Free (No Watermark)";
 const DESCRIPTION =
   "Free online GIF compressor. Reduce GIF file size without losing quality — for Discord, email and the web. No signup, no watermark, nothing uploaded.";
 const OG_IMAGE = `${SITE}/og-image.jpg`;
-const LAST_UPDATED = "August 2026";
+const LAST_UPDATED = "August 14, 2026";
 const MODIFIED = "2026-08-12";
 
 const howToSteps = [
