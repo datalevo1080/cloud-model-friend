@@ -30,31 +30,20 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Tools" className="ml-2 hidden items-center gap-1 md:flex">
-          {nav.map((item) =>
-            item.soon ? (
-              <span
-                key={item.label}
-                aria-disabled="true"
-                title={`${item.label} — coming soon`}
-                className="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-muted-foreground"
-              >
-                {item.label}
-                <span className="ml-1.5 rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
-                  Soon
-                </span>
-              </span>
-            ) : (
-              <Link
-                key={item.label}
-                to={item.href!}
-                activeOptions={{ exact: true }}
-                activeProps={{ "aria-current": "page", className: "bg-accent text-accent-foreground" }}
-                className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {nav.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              activeOptions={{ exact: true }}
+              activeProps={{
+                "aria-current": "page",
+                className: "bg-accent text-accent-foreground",
+              }}
+              className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <button
