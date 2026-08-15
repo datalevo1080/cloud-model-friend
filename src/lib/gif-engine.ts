@@ -187,6 +187,27 @@ export async function runGifsicleCommand(
   return result;
 }
 
+/**
+ * Same as `runGifsicleCommand` but keeps every output file — used by commands
+ * like `--explode` that write one file per frame.
+ */
+export async function runGifsicleMulti(
+  file: File,
+  build: (inputName: string) => string,
+): Promise<File[]> {
+  const gifsicle = await getGifsicle();
+  const out = await gifsicle.run({
+    input: [{ file, name: SAFE_NAME }],
+    command: [build(SAFE_NAME)],
+    isStrict: false,
+  });
+  const files = (out ?? []).filter((f) => f && f.size > 0);
+  if (!files.length) throw new Error("Gifsicle returned no output.");
+  return files.slice().sort((a, b) => a.name.localeCompare(b.name));
+}
+
+
+
 
 export async function runGifsicle(
   file: File,
