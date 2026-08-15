@@ -16,6 +16,8 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as GifCropperRouteImport } from './routes/gif-cropper'
 import { Route as GifResizerRouteImport } from './routes/gif-resizer'
 import { Route as GifSpeedChangerRouteImport } from './routes/gif-speed-changer'
+import { Route as GifSplitterRouteImport } from './routes/gif-splitter'
+import { Route as GifTrimmerRouteImport } from './routes/gif-trimmer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 
@@ -54,6 +56,16 @@ const GifSpeedChangerRoute = GifSpeedChangerRouteImport.update({
   path: '/gif-speed-changer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GifSplitterRoute = GifSplitterRouteImport.update({
+  id: '/gif-splitter',
+  path: '/gif-splitter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GifTrimmerRoute = GifTrimmerRouteImport.update({
+  id: '/gif-trimmer',
+  path: '/gif-trimmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -73,6 +85,8 @@ export interface FileRoutesByFullPath {
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
+  '/gif-splitter': typeof GifSplitterRoute
+  '/gif-trimmer': typeof GifTrimmerRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -84,6 +98,8 @@ export interface FileRoutesByTo {
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
+  '/gif-splitter': typeof GifSplitterRoute
+  '/gif-trimmer': typeof GifTrimmerRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -96,6 +112,8 @@ export interface FileRoutesById {
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
+  '/gif-splitter': typeof GifSplitterRoute
+  '/gif-trimmer': typeof GifTrimmerRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -109,6 +127,8 @@ export interface FileRouteTypes {
     | '/gif-cropper'
     | '/gif-resizer'
     | '/gif-speed-changer'
+    | '/gif-splitter'
+    | '/gif-trimmer'
     | '/privacy'
     | '/terms'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +140,8 @@ export interface FileRouteTypes {
     | '/gif-cropper'
     | '/gif-resizer'
     | '/gif-speed-changer'
+    | '/gif-splitter'
+    | '/gif-trimmer'
     | '/privacy'
     | '/terms'
   id:
@@ -131,6 +153,8 @@ export interface FileRouteTypes {
     | '/gif-cropper'
     | '/gif-resizer'
     | '/gif-speed-changer'
+    | '/gif-splitter'
+    | '/gif-trimmer'
     | '/privacy'
     | '/terms'
   fileRoutesById: FileRoutesById
@@ -143,6 +167,8 @@ export interface RootRouteChildren {
   GifCropperRoute: typeof GifCropperRoute
   GifResizerRoute: typeof GifResizerRoute
   GifSpeedChangerRoute: typeof GifSpeedChangerRoute
+  GifSplitterRoute: typeof GifSplitterRoute
+  GifTrimmerRoute: typeof GifTrimmerRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
 }
@@ -198,6 +224,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GifSpeedChangerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gif-splitter': {
+      id: '/gif-splitter'
+      path: '/gif-splitter'
+      fullPath: '/gif-splitter'
+      preLoaderRoute: typeof GifSplitterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gif-trimmer': {
+      id: '/gif-trimmer'
+      path: '/gif-trimmer'
+      fullPath: '/gif-trimmer'
+      preLoaderRoute: typeof GifTrimmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -223,6 +263,8 @@ const rootRouteChildren: RootRouteChildren = {
   GifCropperRoute: GifCropperRoute,
   GifResizerRoute: GifResizerRoute,
   GifSpeedChangerRoute: GifSpeedChangerRoute,
+  GifSplitterRoute: GifSplitterRoute,
+  GifTrimmerRoute: GifTrimmerRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
 }
