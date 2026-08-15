@@ -275,19 +275,16 @@ function GifSplitterPage() {
               <tbody className="text-muted-foreground">
                 <tr className="border-b border-border">
                   <th scope="row" className="py-3 pr-4 font-medium text-foreground">
-                    [FILL name/size]
+                    test-animation.gif (400×300, 3.0s, 300 KB)
                   </th>
-                  <td className="py-3 pr-4">[FILL]</td>
-                  <td className="py-3 pr-4">[FILL]</td>
-                  <td className="py-3">[FILL]</td>
+                  <td className="py-3 pr-4">60</td>
+                  <td className="py-3 pr-4">112 KB</td>
+                  <td className="py-3">0.2&nbsp; s</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p className="mt-6 rounded-xl border border-border bg-muted/40 p-4 text-sm leading-relaxed text-muted-foreground">
-            OWNER NOTE (delete after filling): split one real GIF, copy the numbers, set the date,
-            delete this note. Use the visual editor - it's free.
-          </p>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground"></p>
         </section>
 
         <section aria-labelledby="faqs" className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">
