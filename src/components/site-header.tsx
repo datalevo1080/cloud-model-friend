@@ -9,7 +9,8 @@ const nav = [
   { label: "GIF Speed Changer", href: "/gif-speed-changer" as const },
   { label: "GIF Splitter", href: "/gif-splitter" as const },
   { label: "GIF Trimmer", href: "/gif-trimmer" as const },
-  { label: "Convert", soon: true },
+  { label: "PNG to GIF", href: "/png-to-gif" as const },
+  { label: "GIF to PNG", href: "/gif-to-png" as const },
 ];
 
 export function SiteHeader() {
@@ -29,31 +30,20 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Tools" className="ml-2 hidden items-center gap-1 md:flex">
-          {nav.map((item) =>
-            item.soon ? (
-              <span
-                key={item.label}
-                aria-disabled="true"
-                title={`${item.label} — coming soon`}
-                className="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-muted-foreground"
-              >
-                {item.label}
-                <span className="ml-1.5 rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide">
-                  Soon
-                </span>
-              </span>
-            ) : (
-              <Link
-                key={item.label}
-                to={item.href!}
-                activeOptions={{ exact: true }}
-                activeProps={{ "aria-current": "page", className: "bg-accent text-accent-foreground" }}
-                className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {nav.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              activeOptions={{ exact: true }}
+              activeProps={{
+                "aria-current": "page",
+                className: "bg-accent text-accent-foreground",
+              }}
+              className="rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <button

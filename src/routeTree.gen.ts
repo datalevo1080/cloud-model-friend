@@ -17,7 +17,9 @@ import { Route as GifCropperRouteImport } from './routes/gif-cropper'
 import { Route as GifResizerRouteImport } from './routes/gif-resizer'
 import { Route as GifSpeedChangerRouteImport } from './routes/gif-speed-changer'
 import { Route as GifSplitterRouteImport } from './routes/gif-splitter'
+import { Route as GifToPngRouteImport } from './routes/gif-to-png'
 import { Route as GifTrimmerRouteImport } from './routes/gif-trimmer'
+import { Route as PngToGifRouteImport } from './routes/png-to-gif'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 
@@ -61,9 +63,19 @@ const GifSplitterRoute = GifSplitterRouteImport.update({
   path: '/gif-splitter',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GifToPngRoute = GifToPngRouteImport.update({
+  id: '/gif-to-png',
+  path: '/gif-to-png',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GifTrimmerRoute = GifTrimmerRouteImport.update({
   id: '/gif-trimmer',
   path: '/gif-trimmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PngToGifRoute = PngToGifRouteImport.update({
+  id: '/png-to-gif',
+  path: '/png-to-gif',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -86,7 +98,9 @@ export interface FileRoutesByFullPath {
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
   '/gif-splitter': typeof GifSplitterRoute
+  '/gif-to-png': typeof GifToPngRoute
   '/gif-trimmer': typeof GifTrimmerRoute
+  '/png-to-gif': typeof PngToGifRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -99,7 +113,9 @@ export interface FileRoutesByTo {
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
   '/gif-splitter': typeof GifSplitterRoute
+  '/gif-to-png': typeof GifToPngRoute
   '/gif-trimmer': typeof GifTrimmerRoute
+  '/png-to-gif': typeof PngToGifRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -113,7 +129,9 @@ export interface FileRoutesById {
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
   '/gif-splitter': typeof GifSplitterRoute
+  '/gif-to-png': typeof GifToPngRoute
   '/gif-trimmer': typeof GifTrimmerRoute
+  '/png-to-gif': typeof PngToGifRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
 }
@@ -128,7 +146,9 @@ export interface FileRouteTypes {
     | '/gif-resizer'
     | '/gif-speed-changer'
     | '/gif-splitter'
+    | '/gif-to-png'
     | '/gif-trimmer'
+    | '/png-to-gif'
     | '/privacy'
     | '/terms'
   fileRoutesByTo: FileRoutesByTo
@@ -141,7 +161,9 @@ export interface FileRouteTypes {
     | '/gif-resizer'
     | '/gif-speed-changer'
     | '/gif-splitter'
+    | '/gif-to-png'
     | '/gif-trimmer'
+    | '/png-to-gif'
     | '/privacy'
     | '/terms'
   id:
@@ -154,7 +176,9 @@ export interface FileRouteTypes {
     | '/gif-resizer'
     | '/gif-speed-changer'
     | '/gif-splitter'
+    | '/gif-to-png'
     | '/gif-trimmer'
+    | '/png-to-gif'
     | '/privacy'
     | '/terms'
   fileRoutesById: FileRoutesById
@@ -168,7 +192,9 @@ export interface RootRouteChildren {
   GifResizerRoute: typeof GifResizerRoute
   GifSpeedChangerRoute: typeof GifSpeedChangerRoute
   GifSplitterRoute: typeof GifSplitterRoute
+  GifToPngRoute: typeof GifToPngRoute
   GifTrimmerRoute: typeof GifTrimmerRoute
+  PngToGifRoute: typeof PngToGifRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
 }
@@ -231,11 +257,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GifSplitterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gif-to-png': {
+      id: '/gif-to-png'
+      path: '/gif-to-png'
+      fullPath: '/gif-to-png'
+      preLoaderRoute: typeof GifToPngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gif-trimmer': {
       id: '/gif-trimmer'
       path: '/gif-trimmer'
       fullPath: '/gif-trimmer'
       preLoaderRoute: typeof GifTrimmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/png-to-gif': {
+      id: '/png-to-gif'
+      path: '/png-to-gif'
+      fullPath: '/png-to-gif'
+      preLoaderRoute: typeof PngToGifRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -264,7 +304,9 @@ const rootRouteChildren: RootRouteChildren = {
   GifResizerRoute: GifResizerRoute,
   GifSpeedChangerRoute: GifSpeedChangerRoute,
   GifSplitterRoute: GifSplitterRoute,
+  GifToPngRoute: GifToPngRoute,
   GifTrimmerRoute: GifTrimmerRoute,
+  PngToGifRoute: PngToGifRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
 }
