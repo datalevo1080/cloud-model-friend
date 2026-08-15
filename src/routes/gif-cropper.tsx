@@ -576,7 +576,21 @@ function GifCropperPage() {
               engine, same browser-only privacy.
             </p>
           </div>
+          <div className="mt-4 rounded-2xl border border-border bg-card p-6">
+            <h2 id="related-trimmer" className="text-xl font-bold tracking-tight">
+              Need to cut the timeline instead?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              The{" "}
+              <Link to="/gif-trimmer" className="text-primary underline-offset-4 hover:underline">
+                GIF trimmer
+              </Link>{" "}
+              keeps only the frames you pick and leaves their timing alone — same engine, same
+              browser-only privacy.
+            </p>
+          </div>
         </section>
+
 
         {/* Section 10 — CTA */}
         <section aria-labelledby="crop-cta" className="mx-auto max-w-3xl px-4 pb-20 pt-4 sm:px-6">
