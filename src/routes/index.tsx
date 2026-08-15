@@ -1000,6 +1000,9 @@ function Index() {
             before you've finished reading this sentence. Nothing to install, nothing to sign, and
             nothing leaves your laptop.
           </p>
+          <p className="mt-6 text-sm text-muted-foreground">
+            Last updated: August 14, 2026&nbsp;- Built by Shafiullah Tareen.
+          </p>
         </section>
       </main>
 
