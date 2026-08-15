@@ -367,9 +367,7 @@ function GifSpeedChangerPage() {
             the frame-skipping section above.
           </p>
           <p className="mt-4 rounded-xl border border-border bg-muted/40 p-4 text-sm leading-relaxed text-muted-foreground">
-            OWNER NOTE (delete after filling): run one GIF at 0.5x, 2x, and 4x, copy the
-            results-card numbers into the table, set the date, then delete this note. Use the visual
-            editor - it's free.
+            {"\n"}
           </p>
         </section>
 
