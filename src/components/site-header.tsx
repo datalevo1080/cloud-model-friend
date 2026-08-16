@@ -3,7 +3,7 @@ import { Moon, Sun, Zap } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 
 const nav = [
-  { label: "GIF Compressor", href: "/" as const, active: true },
+  { label: "GIF Compressor", href: "/gif-compressor" as const, active: true },
   { label: "GIF Cropper", href: "/gif-cropper" as const },
   { label: "GIF Resizer", href: "/gif-resizer" as const },
   { label: "GIF Speed Changer", href: "/gif-speed-changer" as const },
