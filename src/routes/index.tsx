@@ -21,7 +21,7 @@ import { CompressionDemo } from "@/components/home/compression-demo";
 const SITE = "https://zipgif.com";
 const TITLE = "ZipGIF — Free Online GIF Tools That Never Upload Your Files";
 const DESCRIPTION =
-  "Compress, crop, resize, speed up, split, trim and convert GIFs online for free. Every ZipGIF tool runs in your browser — no uploads, no watermark, no signup.";
+  "Compress, crop, resize, speed up, split, trim and convert GIFs online for free. Every ZipGIF tool runs in your browser, with no uploads, no watermark and no signup.";
 const OG_IMAGE = `${SITE}/og-image.jpg`;
 const LAST_UPDATED = "August 16, 2026";
 
@@ -237,7 +237,7 @@ function Home() {
 
               <p className="mt-6 max-w-xl text-lg text-hero-muted text-pretty">
                 ZipGIF is a set of eight GIF tools that run entirely inside your browser. Compress,
-                crop, resize, retime, split and convert — free, without a watermark, without an
+                crop, resize, retime, split and convert. Free, without a watermark, without an
                 account, and without a single byte being uploaded.
               </p>
 
