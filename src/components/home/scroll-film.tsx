@@ -66,8 +66,9 @@ const CARDS = 15;
 function draw(ctx: CanvasRenderingContext2D, w: number, h: number, p: number) {
   ctx.clearRect(0, 0, w, h);
 
+  const small = w < 640;
   const cx = w / 2;
-  const cy = h / 2;
+  const cy = h * (small ? 0.36 : 0.46);
   const e = easeInOut(p);
 
   // Ambient glow behind the stack.
@@ -78,7 +79,7 @@ function draw(ctx: CanvasRenderingContext2D, w: number, h: number, p: number) {
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, w, h);
 
-  const cardW = Math.min(w * 0.34, 420);
+  const cardW = small ? w * 0.62 : Math.min(w * 0.34, 420);
   const cardH = cardW * 0.6;
   const spread = 1 - 0.93 * e;
   const colours = Math.round(20 - 16 * clamp01((p - 0.18) / 0.5));
