@@ -321,8 +321,15 @@ function Home() {
           aria-label="How a GIF gets smaller, step by step"
           className="relative bg-hero text-hero-foreground"
         >
+          <a
+            href="#tools"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground"
+          >
+            Skip the animation
+          </a>
           <ScrollFilm />
         </section>
+
 
         {/* ---------------- The settle ---------------- */}
         <section className="relative overflow-hidden bg-hero text-hero-foreground">
