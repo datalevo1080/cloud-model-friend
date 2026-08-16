@@ -460,7 +460,13 @@ export function PngToGif() {
                   >
                     <Download className="size-4" aria-hidden="true" /> Download GIF
                   </button>
+                  {result.frames === 1 && (
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      That&apos;s one PNG in, one GIF out. Add more images and it animates.
+                    </p>
+                  )}
                 </div>
+
               </div>
             </div>
           )}
