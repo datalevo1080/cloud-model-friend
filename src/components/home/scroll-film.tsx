@@ -308,6 +308,16 @@ export function ScrollFilm() {
           className="absolute inset-0 size-full"
         />
 
+        {/* Text alternative: the full journey for screen readers and keyboard users,
+            who never scrub the canvas. */}
+        <ol className="sr-only">
+          {BANDS.map((b) => (
+            <li key={b.kicker}>
+              <strong>{b.line}</strong> {b.sub}
+            </li>
+          ))}
+        </ol>
+
         {/* Caption band, held in the empty space under the stack. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 top-auto p-4 pb-14 sm:p-8 sm:pb-20">
           <div className="mx-auto max-w-6xl">
