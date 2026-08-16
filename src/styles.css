@@ -357,3 +357,56 @@
     transform: none;
   }
 }
+
+/* ---------- Scroll film: caption bands, drawn lines, whisper motion ---------- */
+@keyframes zg-band-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+.zg-band {
+  animation: zg-band-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.zg-draw {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: 1600;
+  opacity: 0.35;
+  transition: stroke-dashoffset 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.zg-draw[data-on="true"] {
+  stroke-dashoffset: 0;
+}
+
+@keyframes zg-whisper {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate3d(6px, -14px, 0);
+    opacity: 0.75;
+  }
+}
+.zg-whisper {
+  animation: zg-whisper 11s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zg-band {
+    animation: none;
+  }
+  .zg-draw {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+}
