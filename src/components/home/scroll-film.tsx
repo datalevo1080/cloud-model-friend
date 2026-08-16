@@ -61,9 +61,25 @@ function roundRect(
   ctx.closePath();
 }
 
-const CARDS = 15;
+/** Rendering budget, lowered on small or low-core devices so mid-range phones stay at 60fps. */
+export type Quality = { cards: number; cols: number; rows: number; shadows: boolean; dpr: number };
 
-function draw(ctx: CanvasRenderingContext2D, w: number, h: number, p: number) {
+function pickQuality(width: number): Quality {
+  const cores = typeof navigator !== "undefined" ? (navigator.hardwareConcurrency ?? 4) : 4;
+  const lean = width < 900 || cores <= 4;
+  return lean
+    ? { cards: 8, cols: 8, rows: 4, shadows: false, dpr: 1 }
+    : { cards: 15, cols: 12, rows: 6, shadows: true, dpr: 2 };
+}
+
+function draw(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  p: number,
+  q: Quality,
+) {
+  const CARDS = q.cards;
   ctx.clearRect(0, 0, w, h);
 
   const small = w < 640;
@@ -99,9 +115,11 @@ function draw(ctx: CanvasRenderingContext2D, w: number, h: number, p: number) {
     ctx.translate(x, y);
     ctx.rotate(rot);
 
-    ctx.shadowColor = "oklch(0.12 0.04 275 / 0.55)";
-    ctx.shadowBlur = 40;
-    ctx.shadowOffsetY = 18;
+    if (q.shadows) {
+      ctx.shadowColor = "oklch(0.12 0.04 275 / 0.55)";
+      ctx.shadowBlur = 40;
+      ctx.shadowOffsetY = 18;
+    }
     roundRect(ctx, -cardW / 2, -cardH / 2, cardW, cardH, 16);
     ctx.fillStyle = "oklch(0.24 0.05 275)";
     ctx.fill();
@@ -112,8 +130,8 @@ function draw(ctx: CanvasRenderingContext2D, w: number, h: number, p: number) {
     ctx.stroke();
 
     // Palette strip: the colours the frame is carrying.
-    const cols = 12;
-    const rows = 6;
+    const cols = q.cols;
+    const rows = q.rows;
     const padX = cardW * 0.07;
     const padY = cardH * 0.12;
     const gw = (cardW - padX * 2) / cols;
@@ -188,24 +206,37 @@ export function ScrollFilm() {
 
     let w = 0;
     let h = 0;
+    let quality = pickQuality(window.innerWidth);
+    let onScreen = true;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      quality = pickQuality(window.innerWidth);
+      const dpr = Math.min(window.devicePixelRatio || 1, quality.dpr);
       w = rect.width;
       h = rect.height;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      draw(ctx, w, h, shown.current);
+      draw(ctx, w, h, shown.current, quality);
     };
 
+    let lastBand = -1;
+    let lastKb = -1;
+
     const commit = (p: number) => {
-      draw(ctx, w, h, p);
+      draw(ctx, w, h, p, quality);
       const b = Math.min(BANDS.length - 1, Math.floor(p * BANDS.length * 0.999));
-      setBand(b);
+      if (b !== lastBand) {
+        lastBand = b;
+        setBand(b);
+      }
       const shrink = easeInOut(clamp01((p - 0.3) / 0.55));
-      setKb(Math.round(START_KB + (END_KB - START_KB) * shrink));
+      const next = Math.round(START_KB + (END_KB - START_KB) * shrink);
+      if (next !== lastKb) {
+        lastKb = next;
+        setKb(next);
+      }
     };
 
     const tick = () => {
@@ -226,7 +257,7 @@ export function ScrollFilm() {
       const total = rect.height - window.innerHeight;
       const p = total > 0 ? clamp01(-rect.top / total) : 0;
       target.current = p;
-      if (reduced) {
+      if (reduced || !onScreen) {
         shown.current = p;
         commit(p);
         return;
@@ -236,9 +267,29 @@ export function ScrollFilm() {
 
     resize();
     onScroll();
+
+    // Stop painting entirely once the stage scrolls out of view.
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            (entries) => {
+              for (const e of entries) {
+                onScreen = e.isIntersecting;
+                if (!onScreen && raf.current !== null) {
+                  cancelAnimationFrame(raf.current);
+                  raf.current = null;
+                }
+              }
+            },
+            { rootMargin: "120px" },
+          )
+        : null;
+    io?.observe(wrap);
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resize, { passive: true });
     return () => {
+      io?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", resize);
       if (raf.current !== null) cancelAnimationFrame(raf.current);
@@ -256,6 +307,16 @@ export function ScrollFilm() {
           aria-hidden="true"
           className="absolute inset-0 size-full"
         />
+
+        {/* Text alternative: the full journey for screen readers and keyboard users,
+            who never scrub the canvas. */}
+        <ol className="sr-only">
+          {BANDS.map((b) => (
+            <li key={b.kicker}>
+              <strong>{b.line}</strong> {b.sub}
+            </li>
+          ))}
+        </ol>
 
         {/* Caption band, held in the empty space under the stack. */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 top-auto p-4 pb-14 sm:p-8 sm:pb-20">

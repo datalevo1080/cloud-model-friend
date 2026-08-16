@@ -227,83 +227,109 @@ function Home() {
 
       <main className="flex-1">
         {/* ---------------- Opening frame ---------------- */}
-        <section className="relative isolate overflow-hidden bg-hero text-hero-foreground">
+        <section
+          aria-labelledby="hero-heading"
+          className="relative isolate overflow-hidden bg-hero text-hero-foreground"
+        >
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -top-40 left-1/4 size-[36rem] rounded-full bg-primary/30 blur-[120px] zg-aurora" />
+            <div className="absolute -top-48 left-1/2 size-[42rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[140px] zg-aurora" />
             <div
-              className="absolute -right-32 top-24 size-[30rem] rounded-full bg-violet/25 blur-[130px] zg-aurora"
-              style={{ animationDelay: "-7s" }}
+              className="absolute -right-40 top-32 size-[28rem] rounded-full bg-violet/20 blur-[140px] zg-aurora"
+              style={{ animationDelay: "-9s" }}
             />
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(1_0_0/6%)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0/6%)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(70%_60%_at_50%_30%,black,transparent)]" />
-            {[12, 28, 44, 61, 78, 91].map((left, i) => (
-              <span
-                key={left}
-                className="absolute bottom-24 size-1.5 rounded-full bg-hero-foreground/50 zg-drift"
-                style={{ left: `${left}%`, animationDelay: `${i * 1.1}s` }}
-              />
-            ))}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(1_0_0/5%)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0/5%)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(65%_55%_at_50%_28%,black,transparent)]" />
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-hero" />
           </div>
 
-          <div className="relative mx-auto grid max-w-6xl gap-12 px-4 pt-16 pb-20 sm:px-6 sm:pt-24 sm:pb-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="relative mx-auto max-w-4xl px-4 pt-16 pb-14 text-center sm:px-6 sm:pt-24">
             <Reveal>
-              <span className="inline-flex items-center gap-2 rounded-full border border-hero-border bg-hero-elevated/60 px-3 py-1.5 text-xs font-medium text-hero-muted">
+              <span className="inline-flex items-center gap-2 rounded-full border border-hero-border bg-hero-elevated/60 px-3.5 py-1.5 text-xs font-medium tracking-wide text-hero-muted">
                 <Zap className="size-3.5 text-primary" aria-hidden="true" />
                 Every GIF tool. Zero uploads.
               </span>
 
-              <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-                Your GIFs get smaller.
+              <h1
+                id="hero-heading"
+                className="mt-7 text-[2.6rem] leading-[1.02] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl"
+              >
+                Smaller GIFs,
                 <br />
-                <span className="gradient-text">They never leave your device.</span>
+                <span className="gradient-text">without the upload.</span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-lg text-hero-muted text-pretty">
-                ZipGIF is a set of eight GIF tools that run entirely inside your browser. Compress,
-                crop, resize, retime, split and convert. Free, without a watermark, without an
-                account, and without a single byte being uploaded.
+              <p className="mx-auto mt-6 max-w-2xl text-lg text-hero-muted text-pretty sm:text-xl">
+                Eight GIF tools that run inside this tab. Compress, crop, resize, retime, split and
+                convert, free and without a watermark. Your file never leaves your device.
               </p>
+            </Reveal>
 
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Reveal delay={120}>
+              <div className="mt-10 flex flex-col items-center gap-4">
                 <Link
                   to="/gif-compressor"
-                  className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/35"
+                  className="group inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-2xl bg-primary px-8 py-4.5 text-lg font-semibold text-primary-foreground shadow-xl shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-primary/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:w-auto"
                 >
                   Compress a GIF free
                   <ArrowRight
-                    className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                    className="size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
                     aria-hidden="true"
                   />
                 </Link>
+
+                <p className="text-sm text-hero-muted">
+                  Free forever. No signup, no watermark, no file limit.
+                </p>
+
                 <a
                   href="#tools"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-hero-border bg-hero-elevated/50 px-6 py-3.5 text-base font-semibold text-hero-foreground transition-colors duration-300 hover:bg-hero-elevated"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-hero-foreground underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
-                  See all 8 tools
+                  Or browse all 8 tools
+                  <ArrowRight className="size-3.5" aria-hidden="true" />
                 </a>
               </div>
-
-              <p className="mt-5 text-sm text-hero-muted">
-                No signup. No watermark. Works offline after the first visit.
-              </p>
             </Reveal>
 
-            <Reveal delay={140} className="lg:pl-4">
-              <CompressionDemo />
+            <Reveal delay={200}>
+              <ul className="mx-auto mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-hero-muted">
+                {[
+                  "0 bytes uploaded",
+                  "Up to 70% smaller",
+                  "Works offline after the first visit",
+                ].map((item) => (
+                  <li key={item} className="inline-flex items-center gap-2">
+                    <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
           </div>
 
-          <p className="relative pb-6 text-center font-mono text-[11px] tracking-[0.24em] text-hero-muted uppercase">
+          <Reveal delay={260} className="relative mx-auto max-w-2xl px-4 pb-16 sm:px-6">
+            <CompressionDemo />
+          </Reveal>
+
+          <p className="relative pb-8 text-center font-mono text-[11px] tracking-[0.24em] text-hero-muted uppercase">
             Scroll to watch a 5 MB GIF lose four fifths of itself
           </p>
         </section>
+
 
         {/* ---------------- The scroll journey ---------------- */}
         <section
           aria-label="How a GIF gets smaller, step by step"
           className="relative bg-hero text-hero-foreground"
         >
+          <a
+            href="#tools"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground"
+          >
+            Skip the animation
+          </a>
           <ScrollFilm />
         </section>
+
 
         {/* ---------------- The settle ---------------- */}
         <section className="relative overflow-hidden bg-hero text-hero-foreground">
