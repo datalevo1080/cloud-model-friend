@@ -411,7 +411,7 @@ function GifSpeedChangerPage() {
             require animated GIF ads to run slower than 5 FPS, stop animating within 30 seconds, and
             stay at or under 150 KB. Slow the GIF until one loop fits those limits, and if weight is
             the problem, run it through the{" "}
-            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+            <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
               GIF Compressor
             </Link>
             .
@@ -460,7 +460,7 @@ function GifSpeedChangerPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-border bg-card p-6">
               <h3 className="text-lg font-semibold">
-                <Link to="/" className="text-primary underline-offset-4 hover:underline">
+                <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
                   GIF Compressor
                 </Link>
               </h3>

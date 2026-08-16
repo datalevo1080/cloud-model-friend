@@ -786,7 +786,7 @@ export function Resizer() {
                 {overLimit && preset && (
                   <p className="mt-3 text-sm">
                     Still over {preset.limitLabel} —{" "}
-                    <Link to="/" className="text-primary underline-offset-4 hover:underline">
+                    <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
                       run it through our GIF compressor
                     </Link>
                     .

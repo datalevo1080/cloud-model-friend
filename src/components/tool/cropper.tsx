@@ -840,7 +840,7 @@ export function Cropper() {
           <p className="text-sm text-muted-foreground">
             <Scissors className="mr-1 inline size-4 align-text-bottom" aria-hidden="true" />
             Cropping cut the dimensions — want the file smaller too?{" "}
-            <Link to="/" className="font-medium text-primary underline-offset-4 hover:underline">
+            <Link to="/gif-compressor" className="font-medium text-primary underline-offset-4 hover:underline">
               compress the GIF after cropping
             </Link>
             .

@@ -99,7 +99,7 @@ function DiscordGuide() {
           <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
             <ol className="flex gap-2">
               <li>
-                <Link to="/" className="underline underline-offset-2 hover:text-foreground">
+                <Link to="/gif-compressor" className="underline underline-offset-2 hover:text-foreground">
                   GIF compressor
                 </Link>
               </li>
@@ -202,7 +202,7 @@ function DiscordGuide() {
 
           <p className="mt-8 text-lg">
             Ready? Go{" "}
-            <Link to="/" className="font-medium text-primary underline underline-offset-4">
+            <Link to="/gif-compressor" className="font-medium text-primary underline underline-offset-4">
               compress a GIF for Discord
             </Link>{" "}
             with the free GIF compressor — it runs in your browser and nothing gets uploaded.

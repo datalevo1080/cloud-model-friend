@@ -214,7 +214,7 @@ const useCases = [
   },
 ];
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/gif-compressor")({
   head: () => ({
     meta: [
       { title: TITLE },
@@ -223,7 +223,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `${SITE}/` },
+      { property: "og:url", content: `${SITE}/gif-compressor` },
       { property: "og:site_name", content: "ZipGIF" },
       { property: "og:image", content: OG_IMAGE },
       { property: "og:image:width", content: "1200" },
@@ -237,7 +237,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:description", content: DESCRIPTION },
       { name: "twitter:image", content: OG_IMAGE },
     ],
-    links: [{ rel: "canonical", href: `${SITE}/` }],
+    links: [{ rel: "canonical", href: `${SITE}/gif-compressor` }],
     scripts: [
       {
         type: "application/ld+json",
@@ -265,7 +265,7 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "WebApplication",
           name: "ZipGIF GIF Compressor",
-          url: `${SITE}/`,
+          url: `${SITE}/gif-compressor`,
           applicationCategory: "MultimediaApplication",
           operatingSystem: "Web",
           dateModified: MODIFIED,
@@ -315,7 +315,7 @@ export const Route = createFileRoute("/")({
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
-            { "@type": "ListItem", position: 2, name: "GIF Compressor", item: `${SITE}/` },
+            { "@type": "ListItem", position: 2, name: "GIF Compressor", item: `${SITE}/gif-compressor` },
           ],
         }),
       },
