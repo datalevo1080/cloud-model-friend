@@ -4,7 +4,7 @@
 
 ## Tools
 
-- [GIF Compressor](https://zipgif.com/): Compress GIFs up to 70% smaller with AI-selected settings, manual controls, and exact target sizes (e.g. 256KB for Discord).
+- [GIF Compressor](https://zipgif.com/gif-compressor): Compress GIFs up to 70% smaller with AI-selected settings, manual controls, and exact target sizes (e.g. 256KB for Discord).
 
 - [Compress GIF for Discord](https://zipgif.com/compress-gif-for-discord): Verified Discord upload, emoji and sticker limits plus the target sizes that always work.
 

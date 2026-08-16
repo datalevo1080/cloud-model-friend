@@ -238,7 +238,7 @@ function GifTrimmerPage() {
             frame count, so trimming from 60 frames to 30 cuts roughly half the weight while the
             kept part stays exactly as sharp. If the GIF is still too heavy after trimming, run it
             through the{" "}
-            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+            <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
               GIF Compressor
             </Link>{" "}
             - trimming cuts content, compression cuts bytes.

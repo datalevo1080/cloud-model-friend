@@ -368,7 +368,7 @@ function GifCropperPage() {
             </li>
             <li>
               To shrink the file without changing what's visible, run it through our{" "}
-              <Link to="/" className="text-primary underline-offset-4 hover:underline">
+              <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
                 GIF compressor
               </Link>{" "}
               after you crop.

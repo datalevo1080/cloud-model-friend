@@ -367,7 +367,7 @@ function GifResizerPage() {
             Compressing keeps the dimensions exactly as they are and reduces the file size instead,
             by trimming the color palette, dropping duplicate frames, and applying lossy encoding.
             Reach for it when a platform rejects your file for weight rather than width. The{" "}
-            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+            <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
               GIF compressor
             </Link>{" "}
             handles that side, including KB and MB targets.
@@ -446,7 +446,7 @@ function GifResizerPage() {
           <p className="mt-4 leading-relaxed text-muted-foreground">
             If the resized file is still over Discord's documented 256 KB emoji or 512 KB sticker
             limit, dimensions are no longer the problem. That's a job for the{" "}
-            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+            <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
               GIF compressor
             </Link>
             , which takes a target such as 256 KB or 4 MB and works down to it.
@@ -629,7 +629,7 @@ function GifResizerPage() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-border bg-card p-6">
               <h3 className="text-lg font-semibold">
-                <Link to="/" className="text-primary underline-offset-4 hover:underline">
+                <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
                   GIF compressor
                 </Link>
               </h3>

@@ -15,6 +15,7 @@ export default defineConfig({
     prerender: { enabled: true, crawlLinks: true, failOnError: false },
     pages: [
       { path: "/", prerender: { enabled: true } },
+      { path: "/gif-compressor", prerender: { enabled: true } },
       { path: "/compress-gif-for-discord", prerender: { enabled: true } },
       { path: "/gif-cropper", prerender: { enabled: true } },
       { path: "/gif-resizer", prerender: { enabled: true } },

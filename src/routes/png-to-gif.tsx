@@ -257,7 +257,7 @@ function PngToGifPage() {
           <p className="mt-4 leading-relaxed">
             If the finished GIF is heavier than the place you want to post it allows, run it through
             the{" "}
-            <Link to="/" className="text-primary underline-offset-4 hover:underline">
+            <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
               GIF Compressor
             </Link>
             .

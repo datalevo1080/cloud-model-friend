@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as CompressGifForDiscordRouteImport } from './routes/compress-gif-for-discord'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GifCompressorRouteImport } from './routes/gif-compressor'
 import { Route as GifCropperRouteImport } from './routes/gif-cropper'
 import { Route as GifResizerRouteImport } from './routes/gif-resizer'
 import { Route as GifSpeedChangerRouteImport } from './routes/gif-speed-changer'
@@ -41,6 +42,11 @@ const CompressGifForDiscordRoute = CompressGifForDiscordRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GifCompressorRoute = GifCompressorRouteImport.update({
+  id: '/gif-compressor',
+  path: '/gif-compressor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GifCropperRoute = GifCropperRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/compress-gif-for-discord': typeof CompressGifForDiscordRoute
   '/contact': typeof ContactRoute
+  '/gif-compressor': typeof GifCompressorRoute
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/compress-gif-for-discord': typeof CompressGifForDiscordRoute
   '/contact': typeof ContactRoute
+  '/gif-compressor': typeof GifCompressorRoute
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/compress-gif-for-discord': typeof CompressGifForDiscordRoute
   '/contact': typeof ContactRoute
+  '/gif-compressor': typeof GifCompressorRoute
   '/gif-cropper': typeof GifCropperRoute
   '/gif-resizer': typeof GifResizerRoute
   '/gif-speed-changer': typeof GifSpeedChangerRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compress-gif-for-discord'
     | '/contact'
+    | '/gif-compressor'
     | '/gif-cropper'
     | '/gif-resizer'
     | '/gif-speed-changer'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compress-gif-for-discord'
     | '/contact'
+    | '/gif-compressor'
     | '/gif-cropper'
     | '/gif-resizer'
     | '/gif-speed-changer'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/compress-gif-for-discord'
     | '/contact'
+    | '/gif-compressor'
     | '/gif-cropper'
     | '/gif-resizer'
     | '/gif-speed-changer'
@@ -188,6 +200,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CompressGifForDiscordRoute: typeof CompressGifForDiscordRoute
   ContactRoute: typeof ContactRoute
+  GifCompressorRoute: typeof GifCompressorRoute
   GifCropperRoute: typeof GifCropperRoute
   GifResizerRoute: typeof GifResizerRoute
   GifSpeedChangerRoute: typeof GifSpeedChangerRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gif-compressor': {
+      id: '/gif-compressor'
+      path: '/gif-compressor'
+      fullPath: '/gif-compressor'
+      preLoaderRoute: typeof GifCompressorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gif-cropper': {
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CompressGifForDiscordRoute: CompressGifForDiscordRoute,
   ContactRoute: ContactRoute,
+  GifCompressorRoute: GifCompressorRoute,
   GifCropperRoute: GifCropperRoute,
   GifResizerRoute: GifResizerRoute,
   GifSpeedChangerRoute: GifSpeedChangerRoute,

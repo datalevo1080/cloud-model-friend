@@ -10,6 +10,9 @@ export function SiteFooter() {
             <span className="-ml-2 text-foreground">GIF</span>
           </div>
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <Link to="/gif-compressor" className="text-muted-foreground hover:text-foreground">
+              GIF Compressor
+            </Link>
             <Link to="/gif-cropper" className="text-muted-foreground hover:text-foreground">
               GIF Cropper
             </Link>

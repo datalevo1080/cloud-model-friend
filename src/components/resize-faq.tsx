@@ -50,7 +50,7 @@ export const resizeFaqs: { q: string; a: string; jsx: React.ReactNode }[] = [
         Decide which kind of smaller you mean. Fewer pixels is a resize: set a percentage or exact
         width here and the GIF gets physically smaller on screen. Fewer bytes at the same dimensions
         is compression, and the{" "}
-        <Link to="/" className="text-primary underline-offset-4 hover:underline">
+        <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
           GIF compressor
         </Link>{" "}
         handles that. Doing both, in that order, gives the biggest drop.
