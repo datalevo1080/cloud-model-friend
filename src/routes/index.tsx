@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -17,6 +18,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/home/reveal";
 import { CompressionDemo } from "@/components/home/compression-demo";
+import { ScrollFilm } from "@/components/home/scroll-film";
+import { DrawLine } from "@/components/home/draw-line";
 
 const SITE = "https://zipgif.com";
 const TITLE = "ZipGIF — Free Online GIF Tools That Never Upload Your Files";
@@ -100,6 +103,21 @@ const proof = [
   { value: "70%", label: "Typical size cut" },
   { value: "20", label: "GIFs per batch" },
   { value: "8", label: "Free tools" },
+];
+
+const objections = [
+  {
+    q: "Free tools usually mean a watermark.",
+    a: "There is no watermark and no export limit here. The engine writes a plain GIF, byte for byte the format you started with.",
+  },
+  {
+    q: "I cannot send client work to a random website.",
+    a: "You are not sending it anywhere. Open the network tab while you compress: the only requests are for the page itself and the engine file.",
+  },
+  {
+    q: "Browser tools are slow.",
+    a: "A 5 MB GIF finishes in a couple of seconds on a laptop. Nothing waits in a queue behind other people's files.",
+  },
 ];
 
 const faqs = [
@@ -199,12 +217,16 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  useEffect(() => {
+    console.log("Your GIF never made it into this console. That is the whole product.");
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <SiteHeader />
 
       <main className="flex-1">
-        {/* ---------------- Hero ---------------- */}
+        {/* ---------------- Opening frame ---------------- */}
         <section className="relative isolate overflow-hidden bg-hero text-hero-foreground">
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute -top-40 left-1/4 size-[36rem] rounded-full bg-primary/30 blur-[120px] zg-aurora" />
@@ -270,6 +292,49 @@ function Home() {
             </Reveal>
           </div>
 
+          <p className="relative pb-6 text-center font-mono text-[11px] tracking-[0.24em] text-hero-muted uppercase">
+            Scroll to watch a 5 MB GIF lose four fifths of itself
+          </p>
+        </section>
+
+        {/* ---------------- The scroll journey ---------------- */}
+        <section
+          aria-label="How a GIF gets smaller, step by step"
+          className="relative bg-hero text-hero-foreground"
+        >
+          <ScrollFilm />
+        </section>
+
+        {/* ---------------- The settle ---------------- */}
+        <section className="relative overflow-hidden bg-hero text-hero-foreground">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            <div className="absolute left-1/2 -top-24 size-[30rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[130px] zg-aurora" />
+          </div>
+          <div className="relative mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
+            <Reveal>
+              <p className="font-mono text-xs tracking-[0.24em] text-primary uppercase">
+                That was the whole journey
+              </p>
+              <h2 className="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-5xl">
+                It happens in this tab, in about two seconds.
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-lg text-hero-muted text-pretty">
+                No upload bar. No queue. No copy of your file sitting on a machine you have never
+                heard of.
+              </p>
+              <Link
+                to="/gif-compressor"
+                className="group mt-9 inline-flex items-center gap-2 rounded-xl bg-primary px-7 py-4 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40"
+              >
+                Try it on your own GIF
+                <ArrowRight
+                  className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Link>
+            </Reveal>
+          </div>
+
           {/* marquee strip */}
           <div className="relative border-t border-hero-border py-4">
             <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
@@ -318,7 +383,11 @@ function Home() {
         </section>
 
         {/* ---------------- Tools ---------------- */}
-        <section id="tools" aria-labelledby="tools-heading" className="scroll-mt-20">
+        <section id="tools" aria-labelledby="tools-heading" className="relative scroll-mt-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-10 top-24 size-2 rounded-full bg-primary/60 zg-whisper"
+          />
           <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
             <Reveal className="max-w-2xl">
               <p className="text-sm font-semibold tracking-widest text-primary uppercase">
@@ -390,10 +459,12 @@ function Home() {
               </h2>
             </Reveal>
 
-            <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            <DrawLine className="mt-8" />
+
+            <ol className="mt-4 grid gap-6 md:grid-cols-3">
               {steps.map((s, i) => (
                 <Reveal key={s.n} delay={i * 110} as="li">
-                  <div className="relative h-full rounded-2xl border border-border bg-card p-6">
+                  <div className="relative h-full rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
                     <span className="font-mono text-4xl font-bold text-primary/25">{s.n}</span>
                     <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
@@ -477,8 +548,35 @@ function Home() {
           </div>
         </section>
 
+        {/* ---------------- Objections ---------------- */}
+        <section aria-labelledby="doubts" className="border-y border-border bg-muted/30">
+          <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
+            <Reveal className="max-w-2xl">
+              <p className="text-sm font-semibold tracking-widest text-primary uppercase">
+                The fair doubts
+              </p>
+              <h2
+                id="doubts"
+                className="mt-3 text-3xl font-bold tracking-tight text-balance sm:text-4xl"
+              >
+                What people say before they try it
+              </h2>
+            </Reveal>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {objections.map((o, i) => (
+                <Reveal key={o.q} delay={i * 90}>
+                  <div className="h-full rounded-2xl border border-border bg-card p-6">
+                    <p className="text-base font-semibold text-balance">{o.q}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{o.a}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ---------------- FAQ ---------------- */}
-        <section aria-labelledby="faq-heading" className="border-y border-border bg-muted/30">
+        <section aria-labelledby="faq-heading">
           <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
             <Reveal>
               <h2
@@ -510,7 +608,10 @@ function Home() {
         </section>
 
         {/* ---------------- Final CTA ---------------- */}
-        <section aria-labelledby="cta-heading" className="relative overflow-hidden bg-hero text-hero-foreground">
+        <section
+          aria-labelledby="cta-heading"
+          className="relative overflow-hidden bg-hero text-hero-foreground"
+        >
           <div aria-hidden="true" className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-0 size-[34rem] -translate-x-1/2 rounded-full bg-primary/30 blur-[130px] zg-aurora" />
           </div>
