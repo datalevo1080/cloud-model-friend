@@ -244,7 +244,7 @@ export function ScrollFilm() {
     };
   }, []);
 
-  const active = BANDS[band];
+  const active = BANDS[band] ?? BANDS[0]!;
   const mb = (kb / 1024).toFixed(2);
 
   return (
