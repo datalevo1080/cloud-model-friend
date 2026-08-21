@@ -370,7 +370,10 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
         </div>
 
         {/* Live weight readout. */}
-        <div className="pointer-events-none absolute right-4 top-24 rounded-xl border border-hero-border bg-hero/70 px-4 py-3 text-right backdrop-blur-md sm:right-8 sm:top-28">
+        <div
+          className="pointer-events-none absolute right-4 top-24 rounded-xl border border-hero-border bg-hero/70 px-4 py-3 text-right backdrop-blur-md transition-opacity duration-300 sm:right-8 sm:top-28"
+          style={{ opacity: intro ? 1 - introOn : 1 }}
+        >
           <p className="text-[10px] tracking-[0.2em] text-hero-muted uppercase">File weight</p>
           <p className="font-mono text-2xl font-bold text-hero-foreground tabular-nums sm:text-3xl">
             {mb} MB
