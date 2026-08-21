@@ -327,8 +327,30 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
           ))}
         </ol>
 
+        {/* Hero headline: holds the opening frame, then hands the stage to the captions. */}
+        {intro ? (
+          <div
+            className="absolute inset-0 flex items-center justify-center px-4 transition-opacity duration-300 sm:px-6"
+            style={{
+              opacity: introOn,
+              pointerEvents: introOn < 0.4 ? "none" : "auto",
+              visibility: introOn < 0.02 ? "hidden" : "visible",
+            }}
+          >
+            <div
+              className="w-full max-w-3xl text-center"
+              style={{ transform: `translateY(${(1 - introOn) * -24}px)` }}
+            >
+              {intro}
+            </div>
+          </div>
+        ) : null}
+
         {/* Caption band, held in the empty space under the stack. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 top-auto p-4 pb-14 sm:p-8 sm:pb-20">
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 top-auto p-4 pb-14 transition-opacity duration-300 sm:p-8 sm:pb-20"
+          style={{ opacity: intro ? 1 - introOn : 1 }}
+        >
           <div className="mx-auto max-w-6xl">
             <div className="max-w-xl rounded-2xl bg-hero/70 p-5 backdrop-blur-md sm:p-6">
               <p className="font-mono text-xs tracking-[0.22em] text-primary uppercase">
