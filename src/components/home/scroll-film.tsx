@@ -184,7 +184,7 @@ function draw(
   }
 }
 
-export function ScrollFilm() {
+export function ScrollFilm({ intro }: { intro?: ReactNode }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const target = useRef(0);
@@ -192,6 +192,8 @@ export function ScrollFilm() {
   const raf = useRef<number | null>(null);
   const [band, setBand] = useState(0);
   const [kb, setKb] = useState(START_KB);
+  /** 1 at the very top of the film, 0 once the journey is under way. */
+  const [introOn, setIntroOn] = useState(1);
 
   useEffect(() => {
     const canvas = canvasRef.current;
