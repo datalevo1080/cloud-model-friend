@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * Scroll-scrubbed hero "film".
@@ -184,7 +184,7 @@ function draw(
   }
 }
 
-export function ScrollFilm() {
+export function ScrollFilm({ intro }: { intro?: ReactNode }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const target = useRef(0);
@@ -192,6 +192,8 @@ export function ScrollFilm() {
   const raf = useRef<number | null>(null);
   const [band, setBand] = useState(0);
   const [kb, setKb] = useState(START_KB);
+  /** 1 at the very top of the film, 0 once the journey is under way. */
+  const [introOn, setIntroOn] = useState(1);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -223,6 +225,7 @@ export function ScrollFilm() {
 
     let lastBand = -1;
     let lastKb = -1;
+    let lastIntro = -1;
 
     const commit = (p: number) => {
       draw(ctx, w, h, p, quality);
@@ -236,6 +239,12 @@ export function ScrollFilm() {
       if (next !== lastKb) {
         lastKb = next;
         setKb(next);
+      }
+      // Intro headline holds the first sliver of scroll, then hands over to the captions.
+      const fade = Math.round((1 - clamp01((p - 0.015) / 0.075)) * 20) / 20;
+      if (fade !== lastIntro) {
+        lastIntro = fade;
+        setIntroOn(fade);
       }
     };
 
@@ -267,6 +276,16 @@ export function ScrollFilm() {
 
     resize();
     onScroll();
+    // Layout and fonts can settle a frame or two after mount; repaint so the
+    // opening frame is never blank on a cold load.
+    const settleFrame = requestAnimationFrame(() => {
+      resize();
+      onScroll();
+    });
+    const settleTimer = window.setTimeout(() => {
+      resize();
+      onScroll();
+    }, 260);
 
     // Stop painting entirely once the stage scrolls out of view.
     const io =
@@ -292,6 +311,8 @@ export function ScrollFilm() {
       io?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", resize);
+      cancelAnimationFrame(settleFrame);
+      window.clearTimeout(settleTimer);
       if (raf.current !== null) cancelAnimationFrame(raf.current);
     };
   }, []);
@@ -318,8 +339,38 @@ export function ScrollFilm() {
           ))}
         </ol>
 
+        {/* Hero headline: holds the opening frame, then hands the stage to the captions. */}
+        {intro ? (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-hero/75 transition-opacity duration-300 [mask-image:radial-gradient(75%_60%_at_50%_50%,black,transparent)]"
+            style={{ opacity: introOn }}
+          />
+        ) : null}
+
+        {intro ? (
+          <div
+            className="absolute inset-0 flex items-center justify-center px-4 transition-opacity duration-300 sm:px-6"
+            style={{
+              opacity: introOn,
+              pointerEvents: introOn < 0.4 ? "none" : "auto",
+              visibility: introOn < 0.02 ? "hidden" : "visible",
+            }}
+          >
+            <div
+              className="w-full max-w-3xl text-center"
+              style={{ transform: `translateY(${(1 - introOn) * -24}px)` }}
+            >
+              {intro}
+            </div>
+          </div>
+        ) : null}
+
         {/* Caption band, held in the empty space under the stack. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 top-auto p-4 pb-14 sm:p-8 sm:pb-20">
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 top-auto p-4 pb-14 transition-opacity duration-300 sm:p-8 sm:pb-20"
+          style={{ opacity: intro ? 1 - introOn : 1 }}
+        >
           <div className="mx-auto max-w-6xl">
             <div className="max-w-xl rounded-2xl bg-hero/70 p-5 backdrop-blur-md sm:p-6">
               <p className="font-mono text-xs tracking-[0.22em] text-primary uppercase">
@@ -339,7 +390,10 @@ export function ScrollFilm() {
         </div>
 
         {/* Live weight readout. */}
-        <div className="pointer-events-none absolute right-4 top-24 rounded-xl border border-hero-border bg-hero/70 px-4 py-3 text-right backdrop-blur-md sm:right-8 sm:top-28">
+        <div
+          className="pointer-events-none absolute right-4 top-24 rounded-xl border border-hero-border bg-hero/70 px-4 py-3 text-right backdrop-blur-md transition-opacity duration-300 sm:right-8 sm:top-28"
+          style={{ opacity: intro ? 1 - introOn : 1 }}
+        >
           <p className="text-[10px] tracking-[0.2em] text-hero-muted uppercase">File weight</p>
           <p className="font-mono text-2xl font-bold text-hero-foreground tabular-nums sm:text-3xl">
             {mb} MB
