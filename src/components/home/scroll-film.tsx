@@ -311,6 +311,8 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
       io?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", resize);
+      cancelAnimationFrame(settleFrame);
+      window.clearTimeout(settleTimer);
       if (raf.current !== null) cancelAnimationFrame(raf.current);
     };
   }, []);
