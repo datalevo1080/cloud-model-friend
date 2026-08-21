@@ -1,64 +1,119 @@
 import { Link } from "@tanstack/react-router";
+import { Facebook, Linkedin, Mail, Zap } from "lucide-react";
+
+const tools = [
+  { label: "GIF Compressor", href: "/gif-compressor" as const },
+  { label: "GIF Cropper", href: "/gif-cropper" as const },
+  { label: "GIF Resizer", href: "/gif-resizer" as const },
+  { label: "GIF Speed Changer", href: "/gif-speed-changer" as const },
+];
+
+const moreTools = [
+  { label: "GIF Splitter", href: "/gif-splitter" as const },
+  { label: "GIF Trimmer", href: "/gif-trimmer" as const },
+  { label: "PNG to GIF", href: "/png-to-gif" as const },
+  { label: "GIF to PNG", href: "/gif-to-png" as const },
+];
+
+const company = [
+  { label: "Compress GIF for Discord", href: "/compress-gif-for-discord" as const },
+  { label: "About", href: "/about" as const },
+  { label: "Contact", href: "/contact" as const },
+];
+
+const socials = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/shafiullah-tareen-507857268",
+    Icon: Linkedin,
+  },
+  { label: "Facebook", href: "https://www.facebook.com/shafi.sami.336", Icon: Facebook },
+  { label: "Email", href: "mailto:shafitareen431@gmail.com", Icon: Mail },
+];
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-muted/30">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-lg font-bold">
-            <span className="text-primary">Zip</span>
-            <span className="-ml-2 text-foreground">GIF</span>
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+              <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <Zap className="size-4" aria-hidden="true" />
+              </span>
+              <span>
+                <span className="text-primary">Zip</span>
+                <span className="text-foreground">GIF</span>
+              </span>
+            </Link>
+            <p className="mt-5 max-w-xs text-sm leading-6 text-muted-foreground">
+              Every GIF tool. Zero uploads. Everything runs inside your browser, so your files
+              never leave your device.
+            </p>
+            <div className="mt-6 flex items-center gap-4">
+              {socials.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  {...(href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="inline-flex size-11 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <Icon className="size-5" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
           </div>
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-            <Link to="/gif-compressor" className="text-muted-foreground hover:text-foreground">
-              GIF Compressor
-            </Link>
-            <Link to="/gif-cropper" className="text-muted-foreground hover:text-foreground">
-              GIF Cropper
-            </Link>
-            <Link to="/gif-resizer" className="text-muted-foreground hover:text-foreground">
-              GIF Resizer
-            </Link>
-            <Link to="/gif-speed-changer" className="text-muted-foreground hover:text-foreground">
-              GIF Speed Changer
-            </Link>
-            <Link to="/gif-splitter" className="text-muted-foreground hover:text-foreground">
-              GIF Splitter
-            </Link>
-            <Link to="/gif-trimmer" className="text-muted-foreground hover:text-foreground">
-              GIF Trimmer
-            </Link>
-            <Link to="/png-to-gif" className="text-muted-foreground hover:text-foreground">
-              PNG to GIF
-            </Link>
-            <Link to="/gif-to-png" className="text-muted-foreground hover:text-foreground">
-              GIF to PNG
-            </Link>
-            <Link to="/compress-gif-for-discord" className="text-muted-foreground hover:text-foreground">
-              Compress GIF for Discord
-            </Link>
-            <Link to="/about" className="text-muted-foreground hover:text-foreground">
-              About
-            </Link>
 
-            <Link to="/privacy" className="text-muted-foreground hover:text-foreground">
+          <FooterColumn title="Tools" links={tools} />
+          <FooterColumn title="More tools" links={moreTools} />
+          <FooterColumn title="Company" links={company} />
+        </div>
+
+        <div className="mt-14 h-px w-full bg-border" />
+
+        <div className="mt-6 flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} ZipGIF. Built by Shafiullah Tareen.</p>
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link to="/privacy" className="underline hover:text-foreground">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-muted-foreground hover:text-foreground">
+            <Link to="/terms" className="underline hover:text-foreground">
               Terms
             </Link>
-            <Link to="/contact" className="text-muted-foreground hover:text-foreground">
+            <Link to="/contact" className="underline hover:text-foreground">
               Contact
             </Link>
           </nav>
         </div>
-        <p className="mt-8 text-sm text-muted-foreground">
-          ZipGIF runs entirely in your browser — your files never leave your device.
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} ZipGIF. Every GIF tool. Zero uploads.
-        </p>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: ReadonlyArray<{ label: string; href: string }>;
+}) {
+  return (
+    <div>
+      <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+      <nav aria-label={title} className="mt-4 flex flex-col gap-3 text-sm">
+        {links.map((l) => (
+          <Link
+            key={l.label}
+            to={l.href}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            {l.label}
+          </Link>
+        ))}
+      </nav>
+    </div>
   );
 }
