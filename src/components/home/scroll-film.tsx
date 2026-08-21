@@ -276,6 +276,16 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
 
     resize();
     onScroll();
+    // Layout and fonts can settle a frame or two after mount; repaint so the
+    // opening frame is never blank on a cold load.
+    const settleFrame = requestAnimationFrame(() => {
+      resize();
+      onScroll();
+    });
+    const settleTimer = window.setTimeout(() => {
+      resize();
+      onScroll();
+    }, 260);
 
     // Stop painting entirely once the stage scrolls out of view.
     const io =
