@@ -226,100 +226,10 @@ function Home() {
       <SiteHeader />
 
       <main className="flex-1">
-        {/* ---------------- Opening frame ---------------- */}
+        {/* ---------------- Hero: the scroll film ---------------- */}
         <section
           aria-labelledby="hero-heading"
-          className="relative isolate overflow-hidden bg-hero text-hero-foreground"
-        >
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -top-48 left-1/2 size-[42rem] -translate-x-1/2 rounded-full bg-primary/25 blur-[140px] zg-aurora" />
-            <div
-              className="absolute -right-40 top-32 size-[28rem] rounded-full bg-violet/20 blur-[140px] zg-aurora"
-              style={{ animationDelay: "-9s" }}
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(1_0_0/5%)_1px,transparent_1px),linear-gradient(to_bottom,oklch(1_0_0/5%)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(65%_55%_at_50%_28%,black,transparent)]" />
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-hero" />
-          </div>
-
-          <div className="relative mx-auto max-w-4xl px-4 pt-16 pb-14 text-center sm:px-6 sm:pt-24">
-            <Reveal>
-              <span className="inline-flex items-center gap-2 rounded-full border border-hero-border bg-hero-elevated/60 px-3.5 py-1.5 text-xs font-medium tracking-wide text-hero-muted">
-                <Zap className="size-3.5 text-primary" aria-hidden="true" />
-                Every GIF tool. Zero uploads.
-              </span>
-
-              <h1
-                id="hero-heading"
-                className="mt-7 text-[2.6rem] leading-[1.02] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl"
-              >
-                Smaller GIFs,
-                <br />
-                <span className="gradient-text">without the upload.</span>
-              </h1>
-
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-hero-muted text-pretty sm:text-xl">
-                Eight GIF tools that run inside this tab. Compress, crop, resize, retime, split and
-                convert, free and without a watermark. Your file never leaves your device.
-              </p>
-            </Reveal>
-
-            <Reveal delay={120}>
-              <div className="mt-10 flex flex-col items-center gap-4">
-                <Link
-                  to="/gif-compressor"
-                  className="group inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-2xl bg-primary px-8 py-4.5 text-lg font-semibold text-primary-foreground shadow-xl shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-primary/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:w-auto"
-                >
-                  Compress a GIF free
-                  <ArrowRight
-                    className="size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
-                    aria-hidden="true"
-                  />
-                </Link>
-
-                <p className="text-sm text-hero-muted">
-                  Free forever. No signup, no watermark, no file limit.
-                </p>
-
-                <a
-                  href="#tools"
-                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-hero-foreground underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  Or browse all 8 tools
-                  <ArrowRight className="size-3.5" aria-hidden="true" />
-                </a>
-              </div>
-            </Reveal>
-
-            <Reveal delay={200}>
-              <ul className="mx-auto mt-10 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-hero-muted">
-                {[
-                  "0 bytes uploaded",
-                  "Up to 70% smaller",
-                  "Works offline after the first visit",
-                ].map((item) => (
-                  <li key={item} className="inline-flex items-center gap-2">
-                    <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-
-          <Reveal delay={260} className="relative mx-auto max-w-2xl px-4 pb-16 sm:px-6">
-            <CompressionDemo />
-          </Reveal>
-
-          <p className="relative pb-8 text-center font-mono text-[11px] tracking-[0.24em] text-hero-muted uppercase">
-            Scroll to watch a 5 MB GIF lose four fifths of itself
-          </p>
-        </section>
-
-
-        {/* ---------------- The scroll journey ---------------- */}
-        <section
-          aria-label="How a GIF gets smaller, step by step"
-          className="relative bg-hero text-hero-foreground"
+          className="relative isolate bg-hero text-hero-foreground"
         >
           <a
             href="#tools"
@@ -327,8 +237,95 @@ function Home() {
           >
             Skip the animation
           </a>
-          <ScrollFilm />
+
+          <ScrollFilm
+            intro={
+              <>
+                <span className="inline-flex items-center gap-2 rounded-full border border-hero-border bg-hero-elevated/60 px-3.5 py-1.5 text-xs font-medium tracking-wide text-hero-muted backdrop-blur-md">
+                  <Zap className="size-3.5 text-primary" aria-hidden="true" />
+                  Every GIF tool. Zero uploads.
+                </span>
+
+                <h1
+                  id="hero-heading"
+                  className="mt-6 text-[2.4rem] leading-[1.02] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl"
+                >
+                  Smaller GIFs,
+                  <br />
+                  <span className="gradient-text">without the upload.</span>
+                </h1>
+
+                <p className="mx-auto mt-5 max-w-xl text-base text-hero-muted text-pretty sm:text-xl">
+                  Eight GIF tools that run inside this tab. Compress, crop, resize, retime, split
+                  and convert, free and without a watermark.
+                </p>
+
+                <div className="mt-8 flex flex-col items-center gap-3.5">
+                  <Link
+                    to="/gif-compressor"
+                    className="group inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-2xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-xl shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-primary/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:w-auto"
+                  >
+                    Compress a GIF free
+                    <ArrowRight
+                      className="size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                  <a
+                    href="#tools"
+                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-hero-foreground underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    Or browse all 8 tools
+                    <ArrowRight className="size-3.5" aria-hidden="true" />
+                  </a>
+                </div>
+
+                <ul className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-hero-muted">
+                  {[
+                    "0 bytes uploaded",
+                    "Up to 70% smaller",
+                    "Works offline after the first visit",
+                  ].map((item) => (
+                    <li key={item} className="inline-flex items-center gap-2">
+                      <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="mt-8 font-mono text-[11px] tracking-[0.24em] text-hero-muted uppercase">
+                  Scroll to watch a 5 MB GIF lose four fifths of itself
+                </p>
+              </>
+            }
+          />
         </section>
+
+        {/* ---------------- The live demo ---------------- */}
+        <section
+          aria-labelledby="demo-heading"
+          className="relative isolate overflow-hidden bg-hero text-hero-foreground"
+        >
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -top-40 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[140px] zg-aurora" />
+          </div>
+
+          <div className="relative mx-auto max-w-2xl px-4 pt-20 pb-16 sm:px-6">
+            <Reveal className="text-center">
+              <h2 id="demo-heading" className="text-3xl font-bold tracking-tight sm:text-4xl">
+                See it happen, before you commit
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-hero-muted">
+                Drag the divider. Same GIF, two weights, and nothing left your device to make it
+                happen.
+              </p>
+            </Reveal>
+            <Reveal delay={140} className="mt-10 block">
+              <CompressionDemo />
+            </Reveal>
+          </div>
+        </section>
+
 
 
         {/* ---------------- The settle ---------------- */}
