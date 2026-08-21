@@ -225,6 +225,7 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
 
     let lastBand = -1;
     let lastKb = -1;
+    let lastIntro = -1;
 
     const commit = (p: number) => {
       draw(ctx, w, h, p, quality);
