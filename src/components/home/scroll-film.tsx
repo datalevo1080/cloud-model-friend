@@ -240,6 +240,12 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
         lastKb = next;
         setKb(next);
       }
+      // Intro headline holds the first sliver of scroll, then hands over to the captions.
+      const fade = Math.round((1 - clamp01((p - 0.015) / 0.075)) * 20) / 20;
+      if (fade !== lastIntro) {
+        lastIntro = fade;
+        setIntroOn(fade);
+      }
     };
 
     const tick = () => {
