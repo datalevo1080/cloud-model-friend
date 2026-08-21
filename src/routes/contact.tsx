@@ -1,5 +1,13 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { LegalPage } from "@/components/legal-page";
+import { Facebook, Linkedin, Mail } from "lucide-react";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -8,7 +16,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Get in touch with the ZipGIF team about bugs, feature requests, or questions on our client-side, no-upload GIF compressor.",
+          "Get in touch about bugs, feature requests, or questions on ZipGIF's client-side, no-upload GIF tools. Email Shafiullah Tareen directly.",
       },
       { property: "og:title", content: "Contact ZipGIF" },
       {
@@ -25,37 +33,160 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [accepted, setAccepted] = useState(false);
+
+  const mailto = `mailto:shafitareen431@gmail.com?subject=${encodeURIComponent(
+    subject || "ZipGIF enquiry",
+  )}&body=${encodeURIComponent(`${message}\n\n— ${name} (${email})`)}`;
+
   return (
-    <LegalPage title="Contact" subtitle="Bugs, feature requests, and questions are all welcome.">
-      <h2>Email</h2>
-      <p>
-        Write to{" "}
-        <a href="mailto:hello@zipgif.com">hello@zipgif.com</a> and we will read it. There is no
-        contact form here on purpose: a form would need a backend, and ZipGIF deliberately has
-        none.
-      </p>
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader />
 
-      <h2>Reporting a GIF that will not compress</h2>
-      <p>
-        Include your browser, operating system, and the file's size and dimensions — that is
-        usually enough to reproduce the issue. Please do not email the GIF itself unless we ask;
-        most failures are reproducible from a description, and we would rather not receive your
-        files.
-      </p>
+      <main className="flex-1">
+        {/* Contact 1 */}
+        <section className="px-4 py-16 sm:px-6 md:py-24">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-16 gap-y-12 md:grid-cols-2">
+            <div>
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">
+                Get in touch
+              </p>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Contact us</h1>
+              <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
+                Bugs, feature requests and questions are all welcome. There is no server behind
+                this form on purpose, so sending it opens your own email app with the message
+                ready to go.
+              </p>
 
-      <h2>Feature requests</h2>
-      <p>
-        Resize, Crop, and Convert are already on the roadmap and will ship with the same
-        no-upload architecture. If you need something else — batch renaming, specific target
-        presets, or an API-free workflow for your team — tell us which step of your work is slow
-        today and we will look at it.
-      </p>
+              <dl className="mt-10 space-y-6 text-[15px]">
+                <div className="flex items-start gap-4">
+                  <Mail className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <dt className="font-semibold text-foreground">Email</dt>
+                    <dd className="mt-1">
+                      <a
+                        href="mailto:shafitareen431@gmail.com"
+                        className="break-all text-muted-foreground underline hover:text-foreground"
+                      >
+                        shafitareen431@gmail.com
+                      </a>
+                    </dd>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <Linkedin className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <dt className="font-semibold text-foreground">LinkedIn</dt>
+                    <dd className="mt-1">
+                      <a
+                        href="https://www.linkedin.com/in/shafiullah-tareen-507857268"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="break-all text-muted-foreground underline hover:text-foreground"
+                      >
+                        Shafiullah Tareen
+                      </a>
+                    </dd>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <Facebook className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <dt className="font-semibold text-foreground">Facebook</dt>
+                    <dd className="mt-1">
+                      <a
+                        href="https://www.facebook.com/shafi.sami.336"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="break-all text-muted-foreground underline hover:text-foreground"
+                      >
+                        shafi.sami.336
+                      </a>
+                    </dd>
+                  </div>
+                </div>
+              </dl>
+            </div>
 
-      <h2>Response time</h2>
-      <p>
-        We usually reply within a few business days. ZipGIF is free and has no support tier, so
-        replies are best-effort rather than guaranteed.
-      </p>
-    </LegalPage>
+            <form
+              className="space-y-6"
+              onSubmit={(e) => {
+                e.preventDefault();
+                window.location.href = mailto;
+              }}
+            >
+              <div className="space-y-2">
+                <Label htmlFor="contact-name">Name</Label>
+                <Input
+                  id="contact-name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  autoComplete="name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact-email">Email</Label>
+                <Input
+                  id="contact-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact-subject">Subject</Label>
+                <Input
+                  id="contact-subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="Bug report, feature request, something else"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact-message">Message</Label>
+                <Textarea
+                  id="contact-message"
+                  required
+                  rows={6}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Include your browser, operating system, and the file size and dimensions if a GIF will not process."
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id="contact-accept"
+                  checked={accepted}
+                  onCheckedChange={(v) => setAccepted(v === true)}
+                  required
+                />
+                <Label htmlFor="contact-accept" className="text-sm font-normal text-muted-foreground">
+                  I accept the{" "}
+                  <a href="/terms" className="text-primary underline">
+                    Terms
+                  </a>
+                </Label>
+              </div>
+              <Button type="submit" size="lg" disabled={!accepted}>
+                Send message
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Replies are best effort, usually within a few business days. Please do not attach
+                your GIF unless we ask for it.
+              </p>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <SiteFooter />
+    </div>
   );
 }
