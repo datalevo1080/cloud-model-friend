@@ -342,6 +342,14 @@ export function ScrollFilm({ intro }: { intro?: ReactNode }) {
         {/* Hero headline: holds the opening frame, then hands the stage to the captions. */}
         {intro ? (
           <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-hero/75 transition-opacity duration-300 [mask-image:radial-gradient(75%_60%_at_50%_50%,black,transparent)]"
+            style={{ opacity: introOn }}
+          />
+        ) : null}
+
+        {intro ? (
+          <div
             className="absolute inset-0 flex items-center justify-center px-4 transition-opacity duration-300 sm:px-6"
             style={{
               opacity: introOn,
