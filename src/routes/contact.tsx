@@ -202,12 +202,20 @@ function Contact() {
                   </a>
                 </Label>
               </div>
-              <Button type="submit" size="lg" disabled={!accepted}>
-                Send message
+              <Button type="submit" size="lg" disabled={!accepted || sending}>
+                {sending ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    Sending…
+                  </>
+                ) : (
+                  "Send message"
+                )}
               </Button>
-              <p className="text-sm text-muted-foreground">
-                Replies are best effort, usually within a few business days. Please do not attach
-                your GIF unless we ask for it.
+              <p className="text-sm text-muted-foreground" role="status">
+                {sent
+                  ? "Thanks — your message is on its way to contact@zipgif.com."
+                  : "Replies are best effort, usually within a few business days. Please do not attach your GIF unless we ask for it."}
               </p>
             </form>
           </div>
