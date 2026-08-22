@@ -41,10 +41,35 @@ function Contact() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [company, setCompany] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const mailto = `mailto:shafitareen431@gmail.com?subject=${encodeURIComponent(
-    subject || "ZipGIF enquiry",
-  )}&body=${encodeURIComponent(`${message}\n\n— ${name} (${email})`)}`;
+  const send = useServerFn(submitContactMessage);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (sending) return;
+    setSending(true);
+    try {
+      await send({ data: { name, email, subject, message, company } });
+      setSent(true);
+      setName("");
+      setEmail("");
+      setSubject("");
+      setMessage("");
+      setAccepted(false);
+      toast.success("Message sent — thanks! We'll reply to your email.");
+    } catch (err) {
+      toast.error(
+        err instanceof Error && err.message
+          ? err.message
+          : "Something went wrong. Please email contact@zipgif.com directly.",
+      );
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
