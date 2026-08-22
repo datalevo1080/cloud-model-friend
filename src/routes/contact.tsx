@@ -85,9 +85,9 @@ function Contact() {
               </p>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Contact us</h1>
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
-                Bugs, feature requests and questions are all welcome. There is no server behind
-                this form on purpose, so sending it opens your own email app with the message
-                ready to go.
+                Bugs, feature requests and questions are all welcome. Send the form and your
+                message lands straight in our inbox at contact@zipgif.com — we reply to the
+                address you enter.
               </p>
 
               <dl className="mt-10 space-y-6 text-[15px]">
