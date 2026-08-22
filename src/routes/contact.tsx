@@ -140,13 +140,19 @@ function Contact() {
               </dl>
             </div>
 
-            <form
-              className="space-y-6"
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.location.href = mailto;
-              }}
-            >
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="contact-company">Company</label>
+                <input
+                  id="contact-company"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="contact-name">Name</Label>
                 <Input
