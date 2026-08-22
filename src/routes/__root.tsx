@@ -156,6 +156,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <Toaster richColors position="top-center" />
         <Scripts />
       </body>
     </html>
