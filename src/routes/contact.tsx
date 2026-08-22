@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Facebook, Linkedin, Mail } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { Facebook, Linkedin, Loader2, Mail } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
@@ -8,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { submitContactMessage } from "@/lib/contact.functions";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -38,10 +41,35 @@ function Contact() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [company, setCompany] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const mailto = `mailto:shafitareen431@gmail.com?subject=${encodeURIComponent(
-    subject || "ZipGIF enquiry",
-  )}&body=${encodeURIComponent(`${message}\n\n— ${name} (${email})`)}`;
+  const send = useServerFn(submitContactMessage);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (sending) return;
+    setSending(true);
+    try {
+      await send({ data: { name, email, subject, message, company } });
+      setSent(true);
+      setName("");
+      setEmail("");
+      setSubject("");
+      setMessage("");
+      setAccepted(false);
+      toast.success("Message sent — thanks! We'll reply to your email.");
+    } catch (err) {
+      toast.error(
+        err instanceof Error && err.message
+          ? err.message
+          : "Something went wrong. Please email contact@zipgif.com directly.",
+      );
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -57,9 +85,9 @@ function Contact() {
               </p>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Contact us</h1>
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
-                Bugs, feature requests and questions are all welcome. There is no server behind
-                this form on purpose, so sending it opens your own email app with the message
-                ready to go.
+                Bugs, feature requests and questions are all welcome. Send the form and your
+                message lands straight in our inbox at contact@zipgif.com — we reply to the
+                address you enter.
               </p>
 
               <dl className="mt-10 space-y-6 text-[15px]">
@@ -112,13 +140,19 @@ function Contact() {
               </dl>
             </div>
 
-            <form
-              className="space-y-6"
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.location.href = mailto;
-              }}
-            >
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="contact-company">Company</label>
+                <input
+                  id="contact-company"
+                  name="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="contact-name">Name</Label>
                 <Input
@@ -174,12 +208,20 @@ function Contact() {
                   </a>
                 </Label>
               </div>
-              <Button type="submit" size="lg" disabled={!accepted}>
-                Send message
+              <Button type="submit" size="lg" disabled={!accepted || sending}>
+                {sending ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    Sending…
+                  </>
+                ) : (
+                  "Send message"
+                )}
               </Button>
-              <p className="text-sm text-muted-foreground">
-                Replies are best effort, usually within a few business days. Please do not attach
-                your GIF unless we ask for it.
+              <p className="text-sm text-muted-foreground" role="status">
+                {sent
+                  ? "Thanks — your message is on its way to contact@zipgif.com."
+                  : "Replies are best effort, usually within a few business days. Please do not attach your GIF unless we ask for it."}
               </p>
             </form>
           </div>
