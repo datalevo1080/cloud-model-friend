@@ -7,6 +7,7 @@ import {
   absoluteUrl,
   localePath,
 } from "./config";
+import { translate } from "./index";
 
 type MetaEntry = Record<string, string>;
 type LinkEntry = Record<string, string>;
@@ -62,6 +63,23 @@ export function makeRouteOptions<T extends { head?: () => HeadResult }>(
         }
         return next;
       });
+
+      if (locale !== DEFAULT_LOCALE) {
+        const titleKey = `meta.${basePath}.title`;
+        const descKey = `meta.${basePath}.description`;
+        const title = translate(locale, titleKey);
+        const description = translate(locale, descKey);
+        if (title !== titleKey && description !== descKey) {
+          for (const entry of meta) {
+            if (typeof entry["title"] === "string") entry["title"] = title;
+            if (entry["name"] === "description" || entry["property"] === "og:description")
+              entry["content"] = description;
+            if (entry["property"] === "og:title" || entry["name"] === "twitter:title")
+              entry["content"] = title;
+            if (entry["name"] === "twitter:description") entry["content"] = description;
+          }
+        }
+      }
 
       const links = (base.links ?? [])
         .filter((l) => l["rel"] !== "alternate")
