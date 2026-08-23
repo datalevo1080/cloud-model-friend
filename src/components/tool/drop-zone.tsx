@@ -138,7 +138,7 @@ export function DropZone({
           </label>
           <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             <div className="relative flex-1">
-              <L2
+              <Link2
                 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden="true"
               />

@@ -108,7 +108,7 @@ function Contact() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <Ledin className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
+                  <Linkedin className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
                   <div className="min-w-0">
                     <dt className="font-semibold text-foreground">LinkedIn</dt>
                     <dd className="mt-1">

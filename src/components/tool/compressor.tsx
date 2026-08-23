@@ -1132,7 +1132,7 @@ export function Compressor() {
                   </>
                 ) : (
                   <>
-                    <L2 className="size-4" aria-hidden="true" /> Copy settings link
+                    <Link2 className="size-4" aria-hidden="true" /> Copy settings link
                   </>
                 )}
               </button>
