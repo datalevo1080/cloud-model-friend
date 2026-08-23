@@ -55,8 +55,8 @@
   "error.retry": "Réessayer",
   "error.home": "Retour à l'accueil",
   "langBar.message": "Cette page est aussi disponible en {language}.",
-  "langBar.action": "La consulter",
-  "langBar.dismiss": "Ignorer",
+  "langBar.action": "Lire en anglais",
+  "langBar.dismiss": "Masquer cet avis",
   "meta./.title": "ZipGIF — Compresser un GIF en ligne gratuit",
   "meta./.description": "Réduisez le poids d'un GIF jusqu'à 70 % en quelques secondes. ZipGIF compresse vos GIF dans le navigateur : sans envoi, sans filigrane, sans inscription.",
   "meta./gif-compressor.title": "Compresseur GIF — compresser un GIF gratuit",
@@ -157,5 +157,6 @@
   "terms.acceptable.h2": "Usage acceptable",
   "terms.acceptable.p": "N'utilisez pas ZipGIF pour traiter des contenus illégaux là où vous vivez, et ne tentez pas de perturber le site pour les autres visiteurs. Le traitement étant local, un mésusage affecte surtout votre propre appareil.",
   "terms.changes.h2": "Modifications",
-  "terms.changes.p": "Ces conditions peuvent évoluer avec le produit — par exemple à la sortie des outils Redimensionner, Recadrer et Convertir. La version en vigueur se trouve toujours sur cette page."
+  "terms.changes.p": "Ces conditions peuvent évoluer avec le produit — par exemple à la sortie des outils Redimensionner, Recadrer et Convertir. La version en vigueur se trouve toujours sur cette page.",
+  "langBar.viewing": "Vous lisez la version {language} de cette page."
 }
