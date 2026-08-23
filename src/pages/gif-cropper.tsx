@@ -613,3 +613,5 @@ function GifCropperPage() {
     </div>
   );
 }
+
+export const Page = GifCropperPage;

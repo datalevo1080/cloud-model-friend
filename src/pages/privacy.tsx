@@ -72,3 +72,5 @@ function Privacy() {
     </LegalPage>
   );
 }
+
+export const Page = Privacy;

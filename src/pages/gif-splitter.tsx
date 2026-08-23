@@ -315,3 +315,5 @@ function GifSplitterPage() {
     </div>
   );
 }
+
+export const Page = GifSplitterPage;

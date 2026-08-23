@@ -498,3 +498,5 @@ function GifSpeedChangerPage() {
     </div>
   );
 }
+
+export const Page = GifSpeedChangerPage;

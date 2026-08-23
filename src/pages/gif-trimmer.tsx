@@ -392,3 +392,5 @@ function GifTrimmerPage() {
     </div>
   );
 }
+
+export const Page = GifTrimmerPage;

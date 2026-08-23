@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { options } from "@/pages/gif-speed-changer";
+import { options, Page } from "@/pages/gif-speed-changer";
 import { PREFIXED_LOCALES, type Locale } from "@/i18n/config";
 
 export const Route = createFileRoute("/$lang/gif-speed-changer")({
@@ -7,5 +7,5 @@ export const Route = createFileRoute("/$lang/gif-speed-changer")({
     if (!(PREFIXED_LOCALES as string[]).includes(params.lang)) throw notFound();
   },
   head: (ctx) => options(ctx.params.lang as Locale).head!(),
-  component: options("en").component,
+  component: Page,
 });

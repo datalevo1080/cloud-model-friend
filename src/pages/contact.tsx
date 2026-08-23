@@ -234,3 +234,5 @@ function Contact() {
     </div>
   );
 }
+
+export const Page = Contact;

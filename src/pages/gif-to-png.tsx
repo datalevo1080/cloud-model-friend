@@ -373,3 +373,5 @@ function GifToPngPage() {
     </div>
   );
 }
+
+export const Page = GifToPngPage;

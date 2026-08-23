@@ -188,3 +188,5 @@ function About() {
     </div>
   );
 }
+
+export const Page = About;

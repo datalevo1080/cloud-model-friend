@@ -673,3 +673,5 @@ function Home() {
     </div>
   );
 }
+
+export const Page = Home;

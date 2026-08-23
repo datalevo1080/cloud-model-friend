@@ -1011,3 +1011,5 @@ function Index() {
     </div>
   );
 }
+
+export const Page = Index;

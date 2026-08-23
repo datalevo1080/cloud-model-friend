@@ -670,3 +670,5 @@ function GifResizerPage() {
     </div>
   );
 }
+
+export const Page = GifResizerPage;

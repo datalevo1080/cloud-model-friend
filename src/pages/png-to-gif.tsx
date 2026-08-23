@@ -380,3 +380,5 @@ function PngToGifPage() {
     </div>
   );
 }
+
+export const Page = PngToGifPage;

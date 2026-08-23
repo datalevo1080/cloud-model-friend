@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { options } from "@/pages/compress-gif-for-discord";
+import { options, Page } from "@/pages/compress-gif-for-discord";
 import { PREFIXED_LOCALES, type Locale } from "@/i18n/config";
 
 export const Route = createFileRoute("/$lang/compress-gif-for-discord")({
@@ -7,5 +7,5 @@ export const Route = createFileRoute("/$lang/compress-gif-for-discord")({
     if (!(PREFIXED_LOCALES as string[]).includes(params.lang)) throw notFound();
   },
   head: (ctx) => options(ctx.params.lang as Locale).head!(),
-  component: options("en").component,
+  component: Page,
 });

@@ -71,3 +71,5 @@ function Terms() {
     </LegalPage>
   );
 }
+
+export const Page = Terms;

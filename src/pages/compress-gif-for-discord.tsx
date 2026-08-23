@@ -214,3 +214,5 @@ function DiscordGuide() {
     </div>
   );
 }
+
+export const Page = DiscordGuide;
