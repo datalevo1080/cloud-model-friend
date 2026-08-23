@@ -1,5 +1,6 @@
 import { makeRouteOptions } from "@/i18n/route-options";
 import { L } from "@/components/l";
+import { useT } from "@/i18n";
 import { useState } from "react";
 
 import { useServerFn } from "@tanstack/react-start";
