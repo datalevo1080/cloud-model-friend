@@ -1,5 +1,6 @@
+import { L } from "@/components/l";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+
 import { AlertCircle, Download, Loader2, Maximize2, Package, RotateCcw } from "lucide-react";
 import { DropZone } from "./drop-zone";
 import { formatBytes } from "@/lib/format";
@@ -558,12 +559,12 @@ export function Resizer() {
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">
                       Want it perfectly square without stretching?{" "}
-                      <Link
+                      <L
                         to="/gif-cropper"
                         className="text-primary underline-offset-4 hover:underline"
                       >
                         Crop it square first with our GIF Cropper
-                      </Link>
+                      </L>
                       .
                     </p>
                   </fieldset>
@@ -786,9 +787,9 @@ export function Resizer() {
                 {overLimit && preset && (
                   <p className="mt-3 text-sm">
                     Still over {preset.limitLabel} —{" "}
-                    <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
+                    <L to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
                       run it through our GIF compressor
-                    </Link>
+                    </L>
                     .
                   </p>
                 )}

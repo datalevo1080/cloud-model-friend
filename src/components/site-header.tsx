@@ -1,5 +1,6 @@
+import { L } from "@/components/l";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+
 import {
   ArrowRight,
   ChevronDown,
@@ -80,7 +81,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/85 backdrop-blur-xl">
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:px-6 lg:h-18">
         <div className="flex min-w-0 items-center gap-6">
-          <Link
+          <L
             to="/"
             className="flex shrink-0 items-center gap-2 text-lg font-bold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
@@ -91,7 +92,7 @@ export function SiteHeader() {
               <span className="text-primary">Zip</span>
               <span className="text-foreground">GIF</span>
             </span>
-          </Link>
+          </L>
 
           {/* Desktop nav */}
           <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
@@ -115,7 +116,7 @@ export function SiteHeader() {
                   <ul className="grid grid-cols-2 gap-1">
                     {tools.map((tool) => (
                       <li key={tool.href}>
-                        <Link
+                        <L
                           to={tool.href}
                           onClick={() => setToolsOpen(false)}
                           activeProps={{ className: "bg-accent" }}
@@ -130,7 +131,7 @@ export function SiteHeader() {
                             </span>
                             <span className="block text-xs text-muted-foreground">{tool.blurb}</span>
                           </span>
-                        </Link>
+                        </L>
                       </li>
                     ))}
                   </ul>
@@ -138,16 +139,16 @@ export function SiteHeader() {
               ) : null}
             </div>
 
-            <Link
+            <L
               to="/gif-compressor"
               activeOptions={{ exact: true }}
               activeProps={{ className: "bg-accent text-accent-foreground" }}
               className="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
             >
               Compressor
-            </Link>
+            </L>
             {pages.map((page) => (
-              <Link
+              <L
                 key={page.href}
                 to={page.href}
                 activeOptions={{ exact: true }}
@@ -155,7 +156,7 @@ export function SiteHeader() {
                 className="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
               >
                 {page.label}
-              </Link>
+              </L>
             ))}
           </nav>
         </div>
@@ -174,7 +175,7 @@ export function SiteHeader() {
             )}
           </button>
 
-          <Link
+          <L
             to="/gif-compressor"
             className="group hidden items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:inline-flex"
           >
@@ -183,7 +184,7 @@ export function SiteHeader() {
               className="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
               aria-hidden="true"
             />
-          </Link>
+          </L>
 
           <button
             type="button"
@@ -215,7 +216,7 @@ export function SiteHeader() {
             <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
               {tools.map((tool) => (
                 <li key={tool.href}>
-                  <Link
+                  <L
                     to={tool.href}
                     onClick={() => setMenuOpen(false)}
                     activeProps={{ className: "bg-accent" }}
@@ -228,7 +229,7 @@ export function SiteHeader() {
                       <span className="block text-sm font-semibold">{tool.label}</span>
                       <span className="block text-xs text-muted-foreground">{tool.blurb}</span>
                     </span>
-                  </Link>
+                  </L>
                 </li>
               ))}
             </ul>
@@ -239,25 +240,25 @@ export function SiteHeader() {
             <ul className="grid grid-cols-2 gap-1">
               {pages.map((page) => (
                 <li key={page.href}>
-                  <Link
+                  <L
                     to={page.href}
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-3 py-3 text-sm font-medium transition-colors hover:bg-accent"
                   >
                     {page.label}
-                  </Link>
+                  </L>
                 </li>
               ))}
             </ul>
 
-            <Link
+            <L
               to="/gif-compressor"
               onClick={() => setMenuOpen(false)}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground"
             >
               Compress a GIF free
               <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
+            </L>
           </nav>
         </div>
       ) : null}

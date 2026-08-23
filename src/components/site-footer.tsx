@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { L } from "@/components/l";
 import { Facebook, Linkedin, Mail, Zap } from "lucide-react";
 
 const tools = [
@@ -37,7 +37,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+            <L to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
               <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <Zap className="size-4" aria-hidden="true" />
               </span>
@@ -45,7 +45,7 @@ export function SiteFooter() {
                 <span className="text-primary">Zip</span>
                 <span className="text-foreground">GIF</span>
               </span>
-            </Link>
+            </L>
             <p className="mt-5 max-w-xs text-sm leading-6 text-muted-foreground">
               Every GIF tool. Zero uploads. Everything runs inside your browser, so your files
               never leave your device.
@@ -77,15 +77,15 @@ export function SiteFooter() {
         <div className="mt-6 flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} ZipGIF. Built by Shafiullah Tareen.</p>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link to="/privacy" className="underline hover:text-foreground">
+            <L to="/privacy" className="underline hover:text-foreground">
               Privacy Policy
-            </Link>
-            <Link to="/terms" className="underline hover:text-foreground">
+            </L>
+            <L to="/terms" className="underline hover:text-foreground">
               Terms
-            </Link>
-            <Link to="/contact" className="underline hover:text-foreground">
+            </L>
+            <L to="/contact" className="underline hover:text-foreground">
               Contact
-            </Link>
+            </L>
           </nav>
         </div>
       </div>
@@ -105,13 +105,13 @@ function FooterColumn({
       <h2 className="text-sm font-semibold text-foreground">{title}</h2>
       <nav aria-label={title} className="mt-4 flex flex-col gap-3 text-sm">
         {links.map((l) => (
-          <Link
+          <L
             key={l.label}
             to={l.href}
             className="text-muted-foreground hover:text-foreground"
           >
             {l.label}
-          </Link>
+          </L>
         ))}
       </nav>
     </div>

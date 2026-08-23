@@ -1,6 +1,7 @@
+import { L } from "@/components/l";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Download, Loader2, RotateCcw } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+
 import { DropZone } from "./drop-zone";
 import { formatBytes } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -342,12 +343,12 @@ export function GifToPng() {
               </div>
               <p className="mt-4 text-sm text-muted-foreground">
                 To eyeball every frame and pick exact ones visually, use the{" "}
-                <Link
+                <L
                   to="/gif-splitter"
                   className="text-primary underline-offset-4 hover:underline"
                 >
                   GIF Splitter
-                </Link>
+                </L>
                 .
               </p>
             </div>

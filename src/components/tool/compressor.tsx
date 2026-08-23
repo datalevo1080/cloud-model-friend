@@ -1,3 +1,4 @@
+import { L } from "@/components/l";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
@@ -1131,7 +1132,7 @@ export function Compressor() {
                   </>
                 ) : (
                   <>
-                    <Link2 className="size-4" aria-hidden="true" /> Copy settings link
+                    <L2 className="size-4" aria-hidden="true" /> Copy settings link
                   </>
                 )}
               </button>
