@@ -18,44 +18,26 @@ import {
   Zap,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme";
+import { useT } from "@/i18n";
 
 const tools = [
-  {
-    icon: Zap,
-    label: "GIF Compressor",
-    href: "/gif-compressor" as const,
-    blurb: "Cut file size by up to 70%",
-  },
-  { icon: Crop, label: "GIF Cropper", href: "/gif-cropper" as const, blurb: "Trim every frame at once" },
-  {
-    icon: Maximize2,
-    label: "GIF Resizer",
-    href: "/gif-resizer" as const,
-    blurb: "Exact pixels or platform presets",
-  },
-  {
-    icon: Gauge,
-    label: "GIF Speed Changer",
-    href: "/gif-speed-changer" as const,
-    blurb: "Retime from 0.25x to 4x",
-  },
-  { icon: Split, label: "GIF Splitter", href: "/gif-splitter" as const, blurb: "Explode into PNG frames" },
-  {
-    icon: Scissors,
-    label: "GIF Trimmer",
-    href: "/gif-trimmer" as const,
-    blurb: "Keep only the part you want",
-  },
-  { icon: Images, label: "PNG to GIF", href: "/png-to-gif" as const, blurb: "Build an animation from stills" },
-  { icon: Sparkles, label: "GIF to PNG", href: "/gif-to-png" as const, blurb: "Pull frames out as PNGs" },
+  { icon: Zap, key: "tool.compressor", href: "/gif-compressor" },
+  { icon: Crop, key: "tool.cropper", href: "/gif-cropper" },
+  { icon: Maximize2, key: "tool.resizer", href: "/gif-resizer" },
+  { icon: Gauge, key: "tool.speed", href: "/gif-speed-changer" },
+  { icon: Split, key: "tool.splitter", href: "/gif-splitter" },
+  { icon: Scissors, key: "tool.trimmer", href: "/gif-trimmer" },
+  { icon: Images, key: "tool.pngToGif", href: "/png-to-gif" },
+  { icon: Sparkles, key: "tool.gifToPng", href: "/gif-to-png" },
 ];
 
 const pages = [
-  { label: "About", href: "/about" as const },
-  { label: "Contact", href: "/contact" as const },
+  { key: "nav.about", href: "/about" },
+  { key: "nav.contact", href: "/contact" },
 ];
 
 export function SiteHeader() {
+  const t = useT();
   const { theme, toggle } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
@@ -104,7 +86,7 @@ export function SiteHeader() {
                 onClick={() => setToolsOpen((v) => !v)}
                 className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
-                All tools
+                {t("nav.allTools")}
                 <ChevronDown
                   className={`size-4 transition-transform duration-200 ${toolsOpen ? "rotate-180" : ""}`}
                   aria-hidden="true"
@@ -127,9 +109,9 @@ export function SiteHeader() {
                           </span>
                           <span className="min-w-0">
                             <span className="block text-sm font-semibold text-foreground">
-                              {tool.label}
+                              {t(`${tool.key}.label`)}
                             </span>
-                            <span className="block text-xs text-muted-foreground">{tool.blurb}</span>
+                            <span className="block text-xs text-muted-foreground">{t(`${tool.key}.blurb`)}</span>
                           </span>
                         </L>
                       </li>
@@ -145,7 +127,7 @@ export function SiteHeader() {
               activeProps={{ className: "bg-accent text-accent-foreground" }}
               className="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
             >
-              Compressor
+              {t("nav.compressor")}
             </L>
             {pages.map((page) => (
               <L
@@ -155,7 +137,7 @@ export function SiteHeader() {
                 activeProps={{ className: "bg-accent text-accent-foreground" }}
                 className="rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
               >
-                {page.label}
+                {t(page.key)}
               </L>
             ))}
           </nav>
@@ -165,7 +147,7 @@ export function SiteHeader() {
           <button
             type="button"
             onClick={toggle}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={theme === "dark" ? t("nav.toLight") : t("nav.toDark")}
             className="inline-flex size-11 items-center justify-center rounded-xl border border-border text-foreground transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {theme === "dark" ? (
@@ -179,7 +161,7 @@ export function SiteHeader() {
             to="/gif-compressor"
             className="group hidden items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:inline-flex"
           >
-            Compress a GIF
+            {t("nav.cta")}
             <ArrowRight
               className="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
               aria-hidden="true"
@@ -198,7 +180,7 @@ export function SiteHeader() {
             ) : (
               <Menu className="size-5" aria-hidden="true" />
             )}
-            <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
+            <span className="sr-only">{menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}</span>
           </button>
         </div>
       </div>
@@ -211,7 +193,7 @@ export function SiteHeader() {
         >
           <nav aria-label="Tools" className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
             <p className="px-1 pb-2 text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-              Tools
+              {t("nav.tools")}
             </p>
             <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
               {tools.map((tool) => (
@@ -226,8 +208,8 @@ export function SiteHeader() {
                       <tool.icon className="size-4" aria-hidden="true" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-sm font-semibold">{tool.label}</span>
-                      <span className="block text-xs text-muted-foreground">{tool.blurb}</span>
+                      <span className="block text-sm font-semibold">{t(`${tool.key}.label`)}</span>
+                      <span className="block text-xs text-muted-foreground">{t(`${tool.key}.blurb`)}</span>
                     </span>
                   </L>
                 </li>
@@ -235,7 +217,7 @@ export function SiteHeader() {
             </ul>
 
             <p className="mt-4 px-1 pb-2 text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-              More
+              {t("nav.more")}
             </p>
             <ul className="grid grid-cols-2 gap-1">
               {pages.map((page) => (
@@ -245,7 +227,7 @@ export function SiteHeader() {
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-3 py-3 text-sm font-medium transition-colors hover:bg-accent"
                   >
-                    {page.label}
+                    {t(page.key)}
                   </L>
                 </li>
               ))}
@@ -256,7 +238,7 @@ export function SiteHeader() {
               onClick={() => setMenuOpen(false)}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground"
             >
-              Compress a GIF free
+              {t("nav.ctaMobile")}
               <ArrowRight className="size-4" aria-hidden="true" />
             </L>
           </nav>
