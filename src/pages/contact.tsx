@@ -1,5 +1,6 @@
 import { makeRouteOptions } from "@/i18n/route-options";
 import { L } from "@/components/l";
+import { useT } from "@/i18n";
 import { useState } from "react";
 
 import { useServerFn } from "@tanstack/react-start";
@@ -38,6 +39,7 @@ export const options = makeRouteOptions("/contact", {
 });
 
 function Contact() {
+  const t = useT();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -61,12 +63,10 @@ function Contact() {
       setSubject("");
       setMessage("");
       setAccepted(false);
-      toast.success("Message sent — thanks! We'll reply to your email.");
+      toast.success(t("contact.toast.success"));
     } catch (err) {
       toast.error(
-        err instanceof Error && err.message
-          ? err.message
-          : "Something went wrong. Please email contact@zipgif.com directly.",
+        err instanceof Error && err.message ? err.message : t("contact.toast.error"),
       );
     } finally {
       setSending(false);
@@ -83,20 +83,18 @@ function Contact() {
           <div className="mx-auto grid max-w-6xl grid-cols-1 gap-x-16 gap-y-12 md:grid-cols-2">
             <div>
               <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-primary">
-                Get in touch
+                {t("contact.eyebrow")}
               </p>
-              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Contact us</h1>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{t("contact.h1")}</h1>
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
-                Bugs, feature requests and questions are all welcome. Send the form and your
-                message lands straight in our inbox at contact@zipgif.com — we reply to the
-                address you enter.
+                {t("contact.intro")}
               </p>
 
               <dl className="mt-10 space-y-6 text-[15px]">
                 <div className="flex items-start gap-4">
                   <Mail className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
                   <div className="min-w-0">
-                    <dt className="font-semibold text-foreground">Email</dt>
+                    <dt className="font-semibold text-foreground">{t("contact.email")}</dt>
                     <dd className="mt-1">
                       <a
                         href="mailto:shafitareen431@gmail.com"
@@ -110,7 +108,7 @@ function Contact() {
                 <div className="flex items-start gap-4">
                   <Linkedin className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
                   <div className="min-w-0">
-                    <dt className="font-semibold text-foreground">LinkedIn</dt>
+                    <dt className="font-semibold text-foreground">{t("contact.linkedin")}</dt>
                     <dd className="mt-1">
                       <a
                         href="https://www.linkedin.com/in/shafiullah-tareen-507857268"
@@ -126,7 +124,7 @@ function Contact() {
                 <div className="flex items-start gap-4">
                   <Facebook className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
                   <div className="min-w-0">
-                    <dt className="font-semibold text-foreground">Facebook</dt>
+                    <dt className="font-semibold text-foreground">{t("contact.facebook")}</dt>
                     <dd className="mt-1">
                       <a
                         href="https://www.facebook.com/shafi.sami.336"
@@ -144,7 +142,7 @@ function Contact() {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="hidden" aria-hidden="true">
-                <label htmlFor="contact-company">Company</label>
+                <label htmlFor="contact-company">{t("contact.form.company")}</label>
                 <input
                   id="contact-company"
                   name="company"
@@ -156,7 +154,7 @@ function Contact() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="contact-name">Name</Label>
+                <Label htmlFor="contact-name">{t("contact.form.name")}</Label>
                 <Input
                   id="contact-name"
                   required
@@ -166,7 +164,7 @@ function Contact() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contact-email">Email</Label>
+                <Label htmlFor="contact-email">{t("contact.form.email")}</Label>
                 <Input
                   id="contact-email"
                   type="email"
@@ -177,23 +175,23 @@ function Contact() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contact-subject">Subject</Label>
+                <Label htmlFor="contact-subject">{t("contact.form.subject")}</Label>
                 <Input
                   id="contact-subject"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  placeholder="Bug report, feature request, something else"
+                  placeholder={t("contact.form.subjectPlaceholder")}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contact-message">Message</Label>
+                <Label htmlFor="contact-message">{t("contact.form.message")}</Label>
                 <Textarea
                   id="contact-message"
                   required
                   rows={6}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Include your browser, operating system, and the file size and dimensions if a GIF will not process."
+                  placeholder={t("contact.form.messagePlaceholder")}
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -204,26 +202,24 @@ function Contact() {
                   required
                 />
                 <Label htmlFor="contact-accept" className="text-sm font-normal text-muted-foreground">
-                  I accept the{" "}
-                  <a href="/terms" className="text-primary underline">
-                    Terms
-                  </a>
+                  {t("contact.form.acceptPre")}{" "}
+                  <L to="/terms" className="text-primary underline">
+                    {t("contact.form.acceptTerms")}
+                  </L>
                 </Label>
               </div>
               <Button type="submit" size="lg" disabled={!accepted || sending}>
                 {sending ? (
                   <>
                     <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                    Sending…
+                    {t("contact.form.sending")}
                   </>
                 ) : (
-                  "Send message"
+                  t("contact.form.submit")
                 )}
               </Button>
               <p className="text-sm text-muted-foreground" role="status">
-                {sent
-                  ? "Thanks — your message is on its way to contact@zipgif.com."
-                  : "Replies are best effort, usually within a few business days. Please do not attach your GIF unless we ask for it."}
+                {sent ? t("contact.form.sent") : t("contact.form.idle")}
               </p>
             </form>
           </div>
@@ -234,5 +230,6 @@ function Contact() {
     </div>
   );
 }
+
 
 export const Page = Contact;
