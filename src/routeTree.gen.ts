@@ -37,7 +37,6 @@ import { Route as LangGifTrimmerRouteImport } from './routes/$lang/gif-trimmer'
 import { Route as LangPngToGifRouteImport } from './routes/$lang/png-to-gif'
 import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
 import { Route as LangTermsRouteImport } from './routes/$lang/terms'
-import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -180,12 +179,6 @@ const LangTermsRoute = LangTermsRouteImport.update({
   path: '/$lang/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LovableEmailTransactionalPreviewRoute =
-  LovableEmailTransactionalPreviewRouteImport.update({
-    id: '/lovable/email/transactional/preview',
-    path: '/lovable/email/transactional/preview',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -216,7 +209,6 @@ export interface FileRoutesByFullPath {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/$lang/': typeof LangIndexRoute
-  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -247,7 +239,6 @@ export interface FileRoutesByTo {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/$lang': typeof LangIndexRoute
-  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -279,7 +270,6 @@ export interface FileRoutesById {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/$lang/': typeof LangIndexRoute
-  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -312,7 +302,6 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/$lang/'
-    | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -343,7 +332,6 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/$lang'
-    | '/lovable/email/transactional/preview'
   id:
     | '__root__'
     | '/'
@@ -374,7 +362,6 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/$lang/'
-    | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -406,7 +393,6 @@ export interface RootRouteChildren {
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangTermsRoute: typeof LangTermsRoute
   LangIndexRoute: typeof LangIndexRoute
-  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -607,13 +593,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lovable/email/transactional/preview': {
-      id: '/lovable/email/transactional/preview'
-      path: '/lovable/email/transactional/preview'
-      fullPath: '/lovable/email/transactional/preview'
-      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -646,7 +625,6 @@ const rootRouteChildren: RootRouteChildren = {
   LangPrivacyRoute: LangPrivacyRoute,
   LangTermsRoute: LangTermsRoute,
   LangIndexRoute: LangIndexRoute,
-  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
