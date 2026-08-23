@@ -1,12 +1,14 @@
-import { Link, type LinkProps } from "@tanstack/react-router";
-import { useLocalePath } from "@/i18n";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Link } from "@tanstack/react-router";
+import type { ReactNode } from "react";
+import { DEFAULT_LOCALE, useLocale } from "@/i18n";
 
-type LProps = Omit<LinkProps, "to"> & {
+type LProps = {
   to: string;
   className?: string;
-  children?: React.ReactNode;
-  "aria-label"?: string;
+  children?: ReactNode;
   onClick?: () => void;
+  [key: string]: any;
 };
 
 /**
@@ -14,6 +16,10 @@ type LProps = Omit<LinkProps, "to"> & {
  * on /fr/* pages `to="/gif-cropper"` resolves to /fr/gif-cropper.
  */
 export function L({ to, ...rest }: LProps) {
-  const lp = useLocalePath();
-  return <Link {...(rest as LinkProps)} to={lp(to) as LinkProps["to"]} />;
+  const locale = useLocale();
+  if (locale === DEFAULT_LOCALE) {
+    return <Link {...(rest as any)} to={to as any} />;
+  }
+  const target = to === "/" ? "/$lang" : `/$lang${to}`;
+  return <Link {...(rest as any)} to={target as any} params={{ lang: locale } as any} />;
 }
