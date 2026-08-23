@@ -1,6 +1,7 @@
+import { L } from "@/components/l";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -50,9 +51,9 @@ export const resizeFaqs: { q: string; a: string; jsx: React.ReactNode }[] = [
         Decide which kind of smaller you mean. Fewer pixels is a resize: set a percentage or exact
         width here and the GIF gets physically smaller on screen. Fewer bytes at the same dimensions
         is compression, and the{" "}
-        <Link to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
+        <L to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
           GIF compressor
-        </Link>{" "}
+        </L>{" "}
         handles that. Doing both, in that order, gives the biggest drop.
       </>
     ),

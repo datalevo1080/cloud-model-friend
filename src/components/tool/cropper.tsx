@@ -1,5 +1,6 @@
+import { L } from "@/components/l";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+
 import {
   AlertCircle,
   Crop as CropIcon,
@@ -840,9 +841,9 @@ export function Cropper() {
           <p className="text-sm text-muted-foreground">
             <Scissors className="mr-1 inline size-4 align-text-bottom" aria-hidden="true" />
             Cropping cut the dimensions — want the file smaller too?{" "}
-            <Link to="/gif-compressor" className="font-medium text-primary underline-offset-4 hover:underline">
+            <L to="/gif-compressor" className="font-medium text-primary underline-offset-4 hover:underline">
               compress the GIF after cropping
-            </Link>
+            </L>
             .
           </p>
         </section>

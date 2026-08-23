@@ -1,12 +1,6 @@
+import { L } from "@/components/l";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  Outlet,
-  Link,
-  createRootRouteWithContext,
-  useRouter,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
+import { Outlet, createRootRouteWithContext, useRouter, HeadContent, Scripts } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
@@ -15,8 +9,10 @@ import { ThemeProvider, themeInitScript } from "../lib/theme";
 import { PwaInstall } from "../components/pwa-install";
 import { ServiceWorkerUpdater } from "../components/sw-update";
 import { Toaster } from "../components/ui/sonner";
+import { useT, useLocale, HTML_LANG } from "../i18n";
 
 function NotFoundComponent() {
+  const t = useT();
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -27,25 +23,24 @@ function NotFoundComponent() {
           4<span className="inline-block scale-x-50">0</span>4
         </p>
         <h1 className="mt-4 text-2xl font-bold text-foreground">
-          This page got compressed out of existence
+          {t("notFound.title")}
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          We pushed the lossy slider too far and lost a URL. The GIF compressor is still here
-          though, and it's much gentler with your files.
+          {t("notFound.body")}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <Link
+          <L
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Compress a GIF
-          </Link>
-          <Link
+            {t("notFound.ctaPrimary")}
+          </L>
+          <L
             to="/compress-gif-for-discord"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Compress a GIF for Discord
-          </Link>
+            {t("notFound.ctaSecondary")}
+          </L>
         </div>
       </div>
     </div>
@@ -53,6 +48,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+  const t = useT();
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -63,10 +59,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          {t("error.title")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          {t("error.body")}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -76,13 +72,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            {t("error.retry")}
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            {t("error.home")}
           </a>
         </div>
       </div>
@@ -150,8 +146,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const locale = useLocale();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={HTML_LANG[locale]} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
