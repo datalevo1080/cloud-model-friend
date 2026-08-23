@@ -55,8 +55,8 @@
   "error.retry": "Try again",
   "error.home": "Go home",
   "langBar.message": "This page is also available in {language}.",
-  "langBar.action": "View it",
-  "langBar.dismiss": "Dismiss",
+  "langBar.action": "Read it in English",
+  "langBar.dismiss": "Dismiss this notice",
   "meta./.title": "ZipGIF — Compress GIFs Online Free, No Uploads",
   "meta./.description": "Shrink GIF file size by up to 70% in seconds. ZipGIF compresses GIFs in your browser — no uploads, no watermark, no signup.",
   "meta./gif-compressor.title": "GIF Compressor — Compress GIF Online Free",
@@ -157,5 +157,6 @@
   "terms.acceptable.h2": "Acceptable use",
   "terms.acceptable.p": "Do not use ZipGIF to process content that is illegal where you live, and do not attempt to disrupt the site for other visitors. Since processing is local, misuse mostly affects your own device.",
   "terms.changes.h2": "Changes",
-  "terms.changes.p": "These terms may be updated as the product grows — for example when the Resize, Crop, and Convert tools ship. The current version always lives on this page."
+  "terms.changes.p": "These terms may be updated as the product grows — for example when the Resize, Crop, and Convert tools ship. The current version always lives on this page.",
+  "langBar.viewing": "You are reading the {language} version of this page."
 }

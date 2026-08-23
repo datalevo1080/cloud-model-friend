@@ -21,7 +21,11 @@ const LANGS: Record<string, string> = {
 const CHUNK = 40;
 const CONCURRENCY = 4;
 
-const en: Record<string, string> = JSON.parse(readFileSync("src/i18n/auto/en.json", "utf8"));
+/** Which dictionary family to translate: "auto" = extracted prose, "ui" = hand-keyed strings. */
+const SET = (process.env["I18N_SET"] ?? "auto") === "ui" ? "ui" : "auto";
+const DIR = SET === "ui" ? "src/i18n/locales" : "src/i18n/auto";
+
+const en: Record<string, string> = JSON.parse(readFileSync(`${DIR}/en.json`, "utf8"));
 const targets = process.argv.slice(2).filter((l) => l in LANGS);
 const locales = targets.length ? targets : Object.keys(LANGS);
 
@@ -76,13 +80,23 @@ async function translateChunk(lang: string, chunk: [string, string][]): Promise<
 }
 
 for (const locale of locales) {
-  const path = `src/i18n/auto/${locale}.json`;
-  const existing: Record<string, string> = JSON.parse(readFileSync(path, "utf8"));
+  const path = `${DIR}/${locale}.json`;
+  let existing: Record<string, string> = {};
+  try {
+    existing = JSON.parse(readFileSync(path, "utf8")) as Record<string, string>;
+  } catch {
+    existing = {};
+  }
   const missing = Object.entries(en).filter(([key]) => !existing[key]);
-  console.log(`${locale}: ${missing.length} missing of ${Object.keys(en).length}`);
+  console.log(`[${SET}] ${locale}: ${missing.length} missing of ${Object.keys(en).length}`);
 
   const chunks: [string, string][][] = [];
   for (let i = 0; i < missing.length; i += CHUNK) chunks.push(missing.slice(i, i + CHUNK));
+  if (!chunks.length) {
+    const ordered: Record<string, string> = {};
+    for (const key of Object.keys(en)) if (existing[key]) ordered[key] = existing[key];
+    writeFileSync(path, `${JSON.stringify(ordered, null, 2)}\n`);
+  }
 
   for (let i = 0; i < chunks.length; i += CONCURRENCY) {
     const batch = chunks.slice(i, i + CONCURRENCY);

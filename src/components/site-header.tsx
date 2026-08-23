@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { useT } from "@/i18n";
+import { LanguageToggle } from "@/components/language-toggle";
+import { LocaleBar } from "@/components/locale-bar";
 
 const tools = [
   { icon: Zap, key: "tool.compressor", href: "/gif-compressor" },
@@ -61,6 +63,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/70 bg-background/85 backdrop-blur-xl">
+      <LocaleBar />
       <div className="mx-auto grid h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:px-6 lg:h-18">
         <div className="flex min-w-0 items-center gap-6">
           <L
@@ -144,6 +147,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <LanguageToggle />
           <button
             type="button"
             onClick={toggle}

@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "i18n": "bun scripts/i18n-sync.ts",
+    "sitemap": "bun scripts/gen-sitemap.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
