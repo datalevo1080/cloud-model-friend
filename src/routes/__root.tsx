@@ -1,7 +1,7 @@
 import { L } from "@/components/l";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, createRootRouteWithContext, useRouter, HeadContent, Scripts } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { Suspense, use, useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -10,7 +10,7 @@ import { PwaInstall } from "../components/pwa-install";
 import { ServiceWorkerUpdater } from "../components/sw-update";
 import { Toaster } from "../components/ui/sonner";
 import { useT, useLocale, HTML_LANG } from "../i18n";
-import { setAutoLocale } from "../i18n/auto";
+import { ensureAutoDict, isAutoDictReady, setAutoLocale } from "../i18n/auto";
 
 function NotFoundComponent() {
   const t = useT();
@@ -163,14 +163,31 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Holds rendering until the current locale's translation chunk is in memory.
+ * English resolves instantly and downloads nothing.
+ */
+function LocaleGate({ children }: { children: ReactNode }) {
+  const locale = useLocale();
+  if (!isAutoDictReady(locale)) {
+    use(ensureAutoDict(locale));
+  }
+  setAutoLocale(locale);
+  return <>{children}</>;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <Suspense fallback={null}>
+          <LocaleGate>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </LocaleGate>
+        </Suspense>
         <PwaInstall />
         <ServiceWorkerUpdater />
       </ThemeProvider>
