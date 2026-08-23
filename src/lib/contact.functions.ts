@@ -25,7 +25,7 @@ export const submitContactMessage = createServerFn({ method: "POST" })
         message: data.message,
       },
       replyTo: data.email,
-      idempotencyKey: `contact-${data.email}-${data.message.slice(0, 40)}`,
+      idempotencyKey: `contact-${crypto.randomUUID()}`,
     });
 
     if (!result.sent) {
