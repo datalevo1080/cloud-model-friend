@@ -20,9 +20,8 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        "entities/lib/decode.js": path.resolve(__dirname, "node_modules/entities/lib/decode.js"),
-        "entities/lib/encode.js": path.resolve(__dirname, "node_modules/entities/lib/encode.js"),
-        entities: path.resolve(__dirname, "node_modules/entities"),
+        // Route every JSX text node through the auto-translation dictionary.
+
         // Route every JSX text node through the auto-translation dictionary.
         "react/jsx-dev-runtime": path.resolve(__dirname, "src/i18n/jsx-dev-runtime.ts"),
         "react/jsx-runtime": path.resolve(__dirname, "src/i18n/jsx-runtime.ts"),
