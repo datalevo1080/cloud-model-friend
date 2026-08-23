@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { useT } from "@/i18n";
+import { LanguageToggle } from "@/components/language-toggle";
 
 const tools = [
   { icon: Zap, key: "tool.compressor", href: "/gif-compressor" },
