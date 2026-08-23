@@ -8,6 +8,24 @@ import {
   localePath,
 } from "./config";
 import { translate } from "./index";
+import { autoTranslateFor } from "./auto";
+
+/** Deep-translate every prose string inside a JSON-LD block. */
+function localizeJsonLd(value: unknown, locale: Locale): unknown {
+  if (typeof value === "string") {
+    if (/^https?:|^[\d.]+$/.test(value)) return value;
+    return autoTranslateFor(locale, value);
+  }
+  if (Array.isArray(value)) return value.map((v) => localizeJsonLd(v, locale));
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = k === "@type" || k === "@context" || k === "url" ? v : localizeJsonLd(v, locale);
+    }
+    return out;
+  }
+  return value;
+}
 
 type MetaEntry = Record<string, string>;
 type LinkEntry = Record<string, string>;
@@ -106,10 +124,19 @@ export function makeRouteOptions<T extends { head?: () => HeadResult }>(
           typeof (script as { children?: unknown }).children === "string"
         ) {
           const s = script as { children: string };
-          return {
-            ...s,
-            children: s.children.split(`${SITE}${basePath}"`).join(`${absoluteUrl(locale, basePath)}"`),
-          };
+          let children = s.children
+            .split(`${SITE}${basePath}"`)
+            .join(`${absoluteUrl(locale, basePath)}"`);
+          if (locale !== DEFAULT_LOCALE) {
+            try {
+              const parsed = localizeJsonLd(JSON.parse(children), locale) as Record<string, unknown>;
+              parsed["inLanguage"] = HREFLANG[locale];
+              children = JSON.stringify(parsed);
+            } catch {
+              // Not parseable JSON — leave the block untouched.
+            }
+          }
+          return { ...s, children };
         }
         return script;
       });

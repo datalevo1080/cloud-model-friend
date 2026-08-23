@@ -10,6 +10,7 @@ import { PwaInstall } from "../components/pwa-install";
 import { ServiceWorkerUpdater } from "../components/sw-update";
 import { Toaster } from "../components/ui/sonner";
 import { useT, useLocale, HTML_LANG } from "../i18n";
+import { setAutoLocale } from "../i18n/auto";
 
 function NotFoundComponent() {
   const t = useT();
@@ -147,6 +148,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   const locale = useLocale();
+  setAutoLocale(locale);
   return (
     <html lang={HTML_LANG[locale]} suppressHydrationWarning>
       <head>
