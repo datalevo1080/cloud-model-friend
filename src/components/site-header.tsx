@@ -20,6 +20,7 @@ import {
 import { useTheme } from "@/lib/theme";
 import { useT } from "@/i18n";
 import { LanguageToggle } from "@/components/language-toggle";
+import { LocaleBar } from "@/components/locale-bar";
 
 const tools = [
   { icon: Zap, key: "tool.compressor", href: "/gif-compressor" },
