@@ -23,6 +23,20 @@ import { Route as GifTrimmerRouteImport } from './routes/gif-trimmer'
 import { Route as PngToGifRouteImport } from './routes/png-to-gif'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as LangIndexRouteImport } from './routes/$lang/index'
+import { Route as LangAboutRouteImport } from './routes/$lang/about'
+import { Route as LangCompressGifForDiscordRouteImport } from './routes/$lang/compress-gif-for-discord'
+import { Route as LangContactRouteImport } from './routes/$lang/contact'
+import { Route as LangGifCompressorRouteImport } from './routes/$lang/gif-compressor'
+import { Route as LangGifCropperRouteImport } from './routes/$lang/gif-cropper'
+import { Route as LangGifResizerRouteImport } from './routes/$lang/gif-resizer'
+import { Route as LangGifSpeedChangerRouteImport } from './routes/$lang/gif-speed-changer'
+import { Route as LangGifSplitterRouteImport } from './routes/$lang/gif-splitter'
+import { Route as LangGifToPngRouteImport } from './routes/$lang/gif-to-png'
+import { Route as LangGifTrimmerRouteImport } from './routes/$lang/gif-trimmer'
+import { Route as LangPngToGifRouteImport } from './routes/$lang/png-to-gif'
+import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
+import { Route as LangTermsRouteImport } from './routes/$lang/terms'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
@@ -95,6 +109,77 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangIndexRoute = LangIndexRouteImport.update({
+  id: '/$lang/',
+  path: '/$lang/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangAboutRoute = LangAboutRouteImport.update({
+  id: '/$lang/about',
+  path: '/$lang/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangCompressGifForDiscordRoute =
+  LangCompressGifForDiscordRouteImport.update({
+    id: '/$lang/compress-gif-for-discord',
+    path: '/$lang/compress-gif-for-discord',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LangContactRoute = LangContactRouteImport.update({
+  id: '/$lang/contact',
+  path: '/$lang/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifCompressorRoute = LangGifCompressorRouteImport.update({
+  id: '/$lang/gif-compressor',
+  path: '/$lang/gif-compressor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifCropperRoute = LangGifCropperRouteImport.update({
+  id: '/$lang/gif-cropper',
+  path: '/$lang/gif-cropper',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifResizerRoute = LangGifResizerRouteImport.update({
+  id: '/$lang/gif-resizer',
+  path: '/$lang/gif-resizer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifSpeedChangerRoute = LangGifSpeedChangerRouteImport.update({
+  id: '/$lang/gif-speed-changer',
+  path: '/$lang/gif-speed-changer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifSplitterRoute = LangGifSplitterRouteImport.update({
+  id: '/$lang/gif-splitter',
+  path: '/$lang/gif-splitter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifToPngRoute = LangGifToPngRouteImport.update({
+  id: '/$lang/gif-to-png',
+  path: '/$lang/gif-to-png',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangGifTrimmerRoute = LangGifTrimmerRouteImport.update({
+  id: '/$lang/gif-trimmer',
+  path: '/$lang/gif-trimmer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangPngToGifRoute = LangPngToGifRouteImport.update({
+  id: '/$lang/png-to-gif',
+  path: '/$lang/png-to-gif',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangPrivacyRoute = LangPrivacyRouteImport.update({
+  id: '/$lang/privacy',
+  path: '/$lang/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangTermsRoute = LangTermsRouteImport.update({
+  id: '/$lang/terms',
+  path: '/$lang/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailTransactionalPreviewRoute =
   LovableEmailTransactionalPreviewRouteImport.update({
     id: '/lovable/email/transactional/preview',
@@ -117,6 +202,20 @@ export interface FileRoutesByFullPath {
   '/png-to-gif': typeof PngToGifRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/$lang/about': typeof LangAboutRoute
+  '/$lang/compress-gif-for-discord': typeof LangCompressGifForDiscordRoute
+  '/$lang/contact': typeof LangContactRoute
+  '/$lang/gif-compressor': typeof LangGifCompressorRoute
+  '/$lang/gif-cropper': typeof LangGifCropperRoute
+  '/$lang/gif-resizer': typeof LangGifResizerRoute
+  '/$lang/gif-speed-changer': typeof LangGifSpeedChangerRoute
+  '/$lang/gif-splitter': typeof LangGifSplitterRoute
+  '/$lang/gif-to-png': typeof LangGifToPngRoute
+  '/$lang/gif-trimmer': typeof LangGifTrimmerRoute
+  '/$lang/png-to-gif': typeof LangPngToGifRoute
+  '/$lang/privacy': typeof LangPrivacyRoute
+  '/$lang/terms': typeof LangTermsRoute
+  '/$lang/': typeof LangIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
@@ -134,6 +233,20 @@ export interface FileRoutesByTo {
   '/png-to-gif': typeof PngToGifRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/$lang/about': typeof LangAboutRoute
+  '/$lang/compress-gif-for-discord': typeof LangCompressGifForDiscordRoute
+  '/$lang/contact': typeof LangContactRoute
+  '/$lang/gif-compressor': typeof LangGifCompressorRoute
+  '/$lang/gif-cropper': typeof LangGifCropperRoute
+  '/$lang/gif-resizer': typeof LangGifResizerRoute
+  '/$lang/gif-speed-changer': typeof LangGifSpeedChangerRoute
+  '/$lang/gif-splitter': typeof LangGifSplitterRoute
+  '/$lang/gif-to-png': typeof LangGifToPngRoute
+  '/$lang/gif-trimmer': typeof LangGifTrimmerRoute
+  '/$lang/png-to-gif': typeof LangPngToGifRoute
+  '/$lang/privacy': typeof LangPrivacyRoute
+  '/$lang/terms': typeof LangTermsRoute
+  '/$lang': typeof LangIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
@@ -152,6 +265,20 @@ export interface FileRoutesById {
   '/png-to-gif': typeof PngToGifRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/$lang/about': typeof LangAboutRoute
+  '/$lang/compress-gif-for-discord': typeof LangCompressGifForDiscordRoute
+  '/$lang/contact': typeof LangContactRoute
+  '/$lang/gif-compressor': typeof LangGifCompressorRoute
+  '/$lang/gif-cropper': typeof LangGifCropperRoute
+  '/$lang/gif-resizer': typeof LangGifResizerRoute
+  '/$lang/gif-speed-changer': typeof LangGifSpeedChangerRoute
+  '/$lang/gif-splitter': typeof LangGifSplitterRoute
+  '/$lang/gif-to-png': typeof LangGifToPngRoute
+  '/$lang/gif-trimmer': typeof LangGifTrimmerRoute
+  '/$lang/png-to-gif': typeof LangPngToGifRoute
+  '/$lang/privacy': typeof LangPrivacyRoute
+  '/$lang/terms': typeof LangTermsRoute
+  '/$lang/': typeof LangIndexRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
@@ -171,6 +298,20 @@ export interface FileRouteTypes {
     | '/png-to-gif'
     | '/privacy'
     | '/terms'
+    | '/$lang/about'
+    | '/$lang/compress-gif-for-discord'
+    | '/$lang/contact'
+    | '/$lang/gif-compressor'
+    | '/$lang/gif-cropper'
+    | '/$lang/gif-resizer'
+    | '/$lang/gif-speed-changer'
+    | '/$lang/gif-splitter'
+    | '/$lang/gif-to-png'
+    | '/$lang/gif-trimmer'
+    | '/$lang/png-to-gif'
+    | '/$lang/privacy'
+    | '/$lang/terms'
+    | '/$lang/'
     | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -188,6 +329,20 @@ export interface FileRouteTypes {
     | '/png-to-gif'
     | '/privacy'
     | '/terms'
+    | '/$lang/about'
+    | '/$lang/compress-gif-for-discord'
+    | '/$lang/contact'
+    | '/$lang/gif-compressor'
+    | '/$lang/gif-cropper'
+    | '/$lang/gif-resizer'
+    | '/$lang/gif-speed-changer'
+    | '/$lang/gif-splitter'
+    | '/$lang/gif-to-png'
+    | '/$lang/gif-trimmer'
+    | '/$lang/png-to-gif'
+    | '/$lang/privacy'
+    | '/$lang/terms'
+    | '/$lang'
     | '/lovable/email/transactional/preview'
   id:
     | '__root__'
@@ -205,6 +360,20 @@ export interface FileRouteTypes {
     | '/png-to-gif'
     | '/privacy'
     | '/terms'
+    | '/$lang/about'
+    | '/$lang/compress-gif-for-discord'
+    | '/$lang/contact'
+    | '/$lang/gif-compressor'
+    | '/$lang/gif-cropper'
+    | '/$lang/gif-resizer'
+    | '/$lang/gif-speed-changer'
+    | '/$lang/gif-splitter'
+    | '/$lang/gif-to-png'
+    | '/$lang/gif-trimmer'
+    | '/$lang/png-to-gif'
+    | '/$lang/privacy'
+    | '/$lang/terms'
+    | '/$lang/'
     | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
@@ -223,6 +392,20 @@ export interface RootRouteChildren {
   PngToGifRoute: typeof PngToGifRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  LangAboutRoute: typeof LangAboutRoute
+  LangCompressGifForDiscordRoute: typeof LangCompressGifForDiscordRoute
+  LangContactRoute: typeof LangContactRoute
+  LangGifCompressorRoute: typeof LangGifCompressorRoute
+  LangGifCropperRoute: typeof LangGifCropperRoute
+  LangGifResizerRoute: typeof LangGifResizerRoute
+  LangGifSpeedChangerRoute: typeof LangGifSpeedChangerRoute
+  LangGifSplitterRoute: typeof LangGifSplitterRoute
+  LangGifToPngRoute: typeof LangGifToPngRoute
+  LangGifTrimmerRoute: typeof LangGifTrimmerRoute
+  LangPngToGifRoute: typeof LangPngToGifRoute
+  LangPrivacyRoute: typeof LangPrivacyRoute
+  LangTermsRoute: typeof LangTermsRoute
+  LangIndexRoute: typeof LangIndexRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
@@ -326,6 +509,104 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/': {
+      id: '/$lang/'
+      path: '/$lang'
+      fullPath: '/$lang/'
+      preLoaderRoute: typeof LangIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/about': {
+      id: '/$lang/about'
+      path: '/$lang/about'
+      fullPath: '/$lang/about'
+      preLoaderRoute: typeof LangAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/compress-gif-for-discord': {
+      id: '/$lang/compress-gif-for-discord'
+      path: '/$lang/compress-gif-for-discord'
+      fullPath: '/$lang/compress-gif-for-discord'
+      preLoaderRoute: typeof LangCompressGifForDiscordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/contact': {
+      id: '/$lang/contact'
+      path: '/$lang/contact'
+      fullPath: '/$lang/contact'
+      preLoaderRoute: typeof LangContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-compressor': {
+      id: '/$lang/gif-compressor'
+      path: '/$lang/gif-compressor'
+      fullPath: '/$lang/gif-compressor'
+      preLoaderRoute: typeof LangGifCompressorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-cropper': {
+      id: '/$lang/gif-cropper'
+      path: '/$lang/gif-cropper'
+      fullPath: '/$lang/gif-cropper'
+      preLoaderRoute: typeof LangGifCropperRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-resizer': {
+      id: '/$lang/gif-resizer'
+      path: '/$lang/gif-resizer'
+      fullPath: '/$lang/gif-resizer'
+      preLoaderRoute: typeof LangGifResizerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-speed-changer': {
+      id: '/$lang/gif-speed-changer'
+      path: '/$lang/gif-speed-changer'
+      fullPath: '/$lang/gif-speed-changer'
+      preLoaderRoute: typeof LangGifSpeedChangerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-splitter': {
+      id: '/$lang/gif-splitter'
+      path: '/$lang/gif-splitter'
+      fullPath: '/$lang/gif-splitter'
+      preLoaderRoute: typeof LangGifSplitterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-to-png': {
+      id: '/$lang/gif-to-png'
+      path: '/$lang/gif-to-png'
+      fullPath: '/$lang/gif-to-png'
+      preLoaderRoute: typeof LangGifToPngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/gif-trimmer': {
+      id: '/$lang/gif-trimmer'
+      path: '/$lang/gif-trimmer'
+      fullPath: '/$lang/gif-trimmer'
+      preLoaderRoute: typeof LangGifTrimmerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/png-to-gif': {
+      id: '/$lang/png-to-gif'
+      path: '/$lang/png-to-gif'
+      fullPath: '/$lang/png-to-gif'
+      preLoaderRoute: typeof LangPngToGifRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/privacy': {
+      id: '/$lang/privacy'
+      path: '/$lang/privacy'
+      fullPath: '/$lang/privacy'
+      preLoaderRoute: typeof LangPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$lang/terms': {
+      id: '/$lang/terms'
+      path: '/$lang/terms'
+      fullPath: '/$lang/terms'
+      preLoaderRoute: typeof LangTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/transactional/preview': {
       id: '/lovable/email/transactional/preview'
       path: '/lovable/email/transactional/preview'
@@ -351,6 +632,20 @@ const rootRouteChildren: RootRouteChildren = {
   PngToGifRoute: PngToGifRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  LangAboutRoute: LangAboutRoute,
+  LangCompressGifForDiscordRoute: LangCompressGifForDiscordRoute,
+  LangContactRoute: LangContactRoute,
+  LangGifCompressorRoute: LangGifCompressorRoute,
+  LangGifCropperRoute: LangGifCropperRoute,
+  LangGifResizerRoute: LangGifResizerRoute,
+  LangGifSpeedChangerRoute: LangGifSpeedChangerRoute,
+  LangGifSplitterRoute: LangGifSplitterRoute,
+  LangGifToPngRoute: LangGifToPngRoute,
+  LangGifTrimmerRoute: LangGifTrimmerRoute,
+  LangPngToGifRoute: LangPngToGifRoute,
+  LangPrivacyRoute: LangPrivacyRoute,
+  LangTermsRoute: LangTermsRoute,
+  LangIndexRoute: LangIndexRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
