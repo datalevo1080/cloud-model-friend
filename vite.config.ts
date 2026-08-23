@@ -21,8 +21,6 @@ export default defineConfig({
     resolve: {
       alias: {
         // Route every JSX text node through the auto-translation dictionary.
-
-        // Route every JSX text node through the auto-translation dictionary.
         "react/jsx-dev-runtime": path.resolve(__dirname, "src/i18n/jsx-dev-runtime.ts"),
         "react/jsx-runtime": path.resolve(__dirname, "src/i18n/jsx-runtime.ts"),
       },
