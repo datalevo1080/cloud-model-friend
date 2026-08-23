@@ -1,5 +1,6 @@
 import { makeRouteOptions } from "@/i18n/route-options";
 import { L } from "@/components/l";
+import { RelatedTools } from "@/components/related-tools";
 import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
@@ -309,6 +310,8 @@ function GifSplitterPage() {
             Last updated: August 14, 2026&nbsp;- Built by Shafiullah Tareen.
           </p>
         </section>
+        <RelatedTools current="/gif-splitter" picks={["/gif-compressor", "/gif-to-png", "/gif-trimmer"]} />
+
       </main>
 
       <SiteFooter />

@@ -18,6 +18,7 @@ const moreTools = [
 ];
 
 const company = [
+  { key: "nav.home", href: "/" },
   { key: "footer.discord", href: "/compress-gif-for-discord" },
   { key: "footer.about", href: "/about" },
   { key: "footer.contact", href: "/contact" },

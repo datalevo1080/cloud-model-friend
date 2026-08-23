@@ -1,5 +1,6 @@
 import { makeRouteOptions } from "@/i18n/route-options";
 import { L } from "@/components/l";
+import { RelatedTools } from "@/components/related-tools";
 import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
@@ -374,6 +375,8 @@ function PngToGifPage() {
             Last updated: {UPDATED}&nbsp;- Built by Shafiullah Tareen.
           </p>
         </section>
+        <RelatedTools current="/png-to-gif" picks={["/gif-compressor", "/gif-resizer", "/gif-to-png"]} />
+
       </main>
 
       <SiteFooter />

@@ -1,5 +1,6 @@
 import { makeRouteOptions } from "@/i18n/route-options";
 import { L } from "@/components/l";
+import { RelatedTools } from "@/components/related-tools";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
@@ -209,6 +210,8 @@ function DiscordGuide() {
             with the free GIF compressor — it runs in your browser and nothing gets uploaded.
           </p>
         </article>
+        <RelatedTools current="/compress-gif-for-discord" picks={["/gif-compressor", "/gif-resizer", "/gif-cropper"]} />
+
       </main>
       <SiteFooter />
     </div>
