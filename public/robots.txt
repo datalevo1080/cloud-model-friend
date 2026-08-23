@@ -17,3 +17,9 @@ User-agent: *
 Allow: /
 
 Sitemap: https://zipgif.com/sitemap.xml
+Sitemap: https://zipgif.com/sitemap-en.xml
+Sitemap: https://zipgif.com/sitemap-id.xml
+Sitemap: https://zipgif.com/sitemap-fr.xml
+Sitemap: https://zipgif.com/sitemap-ja.xml
+Sitemap: https://zipgif.com/sitemap-es.xml
+Sitemap: https://zipgif.com/sitemap-pt.xml
