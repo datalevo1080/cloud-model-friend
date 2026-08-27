@@ -138,7 +138,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
       { rel: "manifest", href: "/site.webmanifest" },
     ],
-    scripts: [{ children: themeInitScript }],
+    scripts: [
+      // Google Analytics: gtag.js (loads globally on every page)
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-DVZPWB48B2",
+        async: true,
+      },
+      {
+        // Initialize gtag and configure with the provided ID
+        children: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-DVZPWB48B2');`,
+      },
+      // Preserve existing theme init script
+      { children: themeInitScript },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
