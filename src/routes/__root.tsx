@@ -115,7 +115,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "application-name", content: "ZipGIF" },
     ],
     links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "preload",
@@ -126,11 +125,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
-      },
-
-      {
-        rel: "stylesheet",
         href: appCss,
       },
       { rel: "icon", type: "image/png", sizes: "64x64", href: "/favicon.png" },
@@ -139,14 +133,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
-      // Google Analytics: gtag.js (loads globally on every page)
       {
-        src: "https://www.googletagmanager.com/gtag/js?id=G-DVZPWB48B2",
-        async: true,
-      },
-      {
-        // Initialize gtag and configure with the provided ID
-        children: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-DVZPWB48B2');`,
+        // Google Analytics (gtag.js), loaded only once the page is idle or the
+        // visitor interacts, so it never competes with first paint.
+        children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DVZPWB48B2');(function(){var l=false;function load(){if(l)return;l=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-DVZPWB48B2';document.head.appendChild(s);}['pointerdown','keydown','touchstart','scroll'].forEach(function(e){addEventListener(e,load,{once:true,passive:true})});if('requestIdleCallback' in window){requestIdleCallback(load,{timeout:5000})}else{setTimeout(load,4000)}})();`,
       },
       // Preserve existing theme init script
       { children: themeInitScript },

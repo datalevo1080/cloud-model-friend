@@ -1,6 +1,7 @@
+import { lazyRouteComponent } from "@tanstack/react-router";
 import { makeRouteOptions } from "@/i18n/route-options";
-import { useT } from "@/i18n";
-import { LegalPage } from "@/components/legal-page";
+
+export const Page = lazyRouteComponent(() => import("./privacy.view"));
 
 export const options = makeRouteOptions("/privacy", {
   head: () => ({
@@ -22,24 +23,5 @@ export const options = makeRouteOptions("/privacy", {
     ],
     links: [{ rel: "canonical", href: "https://zipgif.com/privacy" }],
   }),
-  component: Privacy,
+  component: Page,
 });
-
-const SECTIONS = ["files", "accounts", "cookies", "logs", "children", "changes"] as const;
-
-function Privacy() {
-  const t = useT();
-
-  return (
-    <LegalPage title={t("privacy.title")} subtitle={t("privacy.subtitle")}>
-      {SECTIONS.map((key) => (
-        <div key={key}>
-          <h2>{t(`privacy.${key}.h2`)}</h2>
-          <p>{t(`privacy.${key}.p`)}</p>
-        </div>
-      ))}
-    </LegalPage>
-  );
-}
-
-export const Page = Privacy;

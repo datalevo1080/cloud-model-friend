@@ -57,7 +57,9 @@ async function maybeInjectGtm(response: Response): Promise<Response> {
     // If GTM already present, skip
     if (html.includes(GTM_ID)) return response;
 
-    const gtmHeadScript = `<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\nnew Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\nj=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n})(window,document,'script','dataLayer','${GTM_ID}');</script>\n<!-- End Google Tag Manager -->`;
+    // Google Tag Manager, deferred until the page is idle or the visitor
+    // interacts. Keeps ~110 KB of third-party JS off the critical path.
+    const gtmHeadScript = `<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var loaded=false;function load(){if(loaded)return;loaded=true;var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}['pointerdown','keydown','touchstart','scroll'].forEach(function(e){w.addEventListener(e,load,{once:true,passive:true})});if('requestIdleCallback' in w){w.requestIdleCallback(load,{timeout:5000})}else{w.setTimeout(load,4000)}})(window,document,'script','dataLayer','${GTM_ID}');</script>\n<!-- End Google Tag Manager -->`;
 
     const noscriptHtml = `<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=${GTM_ID}\" height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n<!-- End Google Tag Manager (noscript) -->`;
 

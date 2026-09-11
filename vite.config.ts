@@ -18,6 +18,9 @@ Object.assign(process.env, serverEnv);
 
 export default defineConfig({
   vite: {
+    // Ship source maps so production JS stays debuggable (and Lighthouse can
+    // attribute work to original files).
+    build: { sourcemap: true },
     resolve: {
       alias: {
         // Route every JSX text node through the auto-translation dictionary.
