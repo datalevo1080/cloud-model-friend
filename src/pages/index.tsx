@@ -1,6 +1,21 @@
 import { lazyRouteComponent } from "@tanstack/react-router";
 import { makeRouteOptions } from "@/i18n/route-options";
 
+import {
+  ArrowRight,
+  Crop,
+  Gauge,
+  Images,
+  Maximize2,
+  Scissors,
+  ShieldCheck,
+  Sparkles,
+  Split,
+  Timer,
+  Wand2,
+  Zap,
+} from "lucide-react";
+
 export const Page = lazyRouteComponent(() => import("./index.view"));
 
 const SITE = "https://zipgif.com";
