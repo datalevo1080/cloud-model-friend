@@ -1,5 +1,16 @@
 import { lazyRouteComponent } from "@tanstack/react-router";
 import { makeRouteOptions } from "@/i18n/route-options";
+import {
+  BadgeCheck,
+  Cpu,
+  Download,
+  Gauge,
+  Layers,
+  ShieldCheck,
+  Sparkles,
+  Upload,
+  Zap,
+} from "lucide-react";
 import { faqs } from "@/components/faq";
 
 export const Page = lazyRouteComponent(() => import("./gif-compressor.view"));
