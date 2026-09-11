@@ -1,6 +1,7 @@
+import { lazyRouteComponent } from "@tanstack/react-router";
 import { makeRouteOptions } from "@/i18n/route-options";
-import { useT } from "@/i18n";
-import { LegalPage } from "@/components/legal-page";
+
+export const Page = lazyRouteComponent(() => import("./terms.view"));
 
 export const options = makeRouteOptions("/terms", {
   head: () => ({
@@ -22,24 +23,5 @@ export const options = makeRouteOptions("/terms", {
     ],
     links: [{ rel: "canonical", href: "https://zipgif.com/terms" }],
   }),
-  component: Terms,
+  component: Page,
 });
-
-const SECTIONS = ["using", "content", "warranty", "liability", "acceptable", "changes"] as const;
-
-function Terms() {
-  const t = useT();
-
-  return (
-    <LegalPage title={t("terms.title")} subtitle={t("terms.subtitle")}>
-      {SECTIONS.map((key) => (
-        <div key={key}>
-          <h2>{t(`terms.${key}.h2`)}</h2>
-          <p>{t(`terms.${key}.p`)}</p>
-        </div>
-      ))}
-    </LegalPage>
-  );
-}
-
-export const Page = Terms;
