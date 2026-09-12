@@ -84,9 +84,25 @@ async function maybeInjectGtm(response: Response): Promise<Response> {
   }
 }
 
+/**
+ * One canonical origin: https://zipgif.com. Any www request gets a single
+ * permanent hop to the apex, path and query preserved. No chains, no JS.
+ */
+function canonicalHostRedirect(request: Request): Response | undefined {
+  const url = new URL(request.url);
+  if (url.hostname !== "www.zipgif.com") return undefined;
+  url.hostname = "zipgif.com";
+  url.protocol = "https:";
+  url.port = "";
+  return new Response(null, { status: 301, headers: { location: url.toString() } });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const redirect = canonicalHostRedirect(request);
+      if (redirect) return redirect;
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
 

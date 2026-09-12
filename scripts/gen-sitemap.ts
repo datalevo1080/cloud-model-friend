@@ -12,6 +12,10 @@ import { writeFileSync } from "node:fs";
 
 import { HREFLANG, LOCALES, PAGE_PATHS, SITE, absoluteUrl } from "../src/i18n/config";
 
+/** Pages intentionally kept out of the sitemap (no search value). */
+const EXCLUDED = new Set(["/contact", "/privacy", "/terms"]);
+const SITEMAP_PATHS = PAGE_PATHS.filter((p) => !EXCLUDED.has(p));
+
 const PRIORITY = (path: string) =>
   path === "/" ? "1.0" : ["/about", "/contact", "/privacy", "/terms"].includes(path) ? "0.4" : "0.8";
 const CHANGEFREQ = (path: string) =>
