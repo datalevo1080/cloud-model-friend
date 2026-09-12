@@ -132,40 +132,4 @@
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
-  <url>
-    <loc>https://zipgif.com/id/contact</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/contact" />
-    <xhtml:link rel="alternate" hreflang="id" href="https://zipgif.com/id/contact" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://zipgif.com/fr/contact" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://zipgif.com/ja/contact" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://zipgif.com/es/contact" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://zipgif.com/pt/contact" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/contact" />
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://zipgif.com/id/privacy</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/privacy" />
-    <xhtml:link rel="alternate" hreflang="id" href="https://zipgif.com/id/privacy" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://zipgif.com/fr/privacy" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://zipgif.com/ja/privacy" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://zipgif.com/es/privacy" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://zipgif.com/pt/privacy" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/privacy" />
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://zipgif.com/id/terms</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/terms" />
-    <xhtml:link rel="alternate" hreflang="id" href="https://zipgif.com/id/terms" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://zipgif.com/fr/terms" />
-    <xhtml:link rel="alternate" hreflang="ja" href="https://zipgif.com/ja/terms" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://zipgif.com/es/terms" />
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://zipgif.com/pt/terms" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/terms" />
-    <changefreq>yearly</changefreq>
-    <priority>0.4</priority>
-  </url>
 </urlset>

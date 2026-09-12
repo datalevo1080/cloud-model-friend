@@ -12,13 +12,17 @@ import { writeFileSync } from "node:fs";
 
 import { HREFLANG, LOCALES, PAGE_PATHS, SITE, absoluteUrl } from "../src/i18n/config";
 
+/** Pages intentionally kept out of the sitemap (no search value). */
+const EXCLUDED = new Set(["/contact", "/privacy", "/terms"]);
+const SITEMAP_PATHS = PAGE_PATHS.filter((p) => !EXCLUDED.has(p));
+
 const PRIORITY = (path: string) =>
   path === "/" ? "1.0" : ["/about", "/contact", "/privacy", "/terms"].includes(path) ? "0.4" : "0.8";
 const CHANGEFREQ = (path: string) =>
   ["/privacy", "/terms"].includes(path) ? "yearly" : path === "/" ? "weekly" : "monthly";
 
 for (const locale of LOCALES) {
-  const urls = PAGE_PATHS.map((path) => {
+  const urls = SITEMAP_PATHS.map((path) => {
     const alternates = [
       ...LOCALES.map(
         (l) =>
@@ -66,5 +70,5 @@ const robots = [
 writeFileSync("public/robots.txt", robots);
 
 console.log(
-  `wrote ${LOCALES.length} locale sitemaps (${PAGE_PATHS.length} URLs each), sitemap index and robots.txt`,
+  `wrote ${LOCALES.length} locale sitemaps (${SITEMAP_PATHS.length} URLs each), sitemap index and robots.txt`,
 );
