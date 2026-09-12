@@ -22,7 +22,7 @@ const CHANGEFREQ = (path: string) =>
   ["/privacy", "/terms"].includes(path) ? "yearly" : path === "/" ? "weekly" : "monthly";
 
 for (const locale of LOCALES) {
-  const urls = PAGE_PATHS.map((path) => {
+  const urls = SITEMAP_PATHS.map((path) => {
     const alternates = [
       ...LOCALES.map(
         (l) =>
@@ -70,5 +70,5 @@ const robots = [
 writeFileSync("public/robots.txt", robots);
 
 console.log(
-  `wrote ${LOCALES.length} locale sitemaps (${PAGE_PATHS.length} URLs each), sitemap index and robots.txt`,
+  `wrote ${LOCALES.length} locale sitemaps (${SITEMAP_PATHS.length} URLs each), sitemap index and robots.txt`,
 );
