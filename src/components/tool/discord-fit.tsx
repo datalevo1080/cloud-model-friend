@@ -104,7 +104,7 @@ export function DiscordFit() {
     }
   };
 
-  const saved = result ? savingsPercent(result.meta ? file!.size : 0, result.blob.size) : 0;
+  const saved = result && file ? savingsPercent(file.size, result.blob.size) : 0;
 
   return (
     <section
