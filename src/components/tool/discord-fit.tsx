@@ -348,7 +348,7 @@ export function DiscordFit() {
               alt={file.name}
               beforeLabel={formatBytes(file.size)}
               afterLabel={formatBytes(result.blob.size)}
-              savingLabel={saved > 0 ? `−${saved}% smaller` : undefined}
+              savingLabel={saved > 0 ? `−${saved}% smaller` : ""}
             />
           </div>
 

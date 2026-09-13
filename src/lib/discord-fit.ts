@@ -76,7 +76,7 @@ export const LADDER: Rung[] = [
 
 export type FitLimits = {
   /** hard dimension cap from the preset or the manual control */
-  maxDim?: number;
+  maxDim?: number | undefined;
   allowColorReduction: boolean;
   allowResize: boolean;
   allowFrameReduction: boolean;
@@ -209,7 +209,7 @@ export type FitResult = {
   blob: Blob;
   meta: GifMeta;
   rung: Rung;
-  maxDim?: number;
+  maxDim?: number | undefined;
   width: number;
   height: number;
   frames: number;
