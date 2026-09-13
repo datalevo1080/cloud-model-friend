@@ -1,4 +1,5 @@
 import { L } from "@/components/l";
+import { DiscordFit } from "@/components/tool/discord-fit";
 import { RelatedTools } from "@/components/related-tools";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -63,6 +64,8 @@ function DiscordGuide() {
             GIF simply fails. Compress it to roughly 8 MB — or 256 KB for an emoji, 512 KB for a
             sticker — and it uploads first time.
           </p>
+
+          <DiscordFit />
 
           <h2 className="mt-10 text-2xl font-bold tracking-tight">Discord size limits, verified</h2>
           <p className="mt-3 leading-relaxed text-muted-foreground">
