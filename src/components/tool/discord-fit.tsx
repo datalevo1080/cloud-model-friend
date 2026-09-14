@@ -61,12 +61,15 @@ export function DiscordFit() {
   };
 
   const accept = async (picked: File | null | undefined) => {
+    console.log("[dfit] accept", picked?.name, picked?.size);
     setError(null);
     clearResult();
     if (!picked) return;
     if (picked.size === 0) return setError("That file is empty.");
     if (picked.size > MAX_BYTES) return setError("That file is larger than 200 MB.");
-    if (!(await hasGifMagicBytes(picked))) {
+    const ok = await hasGifMagicBytes(picked);
+    console.log("[dfit] magic", ok);
+    if (!ok) {
       return setError("That doesn't look like a GIF — pick a real .gif file.");
     }
     setSrcUrl((u) => {
