@@ -50,7 +50,7 @@ export function DiscordFit() {
     Math.max(0, Number(customValue) || 0) * (customUnit === "MB" ? 1024 * 1024 : 1024),
   );
   const targetBytes = preset ? preset.bytes : customBytes;
-  const targetLabel = preset ? preset.label : `${customValue || 0} ${customUnit}`;
+  const targetShort = preset ? formatBytes(preset.bytes) : `${customValue || 0} ${customUnit}`;
 
   const clearResult = () => {
     setResult(null);
@@ -244,7 +244,7 @@ export function DiscordFit() {
           className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-50"
         >
           {busy ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
-          {busy ? `Trying setting ${step} of ${LADDER.length}…` : `Fit to ${targetLabel}`}
+          {busy ? `Trying setting ${step} of ${LADDER.length}…` : `Fit to ${targetShort}`}
         </button>
         {busy && (
           <button
@@ -291,8 +291,10 @@ export function DiscordFit() {
             )}
             <span>
               {result.hitTarget
-                ? `Target passed — ${formatBytes(result.blob.size)} is under ${targetLabel}.`
-                : `Target missed. The smallest safe result is ${formatBytes(result.blob.size)}, still over ${targetLabel}.`}
+                ? result.keptOriginal
+                  ? `Already under ${targetShort} — ${formatBytes(result.blob.size)}, kept as-is.`
+                  : `Target passed — ${formatBytes(result.blob.size)} is under ${targetShort}.`
+                : `Target missed. The smallest safe result is ${formatBytes(result.blob.size)}, still over ${targetShort}.`}
             </span>
           </div>
 
@@ -322,14 +324,16 @@ export function DiscordFit() {
             {result.changes.map((c) => (
               <li key={c}>{c}</li>
             ))}
-            <li>
-              Reached on attempt {result.attempts.length} of {LADDER.length}.
-            </li>
+            {result.attempts.length > 0 && (
+              <li>
+                Reached on attempt {result.attempts.length} of {LADDER.length}.
+              </li>
+            )}
           </ul>
 
           {!result.hitTarget && (
             <p className="mt-4 rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm">
-              This GIF can't reach {targetLabel} without wrecking it. Shorten it with the{" "}
+              This GIF can't reach {targetShort} without wrecking it. Shorten it with the{" "}
               <a className="text-primary underline underline-offset-4" href="/gif-trimmer">
                 GIF trimmer
               </a>{" "}

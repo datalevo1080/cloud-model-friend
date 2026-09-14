@@ -214,6 +214,8 @@ export type FitResult = {
   height: number;
   frames: number;
   hitTarget: boolean;
+  /** compression would have made it bigger, so the original was kept */
+  keptOriginal?: boolean;
   attempts: FitAttempt[];
   changes: string[];
 };
@@ -231,6 +233,25 @@ export async function fitToTarget(
 ): Promise<FitResult> {
   const meta = await readGifMeta(file);
   const maxDim = limits.allowResize ? limits.maxDim : undefined;
+
+  // Already small enough, and no dimension cap to honour — re-encoding a
+  // tuned GIF often makes it bigger, so hand the original back untouched.
+  const needsResize = !!maxDim && (meta.width > maxDim || meta.height > maxDim);
+  if (file.size <= targetBytes && !needsResize) {
+    return {
+      blob: file,
+      meta,
+      rung: { lossy: 0, colors: 0, scale: 1, frameStep: 1 },
+      maxDim,
+      width: meta.width,
+      height: meta.height,
+      frames: meta.frameCount,
+      hitTarget: true,
+      keptOriginal: true,
+      attempts: [],
+      changes: ["Nothing — the file was already under the target, so the original was kept."],
+    };
+  }
   const attempts: FitAttempt[] = [];
   let best: { blob: Blob; rung: Rung } | null = null;
 
@@ -245,6 +266,22 @@ export async function fitToTarget(
     if (!best || blob.size < best.blob.size) best = { blob, rung };
     if (blob.size <= targetBytes) {
       const dims = predictedSize(meta, rung, maxDim);
+      // Never hand back something larger than the source.
+      if (blob.size >= file.size && file.size <= targetBytes) {
+        return {
+          blob: file,
+          meta,
+          rung: { lossy: 0, colors: 0, scale: 1, frameStep: 1 },
+          maxDim,
+          width: meta.width,
+          height: meta.height,
+          frames: meta.frameCount,
+          hitTarget: true,
+          keptOriginal: true,
+          attempts,
+          changes: ["Nothing — compressing made it bigger, so the original was kept."],
+        };
+      }
       return {
         blob,
         meta,
