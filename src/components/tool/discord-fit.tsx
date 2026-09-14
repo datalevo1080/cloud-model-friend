@@ -61,15 +61,12 @@ export function DiscordFit() {
   };
 
   const accept = async (picked: File | null | undefined) => {
-    console.log("[dfit] accept", picked?.name, picked?.size);
     setError(null);
     clearResult();
     if (!picked) return;
     if (picked.size === 0) return setError("That file is empty.");
     if (picked.size > MAX_BYTES) return setError("That file is larger than 200 MB.");
-    const ok = await hasGifMagicBytes(picked);
-    console.log("[dfit] magic", ok);
-    if (!ok) {
+    if (!(await hasGifMagicBytes(picked))) {
       return setError("That doesn't look like a GIF — pick a real .gif file.");
     }
     setSrcUrl((u) => {
@@ -294,7 +291,9 @@ export function DiscordFit() {
             )}
             <span>
               {result.hitTarget
-                ? `Target passed — ${formatBytes(result.blob.size)} is under ${targetLabel}.`
+                ? result.keptOriginal
+                  ? `Already under ${targetLabel} — ${formatBytes(result.blob.size)}, kept as-is.`
+                  : `Target passed — ${formatBytes(result.blob.size)} is under ${targetLabel}.`
                 : `Target missed. The smallest safe result is ${formatBytes(result.blob.size)}, still over ${targetLabel}.`}
             </span>
           </div>
