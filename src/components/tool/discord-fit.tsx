@@ -50,7 +50,6 @@ export function DiscordFit() {
     Math.max(0, Number(customValue) || 0) * (customUnit === "MB" ? 1024 * 1024 : 1024),
   );
   const targetBytes = preset ? preset.bytes : customBytes;
-  const targetLabel = preset ? `${formatBytes(preset.bytes)} (${preset.label})` : `${customValue || 0} ${customUnit}`;
   const targetShort = preset ? formatBytes(preset.bytes) : `${customValue || 0} ${customUnit}`;
 
   const clearResult = () => {
