@@ -1,36 +1,15 @@
 import { lazyRouteComponent } from "@tanstack/react-router";
 import { makeRouteOptions } from "@/i18n/route-options";
+import { discordFaqs } from "@/lib/discord-faqs";
 
 export const Page = lazyRouteComponent(() => import("./compress-gif-for-discord.view"));
 
 const SITE = "https://zipgif.com";
 const PATH = "/compress-gif-for-discord";
-const TITLE = "Compress GIF for Discord — Fit the 10 MiB Limit Free";
+const TITLE = "Compress GIF for Discord — Under 10MB, 256KB or 512KB";
 const DESCRIPTION =
-  "Compress a GIF for Discord in seconds. Verified limits for attachments, emoji and stickers, plus the exact target sizes that always upload.";
-const LAST_UPDATED = "August 2026";
-const MODIFIED = "2026-08-12";
-
-const limits = [
-  {
-    thing: "Attachment, default for all users",
-    limit: "10 MiB",
-    target: "8 MB",
-    href: "https://discord.com/developers/docs/reference",
-  },
-  {
-    thing: "Custom emoji, static or animated",
-    limit: "256 KiB",
-    target: "256 KB at 128×128",
-    href: "https://discord.com/developers/docs/resources/emoji",
-  },
-  {
-    thing: "Sticker (PNG, APNG, GIF, Lottie)",
-    limit: "512 KiB",
-    target: "512 KB at 320×320",
-    href: "https://discord.com/developers/docs/resources/sticker",
-  },
-];
+  "Free Discord GIF compressor with presets for 10 MB uploads, 256 KB emoji and 512 KB stickers. Runs in your browser: no upload, no signup, no watermark.";
+const MODIFIED = "2026-09-15";
 
 export const options = makeRouteOptions("/compress-gif-for-discord", {
   head: () => ({
@@ -48,13 +27,12 @@ export const options = makeRouteOptions("/compress-gif-for-discord", {
       { property: "og:image:height", content: "630" },
       {
         property: "og:image:alt",
-        content: "ZipGIF — compress a GIF for Discord and fit the 10 MiB limit",
+        content: "ZipGIF — compress a GIF for Discord under 10MB, 256KB or 512KB",
       },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
       { name: "twitter:image", content: `${SITE}/og-discord.jpg` },
-      { name: "twitter:description", content: DESCRIPTION },
     ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [
@@ -63,7 +41,7 @@ export const options = makeRouteOptions("/compress-gif-for-discord", {
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Article",
-          headline: "How to compress a GIF for Discord",
+          headline: "Compress GIF for Discord",
           description: DESCRIPTION,
           dateModified: MODIFIED,
           mainEntityOfPage: `${SITE}${PATH}`,
@@ -81,9 +59,21 @@ export const options = makeRouteOptions("/compress-gif-for-discord", {
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "GIF Compressor", item: `${SITE}/` },
+            { "@type": "ListItem", position: 1, name: "GIF Compressor", item: `${SITE}/gif-compressor` },
             { "@type": "ListItem", position: 2, name: "Compress GIF for Discord", item: `${SITE}${PATH}` },
           ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: discordFaqs.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
         }),
       },
     ],
