@@ -1,5 +1,6 @@
 import { lazyRouteComponent } from "@tanstack/react-router";
 import { makeRouteOptions } from "@/i18n/route-options";
+import { discordFaqs } from "@/lib/discord-faqs";
 
 export const Page = lazyRouteComponent(() => import("./compress-gif-for-discord.view"));
 

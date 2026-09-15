@@ -1,16 +1,14 @@
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { L } from "@/components/l";
 import { DiscordFit } from "@/components/tool/discord-fit";
 import { RelatedTools } from "@/components/related-tools";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { discordFaqs } from "@/lib/discord-faqs";
+import { cn } from "@/lib/utils";
 
-const SITE = "https://zipgif.com";
-const PATH = "/compress-gif-for-discord";
-const TITLE = "Compress GIF for Discord — Fit the 10 MiB Limit Free";
-const DESCRIPTION =
-  "Compress a GIF for Discord in seconds. Verified limits for attachments, emoji and stickers, plus the exact target sizes that always upload.";
-const LAST_UPDATED = "August 2026";
-const MODIFIED = "2026-08-12";
+const LAST_UPDATED = "September 2026";
 
 const limits = [
   {
@@ -34,6 +32,8 @@ const limits = [
 ];
 
 function DiscordGuide() {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <SiteHeader />
@@ -52,25 +52,43 @@ function DiscordGuide() {
           </nav>
 
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
-            How to compress a GIF for Discord
+            Compress GIF for Discord — under 10MB, 256KB or 512KB
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             By Shafiullah Tareen · Last updated: {LAST_UPDATED}
           </p>
 
           <p className="mt-6 text-lg leading-relaxed">
-            Discord's default upload limit is 10 MiB for every user, and it goes higher only with
-            Nitro or a server's Boost Tier. Discord never re-encodes your animation, so an oversized
-            GIF simply fails. Compress it to roughly 8 MB — or 256 KB for an emoji, 512 KB for a
-            sticker — and it uploads first time.
+            Pick your Discord target — upload, emoji or sticker — drop in your GIF, and get a file
+            that fits. This GIF compressor for Discord runs entirely in your browser: no upload,
+            no signup, no watermark. It only compresses as much as your target actually needs, and
+            shows you exactly what changed.
           </p>
 
+          {/* The chooser + tool comes before any long content. */}
           <DiscordFit />
 
-          <h2 className="mt-10 text-2xl font-bold tracking-tight">Discord size limits, verified</h2>
+          <h2 className="mt-12 text-2xl font-bold tracking-tight">How it works</h2>
+          <ol className="mt-4 space-y-3 text-muted-foreground">
+            <li>
+              <strong className="text-foreground">1. Choose a target.</strong> Under 10 MB for a
+              regular upload, 256 KB for an emoji, 512 KB for a sticker — or set your own custom
+              size.
+            </li>
+            <li>
+              <strong className="text-foreground">2. Drop in your GIF.</strong> The tool
+              automatically tries stronger settings until the file fits, then stops.
+            </li>
+            <li>
+              <strong className="text-foreground">3. Compare and download.</strong> Check the
+              before/after slider, see the size saved, and download the result.
+            </li>
+          </ol>
+
+          <h2 className="mt-10 text-2xl font-bold tracking-tight">Which preset should I choose?</h2>
           <p className="mt-3 leading-relaxed text-muted-foreground">
-            These are the numbers Discord publishes in its own developer documentation. We recheck
-            them monthly, because platform limits move and stale advice is worse than none.
+            Match the preset to where the GIF is going. These are the limits Discord publishes in
+            its own developer documentation.
           </p>
           <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
             <table className="w-full min-w-[560px] border-collapse text-left text-sm">
@@ -104,53 +122,112 @@ function DiscordGuide() {
               </tbody>
             </table>
           </div>
-
-          <h2 className="mt-10 text-2xl font-bold tracking-tight">
-            Three steps that always work
-          </h2>
-          <ol className="mt-4 space-y-3 text-muted-foreground">
-            <li>
-              <strong className="text-foreground">1. Trim first.</strong> Most failed Discord uploads
-              are duration problems. Ten seconds of build-up plus two seconds of payoff should be two
-              seconds of payoff.
-            </li>
-            <li>
-              <strong className="text-foreground">2. Set a target, not a slider.</strong> Enter 8 MB
-              (or 256 KB for an emoji) and let the tool search for the highest quality that fits.
-            </li>
-            <li>
-              <strong className="text-foreground">3. Check at chat size.</strong> Discord renders
-              GIFs small in a channel. Artifacts you can only see at 200% zoom don't exist to anyone
-              scrolling past.
-            </li>
-          </ol>
-
-          <h2 className="mt-10 text-2xl font-bold tracking-tight">
-            Why can't I resize a GIF on Discord?
-          </h2>
-          <p className="mt-3 leading-relaxed text-muted-foreground">
-            Because Discord has no editor. It validates the file you hand it and rejects anything
-            over the limit for that upload type. Emoji and stickers are strictest, which is why a
-            perfectly good 900 KB animation gets refused as a sticker. Shrink it before you open the
-            upload dialog.
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            Posting to a channel? Use Under 10 MB. Making a custom emoji? Use Under 256 KB — this
+            Discord emoji compressor preset also caps dimensions at 128×128 for you. Building a
+            sticker? Use Under 512 KB, which targets 320×320.
           </p>
 
-          <div className="mt-10 rounded-2xl border border-border bg-card p-6">
-            <h2 className="text-xl font-semibold">About the author</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Shafiullah Tareen builds ZipGIF, a browser-based GIF toolbox that compresses files
-              locally with WebAssembly. He wrote this page after compressing several thousand GIFs
-              while testing the engine — and after losing an embarrassing number of Discord uploads
-              to that 10 MiB wall.
-            </p>
-          </div>
+          <h2 className="mt-10 text-2xl font-bold tracking-tight">
+            What the automatic process actually does
+          </h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Instead of one fixed recipe, the tool walks a ladder from gentle to strong. It starts
+            with optimization and mild lossy compression, then reduces colours, then resizes, and
+            only drops frames when nothing else is enough. The moment your GIF fits the target, it
+            stops — so a file that already fits is returned untouched, and one that barely needs
+            help keeps its full size and frame count. You'll see the original size, result size,
+            percentage saved, dimensions, frames, and a list of exactly what was changed. Nothing
+            is ever enlarged, and no target is promised before the file is actually processed.
+          </p>
 
-          <p className="mt-8 text-lg">
-            Ready? Go{" "}
-            <L to="/gif-compressor" className="font-medium text-primary underline underline-offset-4">
-              compress a GIF for Discord
+          <h2 className="mt-10 text-2xl font-bold tracking-tight">If 256 KB still fails</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Some GIFs honestly can't reach emoji size at watchable quality — usually because
+            they're long, not because they're colourful. When that happens the tool says so instead
+            of faking success. The fix is less content:{" "}
+            <L to="/gif-trimmer" className="text-primary underline underline-offset-4">
+              trim the GIF to just the key moment
             </L>{" "}
-            with the free GIF compressor — it runs in your browser and nothing gets uploaded.
+            or{" "}
+            <L to="/gif-cropper" className="text-primary underline underline-offset-4">
+              crop the GIF to the action
+            </L>
+            , then compress again. Cutting duration in half cuts the file roughly in half before
+            compression even starts.
+          </p>
+
+          <h2 className="mt-10 text-2xl font-bold tracking-tight">Your GIFs never leave your device</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Compression runs on your own CPU with a WebAssembly build of Gifsicle. There is no
+            upload, no queue, no server copy, and nothing to delete later. Open your network tab
+            while you compress — no request carries your file. After the first visit the tool even
+            works offline.
+          </p>
+
+          <h2 className="mt-10 text-2xl font-bold tracking-tight">Limitations, honestly</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Very large GIFs process more slowly because your device does all the work. Photographic
+            footage compresses less gracefully than flat, cartoon-style art. And Discord never
+            re-encodes uploads for you, so a file that's still over the limit will simply be
+            rejected — if you need full manual control instead of a target, use the{" "}
+            <L to="/gif-compressor" className="text-primary underline underline-offset-4">
+              free GIF compressor
+            </L>{" "}
+            or the{" "}
+            <L to="/gif-resizer" className="text-primary underline underline-offset-4">
+              GIF resizer
+            </L>{" "}
+            directly.
+          </p>
+
+          <section aria-labelledby="discord-faq" className="mt-12">
+            <h2 id="discord-faq" className="text-2xl font-bold tracking-tight">
+              Frequently asked questions
+            </h2>
+            <div className="mt-6 divide-y divide-border rounded-2xl border border-border bg-card">
+              {discordFaqs.map((item, i) => {
+                const expanded = openFaq === i;
+                return (
+                  <div key={item.q}>
+                    <h3>
+                      <button
+                        type="button"
+                        onClick={() => setOpenFaq(expanded ? null : i)}
+                        aria-expanded={expanded}
+                        aria-controls={`discord-faq-panel-${i}`}
+                        id={`discord-faq-button-${i}`}
+                        className="flex min-h-14 w-full items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold"
+                      >
+                        {item.q}
+                        <ChevronDown
+                          className={cn(
+                            "size-5 shrink-0 text-muted-foreground transition-transform",
+                            expanded && "rotate-180",
+                          )}
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </h3>
+                    <div
+                      id={`discord-faq-panel-${i}`}
+                      role="region"
+                      aria-labelledby={`discord-faq-button-${i}`}
+                      hidden={!expanded}
+                      className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground"
+                    >
+                      {item.a}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <p className="mt-10 text-lg">
+            Ready? Choose a target above and{" "}
+            <strong className="font-semibold">make your GIF smaller for Discord</strong> — free,
+            private, and done in seconds.
           </p>
         </article>
         <RelatedTools current="/compress-gif-for-discord" picks={["/gif-compressor", "/gif-resizer", "/gif-cropper"]} />
