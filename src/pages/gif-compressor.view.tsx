@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { Compressor } from "@/components/tool/compressor";
+import { CompressorModes } from "@/components/tool/compressor-modes";
 import { Faq, faqs } from "@/components/faq";
 
 const SITE = "https://zipgif.com";
@@ -255,7 +255,7 @@ function Index() {
             </div>
 
             <div className="mx-auto mt-10 max-w-4xl">
-              <Compressor />
+              <CompressorModes />
             </div>
 
             <ul className="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
