@@ -20,6 +20,10 @@ export type Preset = {
   width: number;
   height: number;
   square: boolean;
+  /** Percentage-style preset: scales the source instead of using fixed pixels. */
+  scale?: number;
+  /** Max-width preset: the width comes from the user's own number. */
+  maxWidth?: boolean;
   /** Only set when the limit is sourced from official platform documentation. */
   limitBytes?: number;
   limitLabel?: string;
@@ -33,6 +37,15 @@ export type Preset = {
  * stickers. Everything else is dimensions only — no invented limits.
  */
 export const PRESETS: Preset[] = [
+  {
+    id: "half",
+    label: "50% of original",
+    width: 0,
+    height: 0,
+    square: false,
+    scale: 0.5,
+    note: "half the width and height",
+  },
   {
     id: "discord-emoji",
     label: "Discord Emoji",
@@ -63,12 +76,28 @@ export const PRESETS: Preset[] = [
   },
   { id: "slack-emoji", label: "Slack Emoji", width: 128, height: 128, square: true, note: "128×128" },
   {
-    id: "twitch-emote",
-    label: "Twitch Emote",
+    id: "twitch-112",
+    label: "Twitch Emote 112px",
     width: 112,
     height: 112,
     square: true,
-    note: "112×112 · Twitch scales to 56 and 28",
+    note: "112×112 · the size you upload",
+  },
+  {
+    id: "twitch-56",
+    label: "Twitch Emote 56px",
+    width: 56,
+    height: 56,
+    square: true,
+    note: "56×56",
+  },
+  {
+    id: "twitch-28",
+    label: "Twitch Emote 28px",
+    width: 28,
+    height: 28,
+    square: true,
+    note: "28×28",
   },
   {
     id: "telegram-sticker",
@@ -78,11 +107,30 @@ export const PRESETS: Preset[] = [
     square: true,
     note: "512×512",
   },
+  {
+    id: "max-width",
+    label: "Max width",
+    width: 600,
+    height: 100000,
+    square: false,
+    maxWidth: true,
+    note: "caps the width, height follows",
+  },
   { id: "email", label: "Email-safe", width: 600, height: 100000, square: false, note: "max width 600px" },
   { id: "hd-web", label: "HD web", width: 1280, height: 100000, square: false, note: "max width 1280px" },
 ];
 
 export const MIN_SCALE = 0.1;
+/** Guard rail: anything past this is a browser out-of-memory crash, not a resize. */
+export const MAX_DIMENSION = 5000;
+export const MIN_DIMENSION = 1;
+
+/** Keeps a typed dimension inside safe bounds — no zero, negative or absurd values. */
+export function clampDimension(value: number): number {
+  if (!Number.isFinite(value)) return MIN_DIMENSION;
+  return Math.min(MAX_DIMENSION, Math.max(MIN_DIMENSION, Math.round(value)));
+}
+
 export const MAX_SCALE = 2;
 
 /** What the output will actually measure, given the source and the spec. */
