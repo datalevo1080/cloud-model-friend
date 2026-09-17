@@ -10,8 +10,10 @@ import { fetchGifFromUrl } from "@/lib/gif-url";
 import { EngineLoadError, warmupEngine } from "@/lib/gif-engine";
 import { uniqueName } from "@/lib/gif-crop";
 import {
+  MAX_DIMENSION,
   MAX_SCALE,
   MIN_SCALE,
+  clampDimension,
   PRESETS,
   estimateResizedSize,
   isUpscale,
@@ -69,6 +71,7 @@ export function Resizer() {
   const [scale, setScale] = useState(0.5);
   const [presetId, setPresetId] = useState<string | null>(null);
   const [fitMode, setFitMode] = useState<FitMode>("fit");
+  const [maxWidth, setMaxWidth] = useState(600);
   const [extra, setExtra] = useState(false);
   const [zipping, setZipping] = useState(false);
   const itemsRef = useRef<ResizeItem[]>([]);
@@ -157,12 +160,18 @@ export function Resizer() {
   const spec: ResizeSpec = useMemo(() => {
     if (mode === "percentage") return { kind: "scale", factor: scale };
     if (mode === "presets" && preset) {
+      if (preset.scale) return { kind: "scale", factor: preset.scale };
+      if (preset.maxWidth) return { kind: "fit", width: clampDimension(maxWidth), height: 100000 };
       return preset.square && fitMode === "stretch"
         ? { kind: "exact", width: preset.width, height: preset.height }
         : { kind: "fit", width: preset.width, height: preset.height };
     }
-    return { kind: "exact", width: width || first?.width || 1, height: height || first?.height || 1 };
-  }, [mode, scale, preset, fitMode, width, height, first?.width, first?.height]);
+    return {
+      kind: "exact",
+      width: clampDimension(width || first?.width || 1),
+      height: clampDimension(height || first?.height || 1),
+    };
+  }, [mode, scale, preset, fitMode, maxWidth, width, height, first?.width, first?.height]);
 
   const out = first ? predictDimensions(spec, first.width, first.height) : { width: 0, height: 0 };
   const upscaling = first ? isUpscale(spec, first.width, first.height) : false;
@@ -175,16 +184,18 @@ export function Resizer() {
   const heavy = items.filter((i) => i.size > HEAVY_BYTES);
   const canRun = items.some((i) => i.status === "ready" || i.status === "done");
 
-  const setWidthLinked = (value: number) => {
+  const setWidthLinked = (raw: number) => {
+    const value = clampDimension(raw);
     setWidth(value);
     if (lock && first && first.width) {
-      setHeight(Math.max(1, Math.round((value * first.height) / first.width)));
+      setHeight(clampDimension((value * first.height) / first.width));
     }
   };
-  const setHeightLinked = (value: number) => {
+  const setHeightLinked = (raw: number) => {
+    const value = clampDimension(raw);
     setHeight(value);
     if (lock && first && first.height) {
-      setWidth(Math.max(1, Math.round((value * first.width) / first.height)));
+      setWidth(clampDimension((value * first.width) / first.height));
     }
   };
 
@@ -437,8 +448,9 @@ export function Resizer() {
                       type="number"
                       inputMode="numeric"
                       min={1}
+                      max={MAX_DIMENSION}
                       value={width}
-                      onChange={(e) => setWidthLinked(Math.max(1, Number(e.target.value) || 1))}
+                      onChange={(e) => setWidthLinked(Number(e.target.value) || 1)}
                       className="mt-1 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                     />
                   </div>
@@ -451,8 +463,9 @@ export function Resizer() {
                       type="number"
                       inputMode="numeric"
                       min={1}
+                      max={MAX_DIMENSION}
                       value={height}
-                      onChange={(e) => setHeightLinked(Math.max(1, Number(e.target.value) || 1))}
+                      onChange={(e) => setHeightLinked(Number(e.target.value) || 1)}
                       className="mt-1 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                     />
                   </div>
@@ -465,7 +478,13 @@ export function Resizer() {
                     className="size-4"
                   />
                   Lock aspect ratio
+                  <span className="text-xs text-muted-foreground">
+                    {lock ? "on — height follows width" : "off — set both freely"}
+                  </span>
                 </label>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Width and height stay between 1 and {MAX_DIMENSION}px.
+                </p>
               </div>
             )}
 
@@ -527,7 +546,38 @@ export function Resizer() {
                       <span className="ml-2 text-xs text-muted-foreground">{p.note}</span>
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => setMode("dimensions")}
+                    className="min-h-11 rounded-lg border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  >
+                    <span className="font-medium">Custom width / height</span>
+                    <span className="ml-2 text-xs text-muted-foreground">type exact pixels</span>
+                  </button>
                 </div>
+
+                {preset?.maxWidth && (
+                  <div className="mt-4">
+                    <label htmlFor="rs-maxw" className="text-xs font-medium text-muted-foreground">
+                      Maximum width (px) — height follows automatically
+                    </label>
+                    <input
+                      id="rs-maxw"
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      max={MAX_DIMENSION}
+                      value={maxWidth}
+                      onChange={(e) => setMaxWidth(clampDimension(Number(e.target.value) || 1))}
+                      className="mt-1 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    />
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      Wider GIFs shrink to this width. Narrower ones are left alone — nothing is
+                      enlarged.
+                    </p>
+                  </div>
+                )}
+
 
                 {showSquareChoice && (
                   <fieldset className="mt-4 rounded-lg border border-border p-3">
@@ -608,6 +658,32 @@ export function Resizer() {
               {items.length} GIF{items.length === 1 ? "" : "s"} queued · {done.length} resized ·
               settings apply to every file
             </p>
+
+            <p className="rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+              Resizing re-encodes every frame, so the file size and the look of the GIF both change
+              — usually smaller and slightly softer when you shrink it. Animation timing, loops and
+              transparency are kept.
+            </p>
+
+            <p className="text-xs text-muted-foreground">
+              Chasing a file size instead of a pixel size? Use the{" "}
+              <L to="/gif-compressor" className="text-primary underline-offset-4 hover:underline">
+                GIF compressor
+              </L>{" "}
+              for a target size, the{" "}
+              <L
+                to="/compress-gif-for-discord"
+                className="text-primary underline-offset-4 hover:underline"
+              >
+                Discord GIF compressor
+              </L>{" "}
+              for the 10MB, 256KB and 512KB limits, or the{" "}
+              <L to="/gif-cropper" className="text-primary underline-offset-4 hover:underline">
+                GIF cropper
+              </L>{" "}
+              to cut off dead space before resizing.
+            </p>
+
 
             <button
               type="button"
