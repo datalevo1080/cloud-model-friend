@@ -509,20 +509,11 @@ export function Cropper() {
                 className="pointer-events-none absolute inset-0 size-full object-contain"
               />
 
-                {/* dimmed area outside the crop box */}
+              {/* dimmed area outside the crop box */}
               <div
-                  className="pointer-events-none absolute inset-0 bg-foreground/50"
+                className="pointer-events-none absolute inset-0 bg-foreground/50"
                 style={{
-                    clipPath: circlePreview
-                      ? `path("M 0 0 H ${stageRef.current?.clientWidth ?? 0} V ${stageRef.current?.clientHeight ?? 0} H 0 Z")`
-                      : `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${pct.left}% ${pct.top}%, ${pct.left}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top}%, ${pct.left}% ${pct.top}%)`,
-                    ...(circlePreview
-                      ? {
-                          clipPath: undefined,
-                          maskImage: `radial-gradient(circle at ${pct.left + pct.width / 2}% ${pct.top + pct.height / 2}%, transparent 0 ${pct.width / 2}%, black ${pct.width / 2 + 0.25}%)`,
-                          WebkitMaskImage: `radial-gradient(circle at ${pct.left + pct.width / 2}% ${pct.top + pct.height / 2}%, transparent 0 ${pct.width / 2}%, black ${pct.width / 2 + 0.25}%)`,
-                        }
-                      : {}),
+                  clipPath: `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${pct.left}% ${pct.top}%, ${pct.left}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top}%, ${pct.left}% ${pct.top}%)`,
                 }}
                 aria-hidden="true"
               />
@@ -534,10 +525,10 @@ export function Cropper() {
                 aria-describedby="crop-keyboard-help"
                 onKeyDown={onKeyDown}
                 onPointerDown={onPointerDown("move")}
-                  className={cn(
-                    "absolute cursor-move border-2 border-primary bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-                    circlePreview && "rounded-full",
-                  )}
+                className={cn(
+                  "absolute cursor-move border-2 border-primary bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                  circlePreview && "rounded-full",
+                )}
                 style={{
                   left: `${pct.left}%`,
                   top: `${pct.top}%`,
@@ -545,6 +536,16 @@ export function Cropper() {
                   height: `${pct.height}%`,
                 }}
               >
+                {circlePreview && (
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-full"
+                    style={{
+                      background:
+                        "radial-gradient(circle, transparent 0 49%, color-mix(in srgb, var(--color-foreground) 50%, transparent) 50%)",
+                    }}
+                    aria-hidden="true"
+                  />
+                )}
                 {HANDLES.map((h) => (
                   <button
                     key={h.id}
@@ -673,10 +674,10 @@ export function Cropper() {
               <div className="mt-2 grid grid-cols-2 gap-3">
                 {(
                   [
-                    ["X", "x", maxW],
-                    ["Y", "y", maxH],
-                    ["Width", "width", maxW],
-                    ["Height", "height", maxH],
+                    ["X", "x", Math.max(0, maxW - rect.width)],
+                    ["Y", "y", Math.max(0, maxH - rect.height)],
+                    ["Width", "width", Math.max(1, maxW - rect.x)],
+                    ["Height", "height", Math.max(1, maxH - rect.y)],
                   ] as const
                 ).map(([label, key, max]) => (
                   <div key={key}>
