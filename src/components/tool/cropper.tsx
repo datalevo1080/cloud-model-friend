@@ -10,6 +10,7 @@ import {
   Play,
   Scissors,
   Trash2,
+  Undo2,
   Wand2,
 } from "lucide-react";
 import { DropZone } from "./drop-zone";
@@ -90,6 +91,7 @@ export function Cropper() {
   const [skipped, setSkipped] = useState<string[]>([]);
   const [rect, setRect] = useState<CropRect>({ x: 0, y: 0, width: 0, height: 0 });
   const [aspect, setAspect] = useState<AspectId>("free");
+  const [undoRect, setUndoRect] = useState<CropRect | null>(null);
   const [playing, setPlaying] = useState(true);
   const [pausedFrame, setPausedFrame] = useState<string | null>(null);
   const [trimming, setTrimming] = useState(false);
@@ -123,6 +125,8 @@ export function Cropper() {
     if (!current) return;
     setPlaying(true);
     setPausedFrame(null);
+    setUndoRect(null);
+    setAspect("free");
     setRect(current.rect ?? { x: 0, y: 0, width: current.width, height: current.height });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current?.id]);
@@ -192,12 +196,26 @@ export function Cropper() {
   );
 
   const chooseAspect = (id: AspectId) => {
+    setUndoRect(rect);
     setAspect(id);
     const preset = ASPECT_PRESETS.find((p) => p.id === id);
-    if (preset?.ratio) setRect(applyAspect(rect, preset.ratio, maxW, maxH));
+    if (!preset?.ratio) return;
+    if ("size" in preset) {
+      const size = Math.min(preset.size, maxW, maxH);
+      setRectSafe({
+        x: Math.round((maxW - size) / 2),
+        y: Math.round((maxH - size) / 2),
+        width: size,
+        height: size,
+      });
+      return;
+    }
+    setRect(applyAspect(rect, preset.ratio, maxW, maxH));
   };
 
-  const ratio = ASPECT_PRESETS.find((p) => p.id === aspect)?.ratio ?? null;
+  const activePreset = ASPECT_PRESETS.find((p) => p.id === aspect);
+  const ratio = activePreset?.ratio ?? null;
+  const circlePreview = activePreset && "circle" in activePreset && activePreset.circle;
 
   // ---- pointer dragging -------------------------------------------------
   const onPointerDown = (handle: Handle) => (e: React.PointerEvent) => {
@@ -246,6 +264,7 @@ export function Cropper() {
   };
 
   const endDrag = () => {
+    if (dragRef.current) setUndoRect(dragRef.current.base);
     dragRef.current = null;
   };
 
@@ -260,6 +279,7 @@ export function Cropper() {
     const delta = map[e.key];
     if (!delta) return;
     e.preventDefault();
+    setUndoRect(rect);
     setRectSafe({ ...rect, x: rect.x + delta[0], y: rect.y + delta[1] });
   };
 
@@ -276,6 +296,7 @@ export function Cropper() {
     if (!delta) return;
     e.preventDefault();
     e.stopPropagation();
+    setUndoRect(rect);
     const [dx, dy] = delta;
     let { x, y, width, height } = rect;
     if (handle.includes("w")) {
@@ -324,6 +345,7 @@ export function Cropper() {
       if (!bounds) {
         setNotice("No uniform border found — this GIF already fills its frame.");
       } else {
+        setUndoRect(rect);
         setAspect("free");
         setRectSafe(bounds);
         setNotice(`Auto-trim snapped the box to ${bounds.width}×${bounds.height}px of content.`);
@@ -487,11 +509,20 @@ export function Cropper() {
                 className="pointer-events-none absolute inset-0 size-full object-contain"
               />
 
-              {/* dimmed area outside the crop box */}
+                {/* dimmed area outside the crop box */}
               <div
-                className="pointer-events-none absolute inset-0 bg-foreground/50"
+                  className="pointer-events-none absolute inset-0 bg-foreground/50"
                 style={{
-                  clipPath: `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${pct.left}% ${pct.top}%, ${pct.left}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top}%, ${pct.left}% ${pct.top}%)`,
+                    clipPath: circlePreview
+                      ? `path("M 0 0 H ${stageRef.current?.clientWidth ?? 0} V ${stageRef.current?.clientHeight ?? 0} H 0 Z")`
+                      : `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${pct.left}% ${pct.top}%, ${pct.left}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top + pct.height}%, ${pct.left + pct.width}% ${pct.top}%, ${pct.left}% ${pct.top}%)`,
+                    ...(circlePreview
+                      ? {
+                          clipPath: undefined,
+                          maskImage: `radial-gradient(circle at ${pct.left + pct.width / 2}% ${pct.top + pct.height / 2}%, transparent 0 ${pct.width / 2}%, black ${pct.width / 2 + 0.25}%)`,
+                          WebkitMaskImage: `radial-gradient(circle at ${pct.left + pct.width / 2}% ${pct.top + pct.height / 2}%, transparent 0 ${pct.width / 2}%, black ${pct.width / 2 + 0.25}%)`,
+                        }
+                      : {}),
                 }}
                 aria-hidden="true"
               />
@@ -503,7 +534,10 @@ export function Cropper() {
                 aria-describedby="crop-keyboard-help"
                 onKeyDown={onKeyDown}
                 onPointerDown={onPointerDown("move")}
-                className="absolute cursor-move border-2 border-primary bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  className={cn(
+                    "absolute cursor-move border-2 border-primary bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+                    circlePreview && "rounded-full",
+                  )}
                 style={{
                   left: `${pct.left}%`,
                   top: `${pct.top}%`,
@@ -527,6 +561,11 @@ export function Cropper() {
                   />
                 ))}
               </div>
+                {circlePreview && (
+                  <span className="pointer-events-none absolute bottom-2 left-1/2 z-10 -translate-x-1/2 rounded-md bg-background/90 px-2 py-1 text-xs font-medium text-foreground shadow-soft">
+                    Circular preview
+                  </span>
+                )}
             </div>
 
             <p id="crop-keyboard-help" className="sr-only">
@@ -600,7 +639,7 @@ export function Cropper() {
 
           <div className="space-y-5 rounded-xl border border-border bg-card p-5">
             <div>
-              <h3 className="text-sm font-semibold">Aspect ratio</h3>
+              <h3 className="text-sm font-semibold">Crop preset</h3>
               <div className="mt-2 flex flex-wrap gap-2">
                 {ASPECT_PRESETS.map((p) => (
                   <button
@@ -620,6 +659,13 @@ export function Cropper() {
                   </button>
                 ))}
               </div>
+              {circlePreview && (
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                  This round mask is only a preview. GIF files use rectangular frames, so your
+                  download will be a standards-compatible square GIF. GIF transparency is
+                  palette-based and is not the same as modern PNG alpha.
+                </p>
+              )}
             </div>
 
             <div>
@@ -650,6 +696,7 @@ export function Cropper() {
                       onChange={(e) => {
                         const v = Number(e.target.value);
                         if (!Number.isFinite(v)) return;
+                        setUndoRect(rect);
                         const next = { ...rect, [key]: v };
                         if (ratio && (key === "width" || key === "height")) {
                           if (key === "width") next.height = Math.round(v / ratio);
@@ -686,8 +733,22 @@ export function Cropper() {
               <button
                 type="button"
                 onClick={() => {
+                  if (!undoRect) return;
+                  const previous = rect;
+                  setRectSafe(undoRect);
+                  setUndoRect(previous);
+                }}
+                disabled={!undoRect}
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-50"
+              >
+                <Undo2 className="size-4" aria-hidden="true" /> Undo
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setUndoRect(rect);
                   setAspect("free");
-                  setRect({ x: 0, y: 0, width: current.width, height: current.height });
+                  setRectSafe({ x: 0, y: 0, width: current.width, height: current.height });
                 }}
                 className="min-h-11 rounded-lg px-3 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >

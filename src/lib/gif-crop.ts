@@ -7,17 +7,40 @@ import { runGifsicleCommand } from "./gif-engine";
 export type CropRect = { x: number; y: number; width: number; height: number };
 
 export const ASPECT_PRESETS = [
-  { id: "free", label: "Free", ratio: null as number | null, hint: "No constraint — drag freely" },
+  {
+    id: "free",
+    label: "Freeform",
+    ratio: null as number | null,
+    hint: "No constraint — drag freely",
+  },
   {
     id: "1:1",
-    label: "1:1",
+    label: "Square 1:1",
     ratio: 1,
-    hint: "Square now, circle later — platforms do the rounding.",
+    hint: "A square crop at any size",
+  },
+  {
+    id: "circle",
+    label: "Circle Preview",
+    ratio: 1,
+    circle: true,
+    hint: "Preview a round avatar; the downloaded GIF remains rectangular",
+  },
+  {
+    id: "discord-emoji",
+    label: "Discord Emoji",
+    ratio: 1,
+    size: 128,
+    hint: "A centered square crop up to 128×128 pixels",
+  },
+  {
+    id: "profile-picture",
+    label: "Profile Picture",
+    ratio: 1,
+    hint: "A centered square crop for profile images",
   },
   { id: "16:9", label: "16:9", ratio: 16 / 9, hint: "Widescreen — screen recordings" },
-  { id: "9:16", label: "9:16", ratio: 9 / 16, hint: "Vertical — phone and stories" },
   { id: "4:3", label: "4:3", ratio: 4 / 3, hint: "Classic — older captures" },
-  { id: "3:2", label: "3:2", ratio: 3 / 2, hint: "Photo — camera framing" },
 ] as const;
 
 export type AspectId = (typeof ASPECT_PRESETS)[number]["id"];
