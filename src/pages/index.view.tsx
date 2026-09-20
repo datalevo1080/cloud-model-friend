@@ -389,6 +389,17 @@ function Home() {
                 </Reveal>
               ))}
             </div>
+
+            <p className="mt-8 text-sm text-muted-foreground">
+              Sending to a chat app? There is a dedicated guide for{" "}
+              <L
+                to="/compress-gif-for-discord"
+                className="text-primary underline underline-offset-4"
+              >
+                compressing a GIF for Discord
+              </L>{" "}
+              with the 10 MB, emoji and sticker limits built in.
+            </p>
           </div>
         </section>
 
