@@ -877,6 +877,19 @@ function Index() {
               engine, same browser-only privacy.
             </p>
           </div>
+          <div className="mt-4 rounded-2xl border border-border bg-card p-6">
+            <h2 id="related-trimmer" className="text-xl font-bold tracking-tight">
+              Is the GIF simply too long?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              The{" "}
+              <L to="/gif-trimmer" className="text-primary underline-offset-4 hover:underline">
+                GIF trimmer
+              </L>{" "}
+              cuts the clip down to the seconds that matter, which usually saves more bytes than any
+              quality slider.
+            </p>
+          </div>
         </section>
 
         <section aria-labelledby="cta" className="mx-auto max-w-3xl px-4 pb-20 text-center sm:px-6">
