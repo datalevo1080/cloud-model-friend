@@ -282,11 +282,8 @@ function GifCropperPage() {
               This tool crops. It changes the GIF dimensions and leaves the animation frames alone.
             </li>
             <li>
-              To change the whole canvas without cutting anything away, use the{" "}
-              <L to="/gif-resizer" className="text-primary underline-offset-4 hover:underline">
-                GIF resizer
-              </L>
-              .
+              To shorten a GIF's length or cut GIF frames off the ends, you want a GIF trimmer — ours
+              is on the roadmap alongside a GIF resizer and a GIF splitter.
             </li>
             <li>
               To shrink the file without changing what's visible, run it through our{" "}
