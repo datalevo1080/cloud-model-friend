@@ -37,6 +37,7 @@ import { Route as LangGifTrimmerRouteImport } from './routes/$lang/gif-trimmer'
 import { Route as LangPngToGifRouteImport } from './routes/$lang/png-to-gif'
 import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
 import { Route as LangTermsRouteImport } from './routes/$lang/terms'
+import { Route as ResearchGifCompressionTestRouteImport } from './routes/research.gif-compression-test'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -179,6 +180,12 @@ const LangTermsRoute = LangTermsRouteImport.update({
   path: '/$lang/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResearchGifCompressionTestRoute =
+  ResearchGifCompressionTestRouteImport.update({
+    id: '/research/gif-compression-test',
+    path: '/research/gif-compression-test',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
 }
 export interface FileRoutesByTo {
@@ -238,6 +246,7 @@ export interface FileRoutesByTo {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang': typeof LangIndexRoute
 }
 export interface FileRoutesById {
@@ -269,6 +278,7 @@ export interface FileRoutesById {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
 }
 export interface FileRouteTypes {
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/research/gif-compression-test'
     | '/$lang/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/research/gif-compression-test'
     | '/$lang'
   id:
     | '__root__'
@@ -361,6 +373,7 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/research/gif-compression-test'
     | '/$lang/'
   fileRoutesById: FileRoutesById
 }
@@ -392,6 +405,7 @@ export interface RootRouteChildren {
   LangPngToGifRoute: typeof LangPngToGifRoute
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangTermsRoute: typeof LangTermsRoute
+  ResearchGifCompressionTestRoute: typeof ResearchGifCompressionTestRoute
   LangIndexRoute: typeof LangIndexRoute
 }
 
@@ -593,6 +607,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/research/gif-compression-test': {
+      id: '/research/gif-compression-test'
+      path: '/research/gif-compression-test'
+      fullPath: '/research/gif-compression-test'
+      preLoaderRoute: typeof ResearchGifCompressionTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -624,6 +645,7 @@ const rootRouteChildren: RootRouteChildren = {
   LangPngToGifRoute: LangPngToGifRoute,
   LangPrivacyRoute: LangPrivacyRoute,
   LangTermsRoute: LangTermsRoute,
+  ResearchGifCompressionTestRoute: ResearchGifCompressionTestRoute,
   LangIndexRoute: LangIndexRoute,
 }
 export const routeTree = rootRouteImport
