@@ -1,3 +1,7 @@
+@@
+             <p className="mt-2 text-sm font-medium">Last tested: {LAST_UPDATED}</p>
++            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
++              Read the focused{
 import { L } from "@/components/l";
 import {
   BadgeCheck,
