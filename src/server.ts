@@ -97,9 +97,11 @@ function canonicalHostRedirect(request: Request): Response | undefined {
   return new Response(null, { status: 301, headers: { location: url.toString() } });
 }
 
-export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
-    try {
+// Named export AND default export: the TanStack Start prerender plugin reads
+// `server.fetch` off the module namespace, while the runtime uses the default
+// export. Providing only one of them breaks the other.
+export async function fetch(request: Request, env: unknown, ctx: unknown) {
+  try {
       const redirect = canonicalHostRedirect(request);
       if (redirect) return redirect;
 
@@ -115,5 +117,6 @@ export default {
         headers: { "content-type": "text/html; charset=utf-8" },
       });
     }
-  },
-};
+}
+
+export default { fetch };
