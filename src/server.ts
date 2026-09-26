@@ -101,7 +101,7 @@ function canonicalHostRedirect(request: Request): Response | undefined {
 // `server.fetch` off the module namespace, while the runtime uses the default
 // export. Providing only one of them breaks the other.
 export async function fetch(request: Request, env: unknown, ctx: unknown) {
-  {
+  try {
       const redirect = canonicalHostRedirect(request);
       if (redirect) return redirect;
 
