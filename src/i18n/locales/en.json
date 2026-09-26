@@ -78,6 +78,8 @@
   "meta./png-to-gif.description": "Turn PNG images into an animated GIF in your browser. No uploads, no watermark.",
   "meta./gif-to-png.title": "GIF to PNG — Convert GIF Frames to PNG",
   "meta./gif-to-png.description": "Convert a GIF into PNG frames in your browser. Single frame or full sequence.",
+  "meta./research/gif-compression-test.title": "GIF Compression Test: 16-GIF Results — ZipGIF Research",
+  "meta./research/gif-compression-test.description": "A small ZipGIF test of 16 GIFs found a 37.0% average reduction and a 69.4% best observed reduction using Gifsicle -O3, lossy 120 and 64 colors.",
   "meta./about.title": "About ZipGIF — Built by Shafiullah Tareen",
   "meta./about.description": "Why ZipGIF exists, how it works, and who builds it.",
   "meta./contact.title": "Contact ZipGIF",
