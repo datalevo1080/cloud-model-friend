@@ -35,7 +35,7 @@ function GifCompressionTest() {
                 same amount.
               </p>
               <p className="mt-5 text-sm font-medium text-foreground">
-                Published September 21, 2026 · Shafiullah Tareen
+                Published September 26, 2026 · Shafiullah Tareen
               </p>
             </div>
           </header>
