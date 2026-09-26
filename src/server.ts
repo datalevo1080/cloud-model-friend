@@ -117,5 +117,6 @@ export async function fetch(request: Request, env: unknown, ctx: unknown) {
         headers: { "content-type": "text/html; charset=utf-8" },
       });
     }
-  },
-};
+}
+
+export default { fetch };
