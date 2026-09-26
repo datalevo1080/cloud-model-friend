@@ -14,6 +14,7 @@ import { HREFLANG, LOCALES, PAGE_PATHS, SITE, absoluteUrl } from "../src/i18n/co
 
 /** Pages intentionally kept out of the sitemap (no search value). */
 const EXCLUDED = new Set(["/contact", "/privacy", "/terms"]);
+const ENGLISH_ONLY = new Set(["/research/gif-compression-test"]);
 const SITEMAP_PATHS = PAGE_PATHS.filter((p) => !EXCLUDED.has(p));
 
 const PRIORITY = (path: string) =>
@@ -22,9 +23,11 @@ const CHANGEFREQ = (path: string) =>
   ["/privacy", "/terms"].includes(path) ? "yearly" : path === "/" ? "weekly" : "monthly";
 
 for (const locale of LOCALES) {
-  const urls = SITEMAP_PATHS.map((path) => {
+  const localePaths = SITEMAP_PATHS.filter((path) => locale === "en" || !ENGLISH_ONLY.has(path));
+  const urls = localePaths.map((path) => {
+    const alternateLocales = ENGLISH_ONLY.has(path) ? (["en"] as const) : LOCALES;
     const alternates = [
-      ...LOCALES.map(
+      ...alternateLocales.map(
         (l) =>
           `    <xhtml:link rel="alternate" hreflang="${HREFLANG[l]}" href="${absoluteUrl(l, path)}" />`,
       ),
@@ -70,5 +73,5 @@ const robots = [
 writeFileSync("public/robots.txt", robots);
 
 console.log(
-  `wrote ${LOCALES.length} locale sitemaps (${SITEMAP_PATHS.length} URLs each), sitemap index and robots.txt`,
+  `wrote ${LOCALES.length} locale sitemaps, sitemap index and robots.txt`,
 );

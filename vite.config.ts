@@ -46,6 +46,7 @@ export default defineConfig({
       { path: "/gif-trimmer", prerender: { enabled: true } },
       { path: "/png-to-gif", prerender: { enabled: true } },
       { path: "/gif-to-png", prerender: { enabled: true } },
+      { path: "/research/gif-compression-test", prerender: { enabled: true } },
       { path: "/about", prerender: { enabled: true } },
       { path: "/contact", prerender: { enabled: true } },
       { path: "/privacy", prerender: { enabled: true } },

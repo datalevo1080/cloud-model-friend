@@ -1,8 +1,5 @@
-@@
-             <p className="mt-2 text-sm font-medium">Last tested: {LAST_UPDATED}</p>
-+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-+              Read the focused{
 import { L } from "@/components/l";
+import { Link } from "@tanstack/react-router";
 import {
   BadgeCheck,
   Cpu,
@@ -788,6 +785,16 @@ function Index() {
               barely compresses at all.
             </p>
             <p className="mt-2 text-sm font-medium">Last tested: {LAST_UPDATED}</p>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Read the focused{" "}
+              <Link
+                to="/research/gif-compression-test"
+                className="font-medium text-primary underline underline-offset-4"
+              >
+                16-GIF compression test and methodology
+              </Link>
+              .
+            </p>
           </div>
         </section>
 

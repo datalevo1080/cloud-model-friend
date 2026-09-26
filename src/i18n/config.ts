@@ -54,6 +54,7 @@ export const PAGE_PATHS = [
   "/gif-trimmer",
   "/png-to-gif",
   "/gif-to-png",
+  "/research/gif-compression-test",
   "/about",
   "/contact",
   "/privacy",

@@ -9,7 +9,7 @@ const IMAGE = `${SITE}/og-gif-compression-test.jpg`;
 const TITLE = "GIF Compression Test: 16-GIF Results — ZipGIF Research";
 const DESCRIPTION =
   "A small ZipGIF test of 16 GIFs found a 37.0% average file-size reduction and a 69.4% best observed reduction using Gifsicle -O3, lossy 120 and 64 colors.";
-const PUBLISHED = "2026-09-21";
+const PUBLISHED = "2026-09-26";
 
 export const options = {
   head: () => ({
