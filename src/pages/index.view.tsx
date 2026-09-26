@@ -165,66 +165,26 @@ function Home() {
           <ScrollFilm />
         </section>
 
-        {/* ---------------- The pitch (headline + primary CTA) ---------------- */}
+        {/* ---------------- Primary action ---------------- */}
         <section
           id="pitch"
           aria-labelledby="hero-heading"
-          className="relative isolate scroll-mt-20 overflow-hidden border-t border-hero-border bg-hero text-hero-foreground"
+          className="relative isolate scroll-mt-20 border-t border-hero-border bg-hero text-hero-foreground"
         >
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-            <div className="absolute left-1/2 -top-32 size-[32rem] -translate-x-1/2 rounded-full bg-primary/20 blur-[130px]" />
-          </div>
-
-          <div className="relative mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-24">
-            <span className="inline-flex items-center gap-2 rounded-full border border-hero-border bg-hero-elevated/60 px-3.5 py-1.5 text-xs font-medium tracking-wide text-hero-muted backdrop-blur-md">
-              <Zap className="size-3.5 text-primary" aria-hidden="true" />
-              Every GIF tool. Zero uploads.
-            </span>
-
-            <h1
-              id="hero-heading"
-              className="mt-6 text-[2.15rem] leading-[1.05] font-extrabold tracking-tight text-balance sm:text-6xl"
+          <h1 id="hero-heading" className="sr-only">
+            ZipGIF browser-based GIF tools
+          </h1>
+          <div className="mx-auto flex max-w-6xl justify-center px-4 py-10 sm:px-6 sm:py-12">
+            <L
+              to="/gif-compressor"
+              className="group inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-2xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-xl shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-primary/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:w-auto"
             >
-              Smaller GIFs,
-              <br />
-              <span className="gradient-text">without the upload.</span>
-            </h1>
-
-            <p className="mx-auto mt-5 max-w-xl text-base text-hero-muted text-pretty sm:text-xl">
-              Eight GIF tools that run inside this tab. Compress, crop, resize, retime, split and
-              convert, free and without a watermark.
-            </p>
-
-            <div className="mt-8 flex flex-col items-center gap-3.5">
-              <L
-                to="/gif-compressor"
-                className="group inline-flex w-full max-w-sm items-center justify-center gap-2.5 rounded-2xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-xl shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-primary/40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary sm:w-auto"
-              >
-                Compress a GIF free
-                <ArrowRight
-                  className="size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
-                  aria-hidden="true"
-                />
-              </L>
-              <a
-                href="#tools"
-                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-hero-foreground underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                Or browse all 8 tools
-                <ArrowRight className="size-3.5" aria-hidden="true" />
-              </a>
-            </div>
-
-            <ul className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-hero-muted">
-              {["0 bytes uploaded", "Up to 70% smaller", "Works offline after the first visit"].map(
-                (item) => (
-                  <li key={item} className="inline-flex items-center gap-2">
-                    <ShieldCheck className="size-4 text-primary" aria-hidden="true" />
-                    {item}
-                  </li>
-                ),
-              )}
-            </ul>
+              Compress a GIF free
+              <ArrowRight
+                className="size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none"
+                aria-hidden="true"
+              />
+            </L>
           </div>
         </section>
 
