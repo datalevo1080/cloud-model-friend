@@ -101,7 +101,7 @@ export async function fetch(request: Request, env: unknown, ctx: unknown) {
       const redirect = canonicalHostRedirect(request);
       if (redirect) return redirect;
 
-      const response = await handleStartRequest(request, env, ctx);
+      const response = await handleStartRequest(request);
 
       const injected = await maybeInjectGtm(response);
       return await normalizeCatastrophicSsrResponse(injected);
