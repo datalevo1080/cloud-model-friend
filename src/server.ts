@@ -119,6 +119,7 @@ function localePathRedirect(request: Request): Response | undefined {
     return undefined; // already a clean, live localized URL
   }
 
+  if (cleanPath === url.pathname) return undefined; // never redirect to yourself
   url.pathname = cleanPath;
   return new Response(null, { status: 301, headers: { location: url.toString() } });
 }
