@@ -133,11 +133,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/site.webmanifest" },
     ],
     scripts: [
-      {
-        // Google Analytics (gtag.js), loaded only once the page is idle or the
-        // visitor interacts, so it never competes with first paint.
-        children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DVZPWB48B2');(function(){var l=false;function load(){if(l)return;l=true;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-DVZPWB48B2';document.head.appendChild(s);}['pointerdown','keydown','touchstart','scroll'].forEach(function(e){addEventListener(e,load,{once:true,passive:true})});if('requestIdleCallback' in window){requestIdleCallback(load,{timeout:5000})}else{setTimeout(load,4000)}})();`,
-      },
+      // Google Analytics (G-DVZPWB48B2) is delivered through the Tag Manager
+      // container injected in src/server.ts — loading gtag.js here as well
+      // double-counted visits and shipped the same 173 KB script twice.
       // Preserve existing theme init script
       { children: themeInitScript },
     ],
