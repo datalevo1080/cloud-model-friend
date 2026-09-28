@@ -137,7 +137,7 @@ function withCacheHeaders(request: Request, response: Response): Response {
 // export. Providing only one of them breaks the other.
 export async function fetch(request: Request, env: unknown, ctx: unknown) {
   try {
-      const redirect = canonicalHostRedirect(request);
+      const redirect = canonicalHostRedirect(request) ?? localePathRedirect(request);
       if (redirect) return redirect;
 
       const response = withCacheHeaders(request, await handleStartRequest(request));
