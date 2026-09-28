@@ -93,6 +93,36 @@ function canonicalHostRedirect(request: Request): Response | undefined {
   return new Response(null, { status: 301, headers: { location: url.toString() } });
 }
 
+const LOCALE_PREFIX = /^\/(en|id|fr|ja|es|pt)(\/.*|$)/;
+
+/**
+ * English lives at the root (never /en), so /en and /en/* are dead URLs that
+ * Google crawled and reported as 404s in Search Console. Localized pages also
+ * 307'd on trailing slashes, which search engines treat as temporary. Both now
+ * get one permanent 301 hop to the clean, canonical URL, path and query kept.
+ */
+function localePathRedirect(request: Request): Response | undefined {
+  const url = new URL(request.url);
+  const match = LOCALE_PREFIX.exec(url.pathname);
+  if (!match) return undefined;
+
+  const [, locale, rest = ""] = match;
+  let cleanPath: string;
+  if (locale === "en") {
+    // /en -> / and /en/gif-compressor -> /gif-compressor
+    cleanPath = rest && rest !== "/" ? rest : "/";
+  } else if (rest === "" || rest === "/") {
+    cleanPath = `/${locale}`;
+  } else if (rest.endsWith("/")) {
+    cleanPath = `/${locale}${rest.slice(0, -1)}`;
+  } else {
+    return undefined; // already a clean, live localized URL
+  }
+
+  url.pathname = cleanPath;
+  return new Response(null, { status: 301, headers: { location: url.toString() } });
+}
+
 /** Hashed build files never change, so browsers may keep them for a year. */
 function withCacheHeaders(request: Request, response: Response): Response {
   const path = new URL(request.url).pathname;
