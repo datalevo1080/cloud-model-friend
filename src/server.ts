@@ -1,22 +1,18 @@
 import "./lib/error-capture";
 
+import {
+  createStartHandler,
+  defaultStreamHandler,
+} from "@tanstack/react-start/server";
+
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
-type ServerEntry = {
-  fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
-};
-
-let serverEntryPromise: Promise<ServerEntry> | undefined;
-
-async function getServerEntry(): Promise<ServerEntry> {
-  if (!serverEntryPromise) {
-    serverEntryPromise = import("@tanstack/react-start/server-entry").then(
-      (m) => (m.default ?? m) as ServerEntry,
-    );
-  }
-  return serverEntryPromise;
-}
+// Build the framework request handler directly. Dynamically importing
+// `@tanstack/react-start/server-entry` from a configured custom server entry
+// can resolve back to this bundled module in Node ESM, leaving handler.fetch
+// undefined (or creating a recursive handler) during prerendering.
+const handleStartRequest = createStartHandler(defaultStreamHandler);
 
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
@@ -105,8 +101,7 @@ export async function fetch(request: Request, env: unknown, ctx: unknown) {
       const redirect = canonicalHostRedirect(request);
       if (redirect) return redirect;
 
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
+      const response = await handleStartRequest(request);
 
       const injected = await maybeInjectGtm(response);
       return await normalizeCatastrophicSsrResponse(injected);

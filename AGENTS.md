@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Build the custom SSR entry with `createStartHandler(defaultStreamHandler)` directly; importing `@tanstack/react-start/server-entry` there can self-resolve in Node ESM prerender builds.
