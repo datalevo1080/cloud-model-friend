@@ -10,3 +10,6 @@
 <!-- LOVABLE:END -->
 
 - Build the custom SSR entry with `createStartHandler(defaultStreamHandler)` directly; importing `@tanstack/react-start/server-entry` there can self-resolve in Node ESM prerender builds.
+
+## Server redirects
+- Locale URL cleanup lives in `localePathRedirect` (src/server.ts): /en/* 301s to the root English URL, trailing-slash locale URLs 301 to the slash-less form, and the handler must no-op when the URL is already clean (a self-301 is a redirect loop).
