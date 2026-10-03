@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="340" viewBox="0 0 960 340" role="img" aria-labelledby="t d"><title id="t">Duration timeline for the 60, 30 and 15 frame example</title><desc id="d">At 50 milliseconds per frame, 60 frames last 3 seconds, 30 frames last 1.5 seconds and 15 frames last 0.75 seconds.</desc>
+<rect width="960" height="340" rx="24" fill="#f6f6fb"/>
+<g font-family="sans-serif" font-size="18" fill="#1b1b2f">
+<text x="40" y="80">Original</text><rect x="200" y="56" width="720" height="40" rx="8" fill="#5b4cf0"/><text x="560" y="83" text-anchor="middle" fill="#fff">60 frames × 50 ms = 3.0 s</text>
+<text x="40" y="160">First half</text><rect x="200" y="136" width="360" height="40" rx="8" fill="#7d70f5"/><text x="380" y="163" text-anchor="middle" fill="#fff">30 frames = 1.5 s</text>
+<text x="40" y="240">First quarter</text><rect x="200" y="216" width="180" height="40" rx="8" fill="#a39af8"/><text x="290" y="243" text-anchor="middle" fill="#1b1b2f">15 frames = 0.75 s</text></g>
+<g font-family="sans-serif" font-size="14" fill="#4a4a63" text-anchor="middle"><path d="M200 290h720" stroke="#9a94c9" stroke-width="2"/>
+<text x="200" y="314">0 s</text><text x="380" y="314">0.75 s</text><text x="560" y="314">1.5 s</text><text x="920" y="314">3.0 s</text></g></svg>
