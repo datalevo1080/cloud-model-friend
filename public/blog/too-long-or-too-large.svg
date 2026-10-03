@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="440" viewBox="0 0 960 440" role="img" aria-labelledby="t d"><title id="t">Too long or too large? Decision tree</title><desc id="d">If the GIF is too long, trim it. If it is too large, compress or resize it. If it has an unwanted border, crop it. If playback is too slow, change its speed.</desc>
+<rect width="960" height="440" rx="24" fill="#f6f6fb"/>
+<rect x="330" y="30" width="300" height="64" rx="14" fill="#1b1b2f"/><text x="480" y="70" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="700" fill="#fff">What is wrong with the GIF?</text>
+<g stroke="#9a94c9" stroke-width="3" fill="none"><path d="M480 94v40M135 134h690M135 134v46M365 134v46M595 134v46M825 134v46"/></g>
+<g font-family="sans-serif" text-anchor="middle">
+<rect x="35" y="180" width="200" height="70" rx="12" fill="#e6e3fd"/><text x="135" y="222" font-size="19" fill="#1b1b2f">Too long</text>
+<rect x="265" y="180" width="200" height="70" rx="12" fill="#e6e3fd"/><text x="365" y="222" font-size="19" fill="#1b1b2f">Too large (MB)</text>
+<rect x="495" y="180" width="200" height="70" rx="12" fill="#e6e3fd"/><text x="595" y="222" font-size="19" fill="#1b1b2f">Unwanted border</text>
+<rect x="725" y="180" width="200" height="70" rx="12" fill="#e6e3fd"/><text x="825" y="222" font-size="19" fill="#1b1b2f">Plays too slowly</text>
+<g stroke="#9a94c9" stroke-width="3"><path d="M135 250v50M365 250v50M595 250v50M825 250v50"/></g>
+<rect x="35" y="300" width="200" height="70" rx="12" fill="#5b4cf0"/><text x="135" y="342" font-size="20" font-weight="700" fill="#fff">Trim</text>
+<rect x="265" y="300" width="200" height="70" rx="12" fill="#5b4cf0"/><text x="365" y="342" font-size="20" font-weight="700" fill="#fff">Compress / resize</text>
+<rect x="495" y="300" width="200" height="70" rx="12" fill="#5b4cf0"/><text x="595" y="342" font-size="20" font-weight="700" fill="#fff">Crop</text>
+<rect x="725" y="300" width="200" height="70" rx="12" fill="#5b4cf0"/><text x="825" y="342" font-size="20" font-weight="700" fill="#fff">Change speed</text></g>
+<text x="480" y="412" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#4a4a63">Trim changes time · crop changes the frame area · speed changes delays · compression changes bytes</text></svg>
