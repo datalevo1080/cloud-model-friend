@@ -37,6 +37,8 @@ import { Route as LangGifTrimmerRouteImport } from './routes/$lang/gif-trimmer'
 import { Route as LangPngToGifRouteImport } from './routes/$lang/png-to-gif'
 import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
 import { Route as LangTermsRouteImport } from './routes/$lang/terms'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogHowLongCanAGifBeRouteImport } from './routes/blog.how-long-can-a-gif-be'
 import { Route as ResearchGifCompressionTestRouteImport } from './routes/research.gif-compression-test'
 
 const IndexRoute = IndexRouteImport.update({
@@ -180,6 +182,16 @@ const LangTermsRoute = LangTermsRouteImport.update({
   path: '/$lang/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogHowLongCanAGifBeRoute = BlogHowLongCanAGifBeRouteImport.update({
+  id: '/blog/how-long-can-a-gif-be',
+  path: '/blog/how-long-can-a-gif-be',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResearchGifCompressionTestRoute =
   ResearchGifCompressionTestRouteImport.update({
     id: '/research/gif-compression-test',
@@ -215,8 +227,10 @@ export interface FileRoutesByFullPath {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -246,8 +260,10 @@ export interface FileRoutesByTo {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang': typeof LangIndexRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -278,8 +294,10 @@ export interface FileRoutesById {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -311,8 +329,10 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/blog/how-long-can-a-gif-be'
     | '/research/gif-compression-test'
     | '/$lang/'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -342,8 +362,10 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/blog/how-long-can-a-gif-be'
     | '/research/gif-compression-test'
     | '/$lang'
+    | '/blog'
   id:
     | '__root__'
     | '/'
@@ -373,8 +395,10 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/blog/how-long-can-a-gif-be'
     | '/research/gif-compression-test'
     | '/$lang/'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -405,8 +429,10 @@ export interface RootRouteChildren {
   LangPngToGifRoute: typeof LangPngToGifRoute
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangTermsRoute: typeof LangTermsRoute
+  BlogHowLongCanAGifBeRoute: typeof BlogHowLongCanAGifBeRoute
   ResearchGifCompressionTestRoute: typeof ResearchGifCompressionTestRoute
   LangIndexRoute: typeof LangIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -607,6 +633,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LangTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-long-can-a-gif-be': {
+      id: '/blog/how-long-can-a-gif-be'
+      path: '/blog/how-long-can-a-gif-be'
+      fullPath: '/blog/how-long-can-a-gif-be'
+      preLoaderRoute: typeof BlogHowLongCanAGifBeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/research/gif-compression-test': {
       id: '/research/gif-compression-test'
       path: '/research/gif-compression-test'
@@ -645,8 +685,10 @@ const rootRouteChildren: RootRouteChildren = {
   LangPngToGifRoute: LangPngToGifRoute,
   LangPrivacyRoute: LangPrivacyRoute,
   LangTermsRoute: LangTermsRoute,
+  BlogHowLongCanAGifBeRoute: BlogHowLongCanAGifBeRoute,
   ResearchGifCompressionTestRoute: ResearchGifCompressionTestRoute,
   LangIndexRoute: LangIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
