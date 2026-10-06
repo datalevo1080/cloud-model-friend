@@ -271,7 +271,7 @@ function HowLongCanAGifBe() {
           </ul>
           <P>
             Because of that last point, GIFs do not always store every frame as a full image, and file size is
-            not perfectly linear with length. Doubling the duration of a calm animation may far less than
+            not perfectly linear with length. Doubling the duration of a calm animation may add far less than
             double its size; doubling a shaky phone clip can cost more.
           </P>
 
