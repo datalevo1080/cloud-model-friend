@@ -197,6 +197,12 @@ function GifTrimmerPage() {
             long enough for the moment, short enough to loop well - and when a GIF is over a
             platform's line, trimming the ends is the fastest way back under it.
           </p>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Related guide:{" "}
+            <L to="/blog/how-long-can-a-gif-be" className="text-primary underline">
+              how GIF duration, frame delays and loops work
+            </L>
+          </p>
         </section>
 
         <section aria-labelledby="measured" className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">

@@ -55,6 +55,8 @@ export const PAGE_PATHS = [
   "/png-to-gif",
   "/gif-to-png",
   "/research/gif-compression-test",
+  "/blog",
+  "/blog/how-long-can-a-gif-be",
   "/about",
   "/contact",
   "/privacy",
