@@ -36,6 +36,7 @@ const tools = [
 const pages = [
   { key: "nav.home", href: "/" },
   { key: "nav.about", href: "/about" },
+  { key: "nav.blog", href: "/blog" },
   { key: "nav.contact", href: "/contact" },
 ];
 
