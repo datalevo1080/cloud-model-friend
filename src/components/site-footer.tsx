@@ -21,6 +21,7 @@ const company = [
   { key: "nav.home", href: "/" },
   { key: "footer.discord", href: "/compress-gif-for-discord" },
   { key: "footer.about", href: "/about" },
+  { key: "nav.blog", href: "/blog" },
   { key: "footer.contact", href: "/contact" },
 ];
 
