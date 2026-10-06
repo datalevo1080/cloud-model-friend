@@ -124,6 +124,19 @@ function HowLongCanAGifBe() {
             By <L to="/about" className="font-medium text-primary underline underline-offset-2">Shafiullah Tareen</L>, creator of ZipGIF · Published <time dateTime="2026-10-03">October 3, 2026</time>
           </p>
 
+          <figure className="mt-8 overflow-hidden rounded-2xl border border-border bg-muted">
+            <img
+              src="/og-how-long-can-a-gif-be.jpg"
+              alt="How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF"
+              width={1200}
+              height={630}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="aspect-[1200/630] w-full object-cover"
+            />
+          </figure>
+
           <p className="mt-8 rounded-xl border border-border bg-muted/30 p-5 text-lg leading-8">
             The GIF format sets no short duration cap. One animation cycle lasts as long as its frame
             delays add up to, and a loop can replay that cycle endlessly. The limits you actually hit
@@ -136,7 +149,6 @@ function HowLongCanAGifBe() {
             w={960}
             h={360}
             caption="One stored 3-second cycle versus the same cycle replayed as loops. Looping adds viewing time, not stored frames."
-            eager
           />
 
           <nav aria-labelledby="toc-title" className="mt-10 rounded-xl border border-border bg-card p-6">
