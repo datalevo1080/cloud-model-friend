@@ -14,7 +14,7 @@ import { HREFLANG, LOCALES, PAGE_PATHS, SITE, absoluteUrl } from "../src/i18n/co
 
 /** Pages intentionally kept out of the sitemap (no search value). */
 const EXCLUDED = new Set(["/contact", "/privacy", "/terms"]);
-const ENGLISH_ONLY = new Set(["/research/gif-compression-test"]);
+const ENGLISH_ONLY = new Set(["/research/gif-compression-test", "/blog", "/blog/how-long-can-a-gif-be"]);
 const SITEMAP_PATHS = PAGE_PATHS.filter((p) => !EXCLUDED.has(p));
 
 const PRIORITY = (path: string) =>

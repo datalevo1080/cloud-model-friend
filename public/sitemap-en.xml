@@ -128,6 +128,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://zipgif.com/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zipgif.com/blog/how-long-can-a-gif-be</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-long-can-a-gif-be" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-long-can-a-gif-be" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://zipgif.com/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/about" />
     <xhtml:link rel="alternate" hreflang="id" href="https://zipgif.com/id/about" />

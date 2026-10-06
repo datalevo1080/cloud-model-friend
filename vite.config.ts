@@ -47,6 +47,8 @@ export default defineConfig({
       { path: "/png-to-gif", prerender: { enabled: true } },
       { path: "/gif-to-png", prerender: { enabled: true } },
       { path: "/research/gif-compression-test", prerender: { enabled: true } },
+      { path: "/blog", prerender: { enabled: true } },
+      { path: "/blog/how-long-can-a-gif-be", prerender: { enabled: true } },
       { path: "/about", prerender: { enabled: true } },
       { path: "/contact", prerender: { enabled: true } },
       { path: "/privacy", prerender: { enabled: true } },
