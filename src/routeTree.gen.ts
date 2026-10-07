@@ -39,6 +39,7 @@ import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
 import { Route as LangTermsRouteImport } from './routes/$lang/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogHowLongCanAGifBeRouteImport } from './routes/blog.how-long-can-a-gif-be'
+import { Route as BlogWhyIsMyGifSoBigRouteImport } from './routes/blog.why-is-my-gif-so-big'
 import { Route as ResearchGifCompressionTestRouteImport } from './routes/research.gif-compression-test'
 
 const IndexRoute = IndexRouteImport.update({
@@ -192,6 +193,11 @@ const BlogHowLongCanAGifBeRoute = BlogHowLongCanAGifBeRouteImport.update({
   path: '/blog/how-long-can-a-gif-be',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogWhyIsMyGifSoBigRoute = BlogWhyIsMyGifSoBigRouteImport.update({
+  id: '/blog/why-is-my-gif-so-big',
+  path: '/blog/why-is-my-gif-so-big',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResearchGifCompressionTestRoute =
   ResearchGifCompressionTestRouteImport.update({
     id: '/research/gif-compression-test',
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
+  '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -261,6 +268,7 @@ export interface FileRoutesByTo {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
+  '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang': typeof LangIndexRoute
   '/blog': typeof BlogIndexRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
+  '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -330,6 +339,7 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/blog/how-long-can-a-gif-be'
+    | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang/'
     | '/blog/'
@@ -363,6 +373,7 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/blog/how-long-can-a-gif-be'
+    | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang'
     | '/blog'
@@ -396,6 +407,7 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/blog/how-long-can-a-gif-be'
+    | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang/'
     | '/blog/'
@@ -430,6 +442,7 @@ export interface RootRouteChildren {
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangTermsRoute: typeof LangTermsRoute
   BlogHowLongCanAGifBeRoute: typeof BlogHowLongCanAGifBeRoute
+  BlogWhyIsMyGifSoBigRoute: typeof BlogWhyIsMyGifSoBigRoute
   ResearchGifCompressionTestRoute: typeof ResearchGifCompressionTestRoute
   LangIndexRoute: typeof LangIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -647,6 +660,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogHowLongCanAGifBeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/why-is-my-gif-so-big': {
+      id: '/blog/why-is-my-gif-so-big'
+      path: '/blog/why-is-my-gif-so-big'
+      fullPath: '/blog/why-is-my-gif-so-big'
+      preLoaderRoute: typeof BlogWhyIsMyGifSoBigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/research/gif-compression-test': {
       id: '/research/gif-compression-test'
       path: '/research/gif-compression-test'
@@ -686,6 +706,7 @@ const rootRouteChildren: RootRouteChildren = {
   LangPrivacyRoute: LangPrivacyRoute,
   LangTermsRoute: LangTermsRoute,
   BlogHowLongCanAGifBeRoute: BlogHowLongCanAGifBeRoute,
+  BlogWhyIsMyGifSoBigRoute: BlogWhyIsMyGifSoBigRoute,
   ResearchGifCompressionTestRoute: ResearchGifCompressionTestRoute,
   LangIndexRoute: LangIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
