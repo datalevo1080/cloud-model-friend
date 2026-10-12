@@ -172,7 +172,7 @@ function Home() {
           className="relative isolate scroll-mt-20 border-t border-hero-border bg-hero text-hero-foreground"
         >
           <h1 id="hero-heading" className="sr-only">
-            ZipGIF browser-based GIF tools
+            Free online GIF compressor and GIF tools that never upload your files
           </h1>
           <div className="mx-auto flex max-w-6xl justify-center px-4 py-10 sm:px-6 sm:py-12">
             <L

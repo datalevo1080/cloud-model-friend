@@ -135,6 +135,14 @@ for (const root of ROOTS) {
             : "";
         if (OBJECT_KEYS.has(name) && ts.isStringLiteral(node.initializer)) {
           add(node.initializer.text, file);
+        } else if (!SKIP_KEYS.has(name) && ts.isStringLiteral(node.initializer) && isProse(node.initializer.text)) {
+          // Any other content-object field that reads like prose (e.g. what/cost/when).
+          add(node.initializer.text, file);
+        }
+      } else if (ts.isArrayLiteralExpression(node)) {
+        // Plain string arrays of copy, e.g. ["Nothing is uploaded — ...", ...].
+        for (const el of node.elements) {
+          if (ts.isStringLiteral(el) && isProse(el.text)) add(el.text, file);
         }
       }
       if (ts.isJsxExpression(node) && node.expression && !ts.isJsxAttribute(node.parent)) {
