@@ -6,6 +6,7 @@ export const Page = lazyRouteComponent(() => import("./terms.view"));
 export const options = makeRouteOptions("/terms", {
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Terms of Use — ZipGIF Free GIF Compressor" },
       {
         name: "description",

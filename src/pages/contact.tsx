@@ -6,6 +6,7 @@ export const Page = lazyRouteComponent(() => import("./contact.view"));
 export const options = makeRouteOptions("/contact", {
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Contact ZipGIF — Feedback, Bugs and Feature Requests" },
       {
         name: "description",

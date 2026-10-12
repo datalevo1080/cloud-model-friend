@@ -6,6 +6,7 @@ export const Page = lazyRouteComponent(() => import("./privacy.view"));
 export const options = makeRouteOptions("/privacy", {
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Privacy Policy — ZipGIF Never Uploads Your Files" },
       {
         name: "description",
