@@ -39,6 +39,25 @@ const OBJECT_KEYS = new Set([
   "value",
 ]);
 
+/** Property names whose string values are never visible copy. */
+const SKIP_KEYS = new Set([
+  "className", "class", "href", "to", "src", "id", "key", "type", "variant", "path", "slug",
+  "icon", "rel", "target", "method", "format", "mime", "hrefLang", "property", "content", "as",
+]);
+
+/** A string that reads like human copy rather than a class list, token or path. */
+function isProse(value: string): boolean {
+  const v = value.trim();
+  if (!translatable(v)) return false;
+  const words = v.split(/\s+/);
+  if (words.length < 2) return false;
+  if (!/[a-z]{3,}/.test(v)) return false;
+  // Tailwind-style class lists: every token is lowercase/dashed/colon-prefixed.
+  if (words.every((w) => /^[!a-z0-9:\/\[\]().%#_-]+$/.test(w)) && words.some((w) => /[-:]/.test(w))) return false;
+  if (/^-{1,2}[a-z]/.test(v)) return false; // command-line flags
+  return true;
+}
+
 function walkFiles(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
