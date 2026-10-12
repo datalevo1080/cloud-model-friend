@@ -2,21 +2,9 @@ import { ArrowRight, Clock } from "lucide-react";
 import { L } from "@/components/l";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { BLOG_POSTS } from "@/lib/blog-posts";
 
-const posts = [
-  {
-    href: "/blog/how-long-can-a-gif-be",
-    title: "How Long Can a GIF Be? Duration, Loops and Upload Limits",
-    excerpt:
-      "How frame delays add up, why a short GIF can loop forever, and what to do when a GIF is too long or too large to upload.",
-    date: "October 3, 2026",
-    iso: "2026-10-03",
-    read: "9 min read",
-    tag: "GIF length",
-    image: "/og-how-long-can-a-gif-be.jpg",
-    alt: "How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF",
-  },
-];
+const posts = BLOG_POSTS.map((p) => ({ ...p, href: p.path, iso: p.published }));
 
 function Blog() {
   const [featured, ...rest] = posts;

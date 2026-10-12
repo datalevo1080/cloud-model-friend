@@ -142,6 +142,13 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://zipgif.com/blog/why-is-my-gif-so-big</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/why-is-my-gif-so-big" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/why-is-my-gif-so-big" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://zipgif.com/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/about" />
     <xhtml:link rel="alternate" hreflang="id" href="https://zipgif.com/id/about" />

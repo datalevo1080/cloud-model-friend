@@ -10,11 +10,12 @@
  */
 import { writeFileSync } from "node:fs";
 
+import { BLOG_POSTS } from "../src/lib/blog-posts";
 import { HREFLANG, LOCALES, PAGE_PATHS, SITE, absoluteUrl } from "../src/i18n/config";
 
 /** Pages intentionally kept out of the sitemap (no search value). */
 const EXCLUDED = new Set(["/contact", "/privacy", "/terms"]);
-const ENGLISH_ONLY = new Set(["/research/gif-compression-test", "/blog", "/blog/how-long-can-a-gif-be"]);
+const ENGLISH_ONLY = new Set(["/research/gif-compression-test", "/blog", ...BLOG_POSTS.map((p) => p.path)]);
 const SITEMAP_PATHS = PAGE_PATHS.filter((p) => !EXCLUDED.has(p));
 
 const PRIORITY = (path: string) =>
@@ -53,10 +54,28 @@ for (const locale of LOCALES) {
   writeFileSync(`public/sitemap-${locale}.xml`, xml);
 }
 
+// Dedicated blog sitemap with real publish dates as <lastmod>.
+const newest = BLOG_POSTS.map((p) => p.published).sort().at(-1)!;
+const blogEntries = [
+  { loc: `${SITE}/blog`, lastmod: newest },
+  ...BLOG_POSTS.map((p) => ({ loc: `${SITE}${p.path}`, lastmod: p.published })),
+];
+writeFileSync(
+  "public/sitemap-blog.xml",
+  [
+    `<?xml version="1.0" encoding="UTF-8"?>`,
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+    ...blogEntries.map((e) => `  <url>\n    <loc>${e.loc}</loc>\n    <lastmod>${e.lastmod}</lastmod>\n  </url>`),
+    `</urlset>`,
+    "",
+  ].join("\n"),
+);
+
 const index = [
   `<?xml version="1.0" encoding="UTF-8"?>`,
   `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
   ...LOCALES.map((l) => `  <sitemap>\n    <loc>${SITE}/sitemap-${l}.xml</loc>\n  </sitemap>`),
+  `  <sitemap>\n    <loc>${SITE}/sitemap-blog.xml</loc>\n  </sitemap>`,
   `</sitemapindex>`,
   "",
 ].join("\n");
@@ -68,6 +87,7 @@ const robots = [
   ),
   `Sitemap: ${SITE}/sitemap.xml`,
   ...LOCALES.map((l) => `Sitemap: ${SITE}/sitemap-${l}.xml`),
+  `Sitemap: ${SITE}/sitemap-blog.xml`,
   "",
 ].join("\n");
 writeFileSync("public/robots.txt", robots);
