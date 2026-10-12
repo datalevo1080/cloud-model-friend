@@ -192,7 +192,11 @@ function GifTrimmerPage() {
           <p className="mt-4 leading-relaxed text-muted-foreground">
             The format has no duration limit - a GIF can run seconds or hours, and the file simply
             grows with every frame. The limits that actually bite are platform rules: Discord caps
-            free uploads at 10 MB, Gmail attachments stop at 25 MB, and Google display ads require
+            free uploads at 20 MB (per{" "}
+            <a href="https://support.discord.com/hc/en-us/articles/25444343291031-File-Attachments-FAQ" target="_blank" rel="noopener noreferrer" className="text-primary underline">
+              Discord's File Attachments FAQ
+            </a>
+            ), Gmail attachments stop at 25 MB, and Google display ads require
             animation to stop within 30 seconds. In practice most shared GIFs run 2 to 6 seconds -
             long enough for the moment, short enough to loop well - and when a GIF is over a
             platform's line, trimming the ends is the fastest way back under it.
