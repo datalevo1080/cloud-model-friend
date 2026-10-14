@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import ts from "typescript";
 
-const ROOTS = ["src/pages", "src/components", "src/routes"];
+const ROOTS = ["src/pages", "src/components", "src/routes", "src/lib/discord-faqs.ts", "src/lib/discord-fit.ts"];
 const SKIP = /\/(ui|__tests__)\//;
 
 const ATTRS = new Set(["placeholder", "title", "alt", "aria-label", "label", "aria-placeholder"]);
@@ -59,6 +59,7 @@ function isProse(value: string): boolean {
 }
 
 function walkFiles(dir: string, out: string[] = []): string[] {
+  if (statSync(dir).isFile()) return [dir];
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
     if (statSync(full).isDirectory()) {
@@ -82,6 +83,17 @@ const ENTITIES: Record<string, string> = {
   "&ndash;": "\u2013",
   "&times;": "\u00d7",
   "&hellip;": "\u2026",
+  "&rsquo;": "\u2019",
+  "&lsquo;": "\u2018",
+  "&ldquo;": "\u201c",
+  "&rdquo;": "\u201d",
+  "&rarr;": "\u2192",
+  "&larr;": "\u2190",
+  "&middot;": "\u00b7",
+  "&asymp;": "\u2248",
+  "&minus;": "\u2212",
+  "&le;": "\u2264",
+  "&ge;": "\u2265",
 };
 
 function decodeEntities(value: string): string {
