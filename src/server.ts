@@ -136,7 +136,25 @@ function withCacheHeaders(request: Request, response: Response): Response {
 // Named export AND default export: the TanStack Start prerender plugin reads
 // `server.fetch` off the module namespace, while the runtime uses the default
 // export. Providing only one of them breaks the other.
-export async function fetch(request: Request, env: unknown, ctx: unknown) {
+/**
+ * The prerender pass requests every page with a trailing slash
+ * ("/gif-compressor/") and is pinned to follow zero redirects, so the normal
+ * slash-cleanup redirect made 87 pages fail with "Max redirects reached".
+ * While prerendering only, answer the slash form with the clean page directly.
+ * Live visitors still get the permanent 301/307 to the slash-less URL.
+ */
+function prerenderSlashRewrite(request: Request): Request {
+  const isPrerendering =
+    typeof process !== "undefined" && process.env?.TSS_PRERENDERING === "true";
+  if (!isPrerendering) return request;
+  const url = new URL(request.url);
+  if (url.pathname.length <= 1 || !url.pathname.endsWith("/")) return request;
+  url.pathname = url.pathname.replace(/\/+$/, "");
+  return new Request(url, request);
+}
+
+export async function fetch(incoming: Request, env: unknown, ctx: unknown) {
+  const request = prerenderSlashRewrite(incoming);
   try {
       const redirect = canonicalHostRedirect(request) ?? localePathRedirect(request);
       if (redirect) return redirect;
