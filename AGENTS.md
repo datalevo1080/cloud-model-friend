@@ -13,3 +13,4 @@
 
 ## Server redirects
 - Locale URL cleanup lives in `localePathRedirect` (src/server.ts): /en/* 301s to the root English URL, trailing-slash locale URLs 301 to the slash-less form, and the handler must no-op when the URL is already clean (a self-301 is a redirect loop).
+- During prerender (TSS_PRERENDERING), src/server.ts serves trailing-slash paths directly instead of redirecting: the build requests "/page/" and follows zero redirects.
