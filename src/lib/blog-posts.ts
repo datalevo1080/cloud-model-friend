@@ -31,20 +31,6 @@ export const BLOG_POSTS: BlogPost[] = [
     alt: "Why is my GIF so big: a large GIF file shrinking into a smaller optimized GIF with fewer colours and pixels",
   },
   {
-    path: "/blog/how-long-can-a-gif-be",
-    title: "How Long Can a GIF Be? Duration, Loops and Upload Limits",
-    description:
-      "Learn how long a GIF can be, how frame delays and loops affect duration, and when trimming, compression or video is the better choice.",
-    excerpt:
-      "How frame delays add up, why a short GIF can loop forever, and what to do when a GIF is too long or too large to upload.",
-    published: "2026-10-03",
-    date: "October 3, 2026",
-    read: "9 min read",
-    tag: "GIF length",
-    image: "/og-how-long-can-a-gif-be.jpg",
-    alt: "How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF",
-  },
-  {
     path: "/blog/how-to-make-a-gif-into-a-sticker",
     title: "How to Turn a GIF Into a Sticker: Static vs. Animated",
     description:
@@ -57,6 +43,20 @@ export const BLOG_POSTS: BlogPost[] = [
     tag: "Stickers",
     image: "/og-how-to-make-a-gif-into-a-sticker.svg",
     alt: "How to turn a GIF into a sticker: static, animated, and video sticker paths explained by ZipGIF",
+  },
+  {
+    path: "/blog/how-long-can-a-gif-be",
+    title: "How Long Can a GIF Be? Duration, Loops and Upload Limits",
+    description:
+      "Learn how long a GIF can be, how frame delays and loops affect duration, and when trimming, compression or video is the better choice.",
+    excerpt:
+      "How frame delays add up, why a short GIF can loop forever, and what to do when a GIF is too long or too large to upload.",
+    published: "2026-10-03",
+    date: "October 3, 2026",
+    read: "9 min read",
+    tag: "GIF length",
+    image: "/og-how-long-can-a-gif-be.jpg",
+    alt: "How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF",
   },
 ];
 
