@@ -17,34 +17,6 @@ export type BlogPost = {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
-    path: "/blog/how-many-fps-are-gifs",
-    title: "How Many FPS Are GIFs? Frame Delays Explained",
-    description:
-      "Learn how GIF frame delays relate to FPS, calculate approximate animation speed, and understand why playback can vary between viewers.",
-    excerpt:
-      "A GIF has no single frame rate: each frame carries its own delay. How to convert delays to nominal FPS, why variable timing breaks the average, and why viewers can disagree.",
-    published: "2026-10-24",
-    date: "October 24, 2026",
-    read: "9 min read",
-    tag: "GIF frame rate",
-    image: "/og-how-many-fps-are-gifs.svg",
-    alt: "How many FPS are GIFs: GIF frame delays and nominal frame rate explained by ZipGIF",
-  },
-  {
-    path: "/blog/how-to-slow-down-a-gif",
-    title: "How to Slow Down a GIF Without Making It Choppy",
-    description:
-      "Learn how to slow down a GIF, adjust frame timing, avoid choppy playback, and choose the right method for your animation.",
-    excerpt:
-      "Scaling frame delays, duplicating frames, and deleting frames do very different things — and only the first two actually slow an animation down.",
-    published: "2026-10-24",
-    date: "October 24, 2026",
-    read: "10 min read",
-    tag: "GIF speed",
-    image: "/og-how-to-slow-down-a-gif.svg",
-    alt: "How to slow down a GIF without making it choppy: frame timing, methods, and trade-offs explained by ZipGIF",
-  },
-  {
     path: "/blog/why-is-my-gif-so-big",
     title: "Why Is My GIF So Big? 7 Causes and How to Fix Each",
     description:
@@ -71,6 +43,20 @@ export const BLOG_POSTS: BlogPost[] = [
     tag: "GIF length",
     image: "/og-how-long-can-a-gif-be.jpg",
     alt: "How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF",
+  },
+  {
+    path: "/blog/how-to-slow-down-a-gif",
+    title: "How to Slow Down a GIF Without Making It Choppy",
+    description:
+      "Learn how to slow down a GIF, adjust frame timing, avoid choppy playback, and choose the right method for your animation.",
+    excerpt:
+      "Scaling frame delays, duplicating frames, and deleting frames do very different things — and only the first two actually slow an animation down.",
+    published: "2026-10-24",
+    date: "October 24, 2026",
+    read: "10 min read",
+    tag: "GIF speed",
+    image: "/og-how-to-slow-down-a-gif.svg",
+    alt: "How to slow down a GIF without making it choppy: frame timing, methods, and trade-offs explained by ZipGIF",
   },
 ];
 

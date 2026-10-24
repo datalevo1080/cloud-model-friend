@@ -58,12 +58,11 @@ export const PAGE_PATHS = [
   "/blog",
   "/blog/how-long-can-a-gif-be",
   "/blog/why-is-my-gif-so-big",
-  "/blog/how-many-fps-are-gifs",
-  "/blog/how-to-slow-down-a-gif",
   "/about",
   "/contact",
   "/privacy",
   "/terms",
+  "/blog/how-to-slow-down-a-gif",
 ] as const;
 
 /** Prefix a root-relative English path with a locale. English is unchanged. */

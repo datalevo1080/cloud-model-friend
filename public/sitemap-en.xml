@@ -149,20 +149,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zipgif.com/blog/how-many-fps-are-gifs</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-many-fps-are-gifs" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-many-fps-are-gifs" />
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://zipgif.com/blog/how-to-slow-down-a-gif</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-to-slow-down-a-gif" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-to-slow-down-a-gif" />
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://zipgif.com/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/about" />
     <xhtml:link rel="alternate" hreflang="id" href="https://zipgif.com/id/about" />
@@ -173,5 +159,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/about" />
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://zipgif.com/blog/how-to-slow-down-a-gif</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-to-slow-down-a-gif" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-to-slow-down-a-gif" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
