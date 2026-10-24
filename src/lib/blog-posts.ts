@@ -44,6 +44,20 @@ export const BLOG_POSTS: BlogPost[] = [
     image: "/og-how-long-can-a-gif-be.jpg",
     alt: "How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF",
   },
+  {
+    path: "/blog/how-to-slow-down-a-gif",
+    title: "How to Slow Down a GIF Without Making It Choppy",
+    description:
+      "Learn how to slow down a GIF, adjust frame timing, avoid choppy playback, and choose the right method for your animation.",
+    excerpt:
+      "Scaling frame delays, duplicating frames, and deleting frames do very different things — and only the first two actually slow an animation down.",
+    published: "2026-10-24",
+    date: "October 24, 2026",
+    read: "10 min read",
+    tag: "GIF speed",
+    image: "/og-how-to-slow-down-a-gif.jpg",
+    alt: "How to slow down a GIF without making it choppy: frame timing, methods, and trade-offs explained by ZipGIF",
+  },
 ];
 
 export function getPost(path: string): BlogPost {
