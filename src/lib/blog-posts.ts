@@ -17,6 +17,20 @@ export type BlogPost = {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    path: "/blog/how-many-fps-are-gifs",
+    title: "How Many FPS Are GIFs? Frame Delays Explained",
+    description:
+      "Learn how GIF frame delays relate to FPS, calculate approximate animation speed, and understand why playback can vary between viewers.",
+    excerpt:
+      "A GIF has no single frame rate: each frame carries its own delay. How to convert delays to nominal FPS, why variable timing breaks the average, and why viewers can disagree.",
+    published: "2026-10-24",
+    date: "October 24, 2026",
+    read: "9 min read",
+    tag: "GIF frame rate",
+    image: "/og-how-many-fps-are-gifs.svg",
+    alt: "How many FPS are GIFs: GIF frame delays and nominal frame rate explained by ZipGIF",
+  },
+  {
     path: "/blog/why-is-my-gif-so-big",
     title: "Why Is My GIF So Big? 7 Causes and How to Fix Each",
     description:

@@ -39,6 +39,7 @@ import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
 import { Route as LangTermsRouteImport } from './routes/$lang/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogHowLongCanAGifBeRouteImport } from './routes/blog.how-long-can-a-gif-be'
+import { Route as BlogHowManyFpsAreGifsRouteImport } from './routes/blog.how-many-fps-are-gifs'
 import { Route as BlogWhyIsMyGifSoBigRouteImport } from './routes/blog.why-is-my-gif-so-big'
 import { Route as ResearchGifCompressionTestRouteImport } from './routes/research.gif-compression-test'
 
@@ -193,6 +194,11 @@ const BlogHowLongCanAGifBeRoute = BlogHowLongCanAGifBeRouteImport.update({
   path: '/blog/how-long-can-a-gif-be',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogHowManyFpsAreGifsRoute = BlogHowManyFpsAreGifsRouteImport.update({
+  id: '/blog/how-many-fps-are-gifs',
+  path: '/blog/how-many-fps-are-gifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogWhyIsMyGifSoBigRoute = BlogWhyIsMyGifSoBigRouteImport.update({
   id: '/blog/why-is-my-gif-so-big',
   path: '/blog/why-is-my-gif-so-big',
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
+  '/blog/how-many-fps-are-gifs': typeof BlogHowManyFpsAreGifsRoute
   '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
@@ -268,6 +275,7 @@ export interface FileRoutesByTo {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
+  '/blog/how-many-fps-are-gifs': typeof BlogHowManyFpsAreGifsRoute
   '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang': typeof LangIndexRoute
@@ -303,6 +311,7 @@ export interface FileRoutesById {
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
+  '/blog/how-many-fps-are-gifs': typeof BlogHowManyFpsAreGifsRoute
   '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
@@ -339,6 +348,7 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/blog/how-long-can-a-gif-be'
+    | '/blog/how-many-fps-are-gifs'
     | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang/'
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/blog/how-long-can-a-gif-be'
+    | '/blog/how-many-fps-are-gifs'
     | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang'
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
     | '/$lang/privacy'
     | '/$lang/terms'
     | '/blog/how-long-can-a-gif-be'
+    | '/blog/how-many-fps-are-gifs'
     | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang/'
@@ -442,6 +454,7 @@ export interface RootRouteChildren {
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangTermsRoute: typeof LangTermsRoute
   BlogHowLongCanAGifBeRoute: typeof BlogHowLongCanAGifBeRoute
+  BlogHowManyFpsAreGifsRoute: typeof BlogHowManyFpsAreGifsRoute
   BlogWhyIsMyGifSoBigRoute: typeof BlogWhyIsMyGifSoBigRoute
   ResearchGifCompressionTestRoute: typeof ResearchGifCompressionTestRoute
   LangIndexRoute: typeof LangIndexRoute
@@ -660,6 +673,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogHowLongCanAGifBeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/how-many-fps-are-gifs': {
+      id: '/blog/how-many-fps-are-gifs'
+      path: '/blog/how-many-fps-are-gifs'
+      fullPath: '/blog/how-many-fps-are-gifs'
+      preLoaderRoute: typeof BlogHowManyFpsAreGifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/why-is-my-gif-so-big': {
       id: '/blog/why-is-my-gif-so-big'
       path: '/blog/why-is-my-gif-so-big'
@@ -706,6 +726,7 @@ const rootRouteChildren: RootRouteChildren = {
   LangPrivacyRoute: LangPrivacyRoute,
   LangTermsRoute: LangTermsRoute,
   BlogHowLongCanAGifBeRoute: BlogHowLongCanAGifBeRoute,
+  BlogHowManyFpsAreGifsRoute: BlogHowManyFpsAreGifsRoute,
   BlogWhyIsMyGifSoBigRoute: BlogWhyIsMyGifSoBigRoute,
   ResearchGifCompressionTestRoute: ResearchGifCompressionTestRoute,
   LangIndexRoute: LangIndexRoute,

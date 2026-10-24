@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-labelledby="t d"><title id="t">Variable delays: quick steps then a long hold</title><desc id="d">Seven frames of 50 milliseconds followed by one frame held for 500 milliseconds make an 850 millisecond cycle, averaging about 9.4 frames per second although nothing moves at that rate.</desc>
+<rect width="960" height="360" rx="24" fill="#f6f6fb"/>
+<text x="40" y="56" font-family="sans-serif" font-size="24" font-weight="700" fill="#1b1b2f">Variable delays: quick steps, then a hold</text>
+<g font-family="sans-serif" font-size="15" fill="#fff" text-anchor="middle">
+<rect x="40" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<rect x="91" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<rect x="142" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<rect x="193" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<rect x="244" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<rect x="295" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<rect x="346" y="88" width="49" height="64" rx="8" fill="#5b4cf0"/>
+<text x="217" y="172" font-size="17" fill="#4a4a63">7 frames × 50 ms = 350 ms of motion</text>
+<rect x="403" y="88" width="494" height="64" rx="10" fill="#a39af8"/><text x="650" y="126" font-size="18">500 ms hold on the last frame</text>
+</g>
+<rect x="40" y="208" width="876" height="16" rx="8" fill="#d9d6f5"/>
+<g font-family="sans-serif" font-size="17" fill="#4a4a63">
+<text x="40" y="196">0 ms</text>
+<text x="880" y="196" text-anchor="end">850 ms</text>
+</g>
+<text x="40" y="272" font-family="sans-serif" font-size="22" font-weight="700" fill="#1b1b2f">Cycle = 850 ms · average ≈ 9.4 FPS</text>
+<text x="40" y="310" font-family="sans-serif" font-size="19" fill="#4a4a63">But nothing moves at 9.4 FPS: motion runs at 20 FPS, then freezes.</text>
+</svg>
