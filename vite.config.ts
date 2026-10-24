@@ -127,6 +127,7 @@ export default defineConfig({
       { path: "/pt/privacy", prerender: { enabled: true } },
       { path: "/pt/terms", prerender: { enabled: true } },
       { path: "/blog/how-to-slow-down-a-gif", prerender: { enabled: true } },
+      { path: "/blog/how-to-animate-a-png", prerender: { enabled: true } },
     ],
   },
 });
