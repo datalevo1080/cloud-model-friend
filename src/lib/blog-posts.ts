@@ -86,6 +86,20 @@ export const BLOG_POSTS: BlogPost[] = [
     image: "/og-how-to-slow-down-a-gif.svg",
     alt: "How to slow down a GIF without making it choppy: frame timing, methods, and trade-offs explained by ZipGIF",
   },
+  {
+    path: "/blog/how-to-animate-a-png",
+    title: "How to Animate a PNG Image: APNG, GIF, and Frame Sequences",
+    description:
+      "Learn how to animate a PNG image, understand APNG versus GIF, and choose the right workflow for creating an animated image.",
+    excerpt:
+      "A still PNG holds one image, so motion must be created or converted: build frames, order a sequence, or translate an APNG into GIF.",
+    published: "2026-10-24",
+    date: "October 24, 2026",
+    read: "13 min read",
+    tag: "PNG animation",
+    image: "/og-how-to-animate-a-png.svg",
+    alt: "How to animate a PNG image: one still PNG frame becoming a row of animation frames, explained by ZipGIF",
+  },
 ];
 
 export function getPost(path: string): BlogPost {
