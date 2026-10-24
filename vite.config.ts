@@ -48,6 +48,7 @@ export default defineConfig({
       { path: "/gif-to-png", prerender: { enabled: true } },
       { path: "/research/gif-compression-test", prerender: { enabled: true } },
       { path: "/blog", prerender: { enabled: true } },
+      { path: "/blog/how-to-make-a-gif-into-a-sticker", prerender: { enabled: true } },
       { path: "/blog/how-long-can-a-gif-be", prerender: { enabled: true } },
       { path: "/blog/why-is-my-gif-so-big", prerender: { enabled: true } },
       { path: "/blog/how-many-fps-are-gifs", prerender: { enabled: true } },

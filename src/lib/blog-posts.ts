@@ -45,6 +45,20 @@ export const BLOG_POSTS: BlogPost[] = [
     alt: "Why is my GIF so big: a large GIF file shrinking into a smaller optimized GIF with fewer colours and pixels",
   },
   {
+    path: "/blog/how-to-make-a-gif-into-a-sticker",
+    title: "How to Turn a GIF Into a Sticker: Static vs. Animated",
+    description:
+      "Learn how to turn GIF artwork into a sticker, understand static versus animated formats, and check your destination platform's requirements.",
+    excerpt:
+      "A GIF is not automatically a sticker: Telegram needs PNG, WebP, WebM or vector .TGS, while Discord accepts GIFs up to 512 KiB. Pick the platform, then the format.",
+    published: "2026-10-24",
+    date: "October 24, 2026",
+    read: "12 min read",
+    tag: "Stickers",
+    image: "/og-how-to-make-a-gif-into-a-sticker.svg",
+    alt: "How to turn a GIF into a sticker: static, animated, and video sticker paths explained by ZipGIF",
+  },
+  {
     path: "/blog/how-long-can-a-gif-be",
     title: "How Long Can a GIF Be? Duration, Loops and Upload Limits",
     description:

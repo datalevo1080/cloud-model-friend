@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="t d"><title id="t">Three Telegram sticker kinds at a glance</title><desc id="d">Static stickers: PNG or WebP, one frame, one side 512 pixels, no duration limit, binary transparency. Animated TGS stickers: vector Lottie, 512 by 512 canvas, at most 3 seconds looped, at most 64 KB, 60 frames per second. Video WebM stickers: VP9 with no audio, one side 512 pixels, at most 3 seconds looped, at most 256 KB, up to 30 frames per second. Requirements shown are Telegram's; Discord accepts GIF files up to 512 KiB.</desc>
+<rect width="960" height="540" rx="24" fill="#f6f6fb"/>
+<text x="40" y="52" font-family="sans-serif" font-size="26" font-weight="700" fill="#1b1b2f">Three Telegram sticker kinds at a glance</text>
+<g font-family="sans-serif">
+<rect x="40" y="80" width="280" height="360" rx="16" fill="#ffffff" stroke="#e0e0f0"/>
+<text x="64" y="128" font-size="22" font-weight="700" fill="#5b4cf0">Static</text>
+<text x="64" y="175" font-size="17" fill="#4a4a63">PNG or WebP</text>
+<text x="64" y="225" font-size="17" fill="#4a4a63">One frame</text>
+<text x="64" y="275" font-size="17" fill="#4a4a63">One side: 512 px</text>
+<text x="64" y="325" font-size="17" fill="#4a4a63">No duration limit</text>
+<text x="64" y="375" font-size="17" fill="#4a4a63">Transparency: binary</text>
+<rect x="340" y="80" width="280" height="360" rx="16" fill="#ffffff" stroke="#e0e0f0"/>
+<text x="364" y="128" font-size="22" font-weight="700" fill="#7d70f5">Animated (.TGS)</text>
+<text x="364" y="175" font-size="17" fill="#4a4a63">Vector (Lottie)</text>
+<text x="364" y="225" font-size="17" fill="#4a4a63">Canvas 512 x 512</text>
+<text x="364" y="275" font-size="17" fill="#4a4a63">At most 3 s, looped</text>
+<text x="364" y="325" font-size="17" fill="#4a4a63">At most 64 KB</text>
+<text x="364" y="375" font-size="17" fill="#4a4a63">60 fps</text>
+<rect x="640" y="80" width="280" height="360" rx="16" fill="#ffffff" stroke="#e0e0f0"/>
+<text x="664" y="128" font-size="22" font-weight="700" fill="#1b1b2f">Video (WebM)</text>
+<text x="664" y="175" font-size="17" fill="#4a4a63">VP9, no audio</text>
+<text x="664" y="225" font-size="17" fill="#4a4a63">One side: 512 px</text>
+<text x="664" y="275" font-size="17" fill="#4a4a63">At most 3 s, looped</text>
+<text x="664" y="325" font-size="17" fill="#4a4a63">At most 256 KB</text>
+<text x="664" y="375" font-size="17" fill="#4a4a63">Up to 30 fps</text>
+</g>
+<text x="480" y="488" font-family="sans-serif" font-size="17" fill="#4a4a63" text-anchor="middle">Requirements shown are Telegram's. Discord accepts GIF files up to 512 KiB.</text>
+<text x="480" y="516" font-family="sans-serif" font-size="17" fill="#4a4a63" text-anchor="middle">Always check the destination's official rules before uploading.</text>
+</svg>

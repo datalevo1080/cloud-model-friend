@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="t d"><title id="t">How to Turn a GIF Into a Sticker: Static vs. Animated</title><desc id="d">Social sharing image for the ZipGIF guide: static, animated, and video sticker paths explained.</desc>
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b4cf0"/><stop offset="1" stop-color="#1b1b2f"/></linearGradient></defs>
+<rect width="1200" height="630" fill="url(#g)"/>
+<text x="80" y="110" font-family="sans-serif" font-size="44" font-weight="700" fill="#ffffff">ZIPGIF</text>
+<text x="80" y="240" font-family="sans-serif" font-size="76" font-weight="700" fill="#ffffff">How to Turn a GIF</text>
+<text x="80" y="330" font-family="sans-serif" font-size="76" font-weight="700" fill="#ffffff">Into a Sticker</text>
+<text x="80" y="420" font-family="sans-serif" font-size="76" font-weight="700" fill="#ffffff">Static vs. Animated</text>
+<text x="80" y="512" font-family="sans-serif" font-size="38" fill="#dcdcf0">Static, animated, and video sticker paths explained</text>
+</svg>
