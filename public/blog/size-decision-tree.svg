@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660" role="img" aria-labelledby="t d"><title id="t">Decision tree: which way to shrink a GIF first</title><desc id="d">Start with trimming if the GIF is longer than needed, then resizing if it is shown smaller than its pixel size, then dropping frames if it has more frames than the motion needs, and finally compression with lossy settings and fewer colours. A strict size target goes to the compressor's target-size mode.</desc>
+<rect width="960" height="660" rx="24" fill="#f6f6fb"/>
+<text x="40" y="54" font-family="sans-serif" font-size="26" font-weight="700" fill="#1b1b2f">Which fix first? Work down the questions.</text>
+<g font-family="sans-serif" font-size="17">
+<rect x="40" y="80" width="500" height="72" rx="12" fill="#ffffff" stroke="#d9d7ef" stroke-width="2"/>
+<text x="60" y="108" fill="#1b1b2f" font-weight="700">1. Longer than the moment you need?</text>
+<text x="60" y="134" fill="#4a4a63">Cut the start or end you do not need.</text>
+<rect x="600" y="80" width="320" height="72" rx="12" fill="#5b4cf0"/>
+<text x="760" y="108" text-anchor="middle" fill="#ffffff" font-weight="700">YES → Trim it</text>
+<text x="760" y="134" text-anchor="middle" fill="#d9d7ef">Shorter animation, same look</text>
+<text x="560" y="122" text-anchor="middle" fill="#4a4a63" font-size="15">No ↓</text>
+<rect x="40" y="190" width="500" height="72" rx="12" fill="#ffffff" stroke="#d9d7ef" stroke-width="2"/>
+<text x="60" y="218" fill="#1b1b2f" font-weight="700">2. Shown smaller than its pixel size?</text>
+<text x="60" y="244" fill="#4a4a63">Match the size it will actually display at.</text>
+<rect x="600" y="190" width="320" height="72" rx="12" fill="#5b4cf0"/>
+<text x="760" y="218" text-anchor="middle" fill="#ffffff" font-weight="700">YES → Resize it</text>
+<text x="760" y="244" text-anchor="middle" fill="#d9d7ef">Half the width = a quarter of pixels</text>
+<text x="560" y="232" text-anchor="middle" fill="#4a4a63" font-size="15">No ↓</text>
+<rect x="40" y="300" width="500" height="72" rx="12" fill="#ffffff" stroke="#d9d7ef" stroke-width="2"/>
+<text x="60" y="328" fill="#1b1b2f" font-weight="700">3. More frames than the motion needs?</text>
+<text x="60" y="354" fill="#4a4a63">Keep the duration, show fewer frames.</text>
+<rect x="600" y="300" width="320" height="72" rx="12" fill="#5b4cf0"/>
+<text x="760" y="328" text-anchor="middle" fill="#ffffff" font-weight="700">YES → Drop frames</text>
+<text x="760" y="354" text-anchor="middle" fill="#d9d7ef">Motion gets choppier — check it</text>
+<text x="560" y="342" text-anchor="middle" fill="#4a4a63" font-size="15">No ↓</text>
+<rect x="40" y="410" width="500" height="72" rx="12" fill="#ffffff" stroke="#d9d7ef" stroke-width="2"/>
+<text x="60" y="438" fill="#1b1b2f" font-weight="700">4. Still too big, or a strict size limit?</text>
+<text x="60" y="464" fill="#4a4a63">Optimize, then lossy and fewer colours.</text>
+<rect x="600" y="410" width="320" height="72" rx="12" fill="#5b4cf0"/>
+<text x="760" y="438" text-anchor="middle" fill="#ffffff" font-weight="700">YES → Compress it</text>
+<text x="760" y="464" text-anchor="middle" fill="#d9d7ef">Raise strength only until it fits</text>
+<text x="560" y="452" text-anchor="middle" fill="#4a4a63" font-size="15">No ↓</text>
+<rect x="40" y="520" width="880" height="72" rx="12" fill="#1b1b2f"/>
+<text x="480" y="549" text-anchor="middle" fill="#ffffff" font-weight="700">Need an exact size? Use the compressor's target-size mode.</text>
+<text x="480" y="575" text-anchor="middle" fill="#c9c6e8" font-size="15">It tries stronger settings in passes and says honestly if the target cannot be reached.</text>
+</g>
+<text x="40" y="630" font-family="sans-serif" font-size="15" fill="#4a4a63">Free fixes first (trim, resize), visible trade-offs last (frames, colours, lossy).</text></svg>

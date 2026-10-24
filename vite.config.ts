@@ -128,6 +128,7 @@ export default defineConfig({
       { path: "/pt/terms", prerender: { enabled: true } },
       { path: "/blog/how-to-slow-down-a-gif", prerender: { enabled: true } },
       { path: "/blog/how-to-animate-a-png", prerender: { enabled: true } },
+      { path: "/blog/how-to-make-a-gif-size-smaller", prerender: { enabled: true } },
     ],
   },
 });
