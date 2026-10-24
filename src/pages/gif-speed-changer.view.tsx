@@ -153,6 +153,17 @@ function GifSpeedChangerPage() {
             400ms. A slowed GIF doesn't gain drama frames; it just commits harder to the ones it
             has.
           </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            For the reasoning behind each slowing method, and when to trim or compress instead, see
+            the guide:{" "}
+            <L
+              to="/blog/how-to-slow-down-a-gif"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              how to slow down a GIF without making it choppy
+            </L>
+            .
+          </p>
         </section>
 
         <section aria-labelledby="frame-rates" className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">

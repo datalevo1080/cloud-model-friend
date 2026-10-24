@@ -63,6 +63,7 @@ export const PAGE_PATHS = [
   "/contact",
   "/privacy",
   "/terms",
+  "/blog/how-to-slow-down-a-gif",
 ] as const;
 
 /** Prefix a root-relative English path with a locale. English is unchanged. */
