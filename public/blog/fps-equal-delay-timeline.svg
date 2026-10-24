@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-labelledby="t d"><title id="t">Equal delays: 10 frames at 100 milliseconds</title><desc id="d">Ten equal frame boxes of 100 milliseconds each add up to a 1 second cycle, which is 10 nominal frames per second.</desc>
+<rect width="960" height="360" rx="24" fill="#f6f6fb"/>
+<text x="40" y="56" font-family="sans-serif" font-size="24" font-weight="700" fill="#1b1b2f">Equal delays: 10 frames × 100 ms</text>
+<g font-family="sans-serif" font-size="15" fill="#fff" text-anchor="middle">
+<rect x="40" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="82" y="126">100 ms</text>
+<rect x="128" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="170" y="126">100 ms</text>
+<rect x="216" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="258" y="126">100 ms</text>
+<rect x="304" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="346" y="126">100 ms</text>
+<rect x="392" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="434" y="126">100 ms</text>
+<rect x="480" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="522" y="126">100 ms</text>
+<rect x="568" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="610" y="126">100 ms</text>
+<rect x="656" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="698" y="126">100 ms</text>
+<rect x="744" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="786" y="126">100 ms</text>
+<rect x="832" y="88" width="84" height="64" rx="10" fill="#5b4cf0"/><text x="874" y="126">100 ms</text>
+</g>
+<g font-family="sans-serif" font-size="17" fill="#4a4a63">
+<text x="40" y="196">0 s</text>
+<text x="880" y="196" text-anchor="end">1 s</text>
+</g>
+<rect x="40" y="208" width="876" height="16" rx="8" fill="#d9d6f5"/>
+<text x="40" y="272" font-family="sans-serif" font-size="22" font-weight="700" fill="#1b1b2f">10 frames × 100 ms = 1 second cycle</text>
+<text x="40" y="310" font-family="sans-serif" font-size="19" fill="#4a4a63">1 ÷ 0.1 s = 10 nominal frames per second</text>
+</svg>
