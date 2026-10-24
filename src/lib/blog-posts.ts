@@ -55,7 +55,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: "October 24, 2026",
     read: "10 min read",
     tag: "GIF speed",
-    image: "/og-how-to-slow-down-a-gif.jpg",
+    image: "/og-how-to-slow-down-a-gif.svg",
     alt: "How to slow down a GIF without making it choppy: frame timing, methods, and trade-offs explained by ZipGIF",
   },
 ];

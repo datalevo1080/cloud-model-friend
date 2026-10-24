@@ -158,7 +158,7 @@ function HowToSlowDownAGif() {
 
           <figure className="mt-8 overflow-hidden rounded-2xl border border-border bg-muted">
             <img
-              src="/og-how-to-slow-down-a-gif.jpg"
+              src="/og-how-to-slow-down-a-gif.svg"
               alt="How to slow down a GIF without making it choppy: frame timing, methods, and trade-offs explained by ZipGIF"
               width={1200}
               height={630}
