@@ -91,6 +91,8 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://zipgif.com/fr/gif-trimmer" />
     <xhtml:link rel="alternate" hreflang="ja" href="https://zipgif.com/ja/gif-trimmer" />
     <xhtml:link rel="alternate" hreflang="es" href="https://zipgif.com/es/gif-trimmer" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://zipgif.com/ja/gif-trimmer" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://zipgif.com/es/gif-trimmer" />
     <xhtml:link rel="alternate" hreflang="pt-BR" href="https://zipgif.com/pt/gif-trimmer" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/gif-trimmer" />
     <changefreq>monthly</changefreq>
@@ -178,6 +180,13 @@
     <loc>https://zipgif.com/blog/how-to-slow-down-a-gif</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-to-slow-down-a-gif" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-to-slow-down-a-gif" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zipgif.com/blog/how-to-animate-a-png</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-to-animate-a-png" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-to-animate-a-png" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
