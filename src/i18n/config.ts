@@ -58,6 +58,7 @@ export const PAGE_PATHS = [
   "/blog",
   "/blog/how-long-can-a-gif-be",
   "/blog/why-is-my-gif-so-big",
+  "/blog/how-to-make-a-gif-size-smaller",
   "/about",
   "/contact",
   "/privacy",

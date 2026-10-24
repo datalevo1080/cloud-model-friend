@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="t d"><title id="t">Controlled test: one GIF, one change at a time</title><desc id="d">Bar chart of file sizes for a synthetic 320 by 240, 30-frame GIF starting at 294,034 bytes. Optimization alone cut it to 28,086 bytes; resize to 50 percent cut it to 15,561 bytes; combining resize, lossy 120, 64 colours and halved frames cut it to 7,483 bytes.</desc>
+<rect width="960" height="540" rx="24" fill="#f6f6fb"/>
+<text x="40" y="52" font-family="sans-serif" font-size="26" font-weight="700" fill="#1b1b2f">Same GIF, one change at a time</text>
+<text x="40" y="78" font-family="sans-serif" font-size="16" fill="#4a4a63">Synthetic 320×240, 30-frame GIF. Bars show file size after each single change.</text>
+<g font-family="sans-serif" font-size="16">
+<text x="40" y="126" fill="#1b1b2f">Original</text>
+<rect x="250" y="106" width="600" height="28" rx="6" fill="#1b1b2f"/>
+<text x="860" y="126" fill="#1b1b2f" font-weight="700">294,034</text>
+<text x="40" y="178" fill="#1b1b2f">Optimize (−O3)</text>
+<rect x="250" y="158" width="57" height="28" rx="6" fill="#5b4cf0"/>
+<text x="317" y="178" fill="#4a4a63">28,086 (−90.4%)</text>
+<text x="40" y="230" fill="#1b1b2f">+ Lossy 80</text>
+<rect x="250" y="210" width="51" height="28" rx="6" fill="#5b4cf0"/>
+<text x="311" y="230" fill="#4a4a63">24,834 (−91.6%)</text>
+<text x="40" y="282" fill="#1b1b2f">+ Lossy 120, 64 colours</text>
+<rect x="250" y="262" width="42" height="28" rx="6" fill="#5b4cf0"/>
+<text x="302" y="282" fill="#4a4a63">20,502 (−93.0%)</text>
+<text x="40" y="334" fill="#1b1b2f">Resize to 50%</text>
+<rect x="250" y="314" width="32" height="28" rx="6" fill="#5b4cf0"/>
+<text x="292" y="334" fill="#4a4a63">15,561 (−94.7%)</text>
+<text x="40" y="386" fill="#1b1b2f">Drop every 2nd frame</text>
+<rect x="250" y="366" width="45" height="28" rx="6" fill="#5b4cf0"/>
+<text x="305" y="386" fill="#4a4a63">22,127 (−92.5%)</text>
+<text x="40" y="438" fill="#1b1b2f">Trim to first half</text>
+<rect x="250" y="418" width="39" height="28" rx="6" fill="#5b4cf0"/>
+<text x="299" y="438" fill="#4a4a63">19,343 (−93.4%)</text>
+<text x="40" y="490" fill="#1b1b2f">Combined (all levers)</text>
+<rect x="250" y="470" width="15" height="28" rx="6" fill="#5b4cf0"/>
+<text x="275" y="490" fill="#4a4a63">7,483 (−97.5%)</text>
+</g>
+<text x="40" y="528" font-family="sans-serif" font-size="14" fill="#4a4a63">The source was unoptimized, so optimization alone did most of the work here. See the methodology note in the article.</text></svg>
