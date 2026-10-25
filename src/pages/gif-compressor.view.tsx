@@ -82,7 +82,7 @@ const methods = [
 ];
 
 const discordLimits = [
-  { thing: "Attachment (default, all users)", limit: "10 MiB", note: "Higher with Nitro or server Boost Tier" },
+  { thing: "Attachment (free)", limit: "20 MB", note: "Higher with Nitro or server Boost Tier" },
   { thing: "Custom emoji (static or animated)", limit: "256 KiB", note: "128×128 renders best" },
   { thing: "Sticker (PNG, APNG, GIF, Lottie)", limit: "512 KiB", note: "320×320 canvas" },
 ];
@@ -123,7 +123,7 @@ const socialLimits = [
 const platformLimits = [
   {
     platform: "Discord attachment",
-    limit: "10 MiB default",
+    limit: "20 MB",
     target: "8 MB",
     href: "https://discord.com/developers/docs/reference",
   },
@@ -405,10 +405,9 @@ function Index() {
               GIF Compressor for Discord
             </h2>
             <p className="mt-5 text-lg leading-relaxed">
-              Discord's default attachment limit is 10 MiB for all users, higher only with Nitro or a
-              server's Boost Tier. GIFs fail to send because Discord won't re-encode them for you —
-              it accepts the file or rejects it. Compress the GIF to about 8 MB first and it posts
-              on the first try.
+              Discord's free attachment limit is 20 MB. GIFs fail to send because Discord won't
+              re-encode them for you — it accepts the file or rejects it. Compress the GIF to under
+              20 MB first and it posts on the first try.
             </p>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-card">
               <table className="w-full min-w-[560px] border-collapse text-left text-sm">
@@ -459,12 +458,12 @@ function Index() {
               >
                 sticker docs
               </a>
-              . Checked {LAST_UPDATED}.
+              . Checked October 25, 2026.
             </p>
             <ul className="mt-6 space-y-3 text-muted-foreground">
               <li>
                 <strong className="text-foreground">Aim below the line, not at it.</strong> Target 8
-                MB rather than 10 MiB — Discord counts the whole request, so a caption and embed
+                MB rather than 20 MB — Discord counts the whole request, so a caption and embed
                 metadata ride along with your file.
               </li>
               <li>
