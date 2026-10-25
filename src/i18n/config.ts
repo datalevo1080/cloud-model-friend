@@ -66,6 +66,7 @@ export const PAGE_PATHS = [
   "/terms",
   "/blog/how-to-slow-down-a-gif",
   "/blog/how-to-animate-a-png",
+  "/blog/how-to-make-a-gif-size-smaller",
 ] as const;
 
 /** Prefix a root-relative English path with a locale. English is unchanged. */

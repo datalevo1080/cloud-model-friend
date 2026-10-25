@@ -100,6 +100,20 @@ export const BLOG_POSTS: BlogPost[] = [
     image: "/og-how-to-animate-a-png.svg",
     alt: "How to animate a PNG image: one still PNG frame becoming a row of animation frames, explained by ZipGIF",
   },
+  {
+    path: "/blog/how-to-make-a-gif-size-smaller",
+    title: "How to Make a GIF Smaller Without Ruining Quality",
+    description:
+      "Learn how to reduce GIF file size by adjusting dimensions, frames, duration, and image detail while choosing the best quality trade-offs.",
+    excerpt:
+      "Five ways to shrink a GIF — trimming, resizing, fewer frames, palette and compression — how to pick the right one for your file, and what a controlled same-file test actually showed.",
+    published: "2026-10-24",
+    date: "October 24, 2026",
+    read: "10 min read",
+    tag: "GIF size",
+    image: "/og-how-to-make-a-gif-size-smaller.svg",
+    alt: "How to make a GIF smaller without ruining quality: a large GIF file shrinking into a smaller one by trimming, resizing, dropping frames and compressing",
+  },
 ];
 
 export function getPost(path: string): BlogPost {
