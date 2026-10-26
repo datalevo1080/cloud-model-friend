@@ -1,5 +1,4 @@
 import { L } from "@/components/l";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -33,11 +32,6 @@ const STEPS = [
 ];
 
 function GifResizerPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("This console message was resized to fit 80 columns.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

@@ -1,6 +1,5 @@
 import { L } from "@/components/l";
 import { RelatedTools } from "@/components/related-tools";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -66,11 +65,6 @@ const MEASURED: { input: string; output: string; size: string; time: string }[] 
 ];
 
 function GifToPngPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("Every GIF is a stack of PNGs in a trench coat.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

@@ -59,11 +59,11 @@ export const options = makeRouteOptions("/gif-splitter", {
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
-      { property: "og:site_name", content: "ZipGIF" },
+\1      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
-      { name: "twitter:description", content: DESCRIPTION },
-    ],
+\1      { name: \"twitter:image\", content: `${SITE}/og-image.jpg` },\n    ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [
       {

@@ -1,6 +1,5 @@
 import { L } from "@/components/l";
 import { RelatedTools } from "@/components/related-tools";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -56,11 +55,6 @@ const STEPS: { name: string; text: string }[] = [
 ];
 
 function GifTrimmerPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("No frames were harmed. Well, some were.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

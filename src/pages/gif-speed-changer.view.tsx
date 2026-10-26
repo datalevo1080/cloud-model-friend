@@ -1,5 +1,4 @@
 import { L } from "@/components/l";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -41,11 +40,6 @@ const FAQS: { q: string; a: string }[] = [
 ];
 
 function GifSpeedChangerPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("This console message plays at 1x speed.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

@@ -1,5 +1,4 @@
 import { L } from "@/components/l";
-import { useEffect } from "react";
 
 import {
   ArrowRight,
@@ -141,10 +140,6 @@ const faqs = [
 ];
 
 function Home() {
-  useEffect(() => {
-    console.log("Your GIF never made it into this console. That is the whole product.");
-  }, []);
-
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <SiteHeader />
@@ -203,7 +198,7 @@ function Home() {
                 See it happen, before you commit
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-hero-muted">
-                Drag the divider. Same GIF, two weights, and nothing left your device to make it
+                Watch it happen. Same GIF, two weights, and nothing left your device to make it
                 happen.
               </p>
             </Reveal>
