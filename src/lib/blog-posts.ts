@@ -115,6 +115,20 @@ export const BLOG_POSTS: BlogPost[] = [
     alt: "How long can a GIF be: GIF duration, frame delay and loop count explained by ZipGIF",
   },
   {
+    path: "/blog/best-free-gif-maker",
+    title: "What Is the Best Free GIF Maker?",
+    description:
+      "Compare free GIF makers on price, watermarks, signups, privacy, video import and editing — and find which one fits what you actually want to make.",
+    excerpt:
+      "No single maker wins everything: GIPHY and EZGIF handle video, Canva and Imgflip handle text and design, ZipGIF keeps your files on your device. Pick by your starting point.",
+    published: "2026-10-26",
+    date: "October 26, 2026",
+    read: "10 min read",
+    tag: "GIF makers",
+    image: "/og-best-free-gif-maker.svg",
+    alt: "What is the best free GIF maker: comparing GIPHY, EZGIF, Canva, Imgflip and ZipGIF by price, watermark, privacy and features",
+  },
+  {
     path: "/blog/how-to-slow-down-a-gif",
     title: "How to Slow Down a GIF Without Making It Choppy",
     description:

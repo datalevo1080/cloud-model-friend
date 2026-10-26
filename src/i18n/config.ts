@@ -59,6 +59,7 @@ export const PAGE_PATHS = [
   "/blog/how-to-make-a-gif-into-a-sticker",
   "/blog/how-to-make-a-gif-from-video",
   "/blog/how-long-can-a-gif-be",
+  "/blog/best-free-gif-maker",
   "/blog/why-is-my-gif-so-big",
   "/blog/how-to-crop-a-gif",
   "/blog/how-many-fps-are-gifs",
