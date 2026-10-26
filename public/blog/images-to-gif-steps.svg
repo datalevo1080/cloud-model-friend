@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="t d"><title id="t">Four steps from images to a GIF</title><desc id="d">Step one, pick PNG, JPG, or WebP images. Step two, drag the thumbnails into playback order. Step three, set one frame delay and a loop count. Step four, export and download the GIF.</desc>
+<rect width="960" height="420" rx="24" fill="#f6f6fb"/>
+<text x="40" y="52" font-family="sans-serif" font-size="24" font-weight="700" fill="#1b1b2f">From a folder of images to one GIF</text>
+<g font-family="sans-serif">
+<g><rect x="40" y="80" width="190" height="150" rx="12" fill="#5b4cf0"/><text x="135" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">1. Pick</text><text x="135" y="172" text-anchor="middle" font-size="15" fill="#e6e2ff">PNG, JPG, or WebP</text><text x="135" y="196" text-anchor="middle" font-size="15" fill="#e6e2ff">Up to 20 images</text></g>
+<text x="248" y="158" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="266" y="80" width="190" height="150" rx="12" fill="#7d70f5"/><text x="361" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">2. Order</text><text x="361" y="172" text-anchor="middle" font-size="15" fill="#e6e2ff">Drag thumbnails</text><text x="361" y="196" text-anchor="middle" font-size="15" fill="#e6e2ff">into playback order</text></g>
+<text x="474" y="158" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="492" y="80" width="190" height="150" rx="12" fill="#a39af8"/><text x="587" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#1b1b2f">3. Time</text><text x="587" y="172" text-anchor="middle" font-size="15" fill="#1b1b2f">One delay for all frames</text><text x="587" y="196" text-anchor="middle" font-size="15" fill="#1b1b2f">Loop: forever or once</text></g>
+<text x="700" y="158" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="718" y="80" width="200" height="150" rx="12" fill="#fff" stroke="#d8d5ef" stroke-width="2"/><text x="818" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#1b1b2f">4. Export</text><text x="818" y="172" text-anchor="middle" font-size="15" fill="#4a4a63">Preview, then</text><text x="818" y="196" text-anchor="middle" font-size="15" fill="#4a4a63">download the GIF</text></g>
+</g>
+<text x="40" y="290" font-family="sans-serif" font-size="17" fill="#4a4a63">One image on its own exports as a still GIF. Two or more make an animation.</text>
+<text x="40" y="330" font-family="sans-serif" font-size="17" fill="#4a4a63">Everything runs in the browser: the images are never uploaded.</text>
+</svg>
