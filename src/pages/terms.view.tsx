@@ -1,7 +1,7 @@
 import { useT } from "@/i18n";
 import { LegalPage } from "@/components/legal-page";
 
-const SECTIONS = ["using", "content", "warranty", "liability", "acceptable", "changes"] as const;
+const SECTIONS = ["using", "content", "warranty", "liability", "acceptable", "operator", "changes"] as const;
 
 function Terms() {
   const t = useT();

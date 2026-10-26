@@ -64,7 +64,7 @@ function About() {
           </div>
         </section>
 
-        {/* Introduce the team */}
+        {/* Meet the creator */}
         <section className="border-t border-border px-4 py-16 sm:px-6 md:py-24">
           <div className="mx-auto max-w-6xl">
             <div className="max-w-2xl">

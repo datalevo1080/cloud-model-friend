@@ -65,6 +65,9 @@ function Contact() {
               <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
                 {t("contact.intro")}
               </p>
+              <p className="mt-4 text-[15px] leading-7 text-muted-foreground">
+                {t("contact.routeNote")}
+              </p>
 
               <dl className="mt-10 space-y-6 text-[15px]">
                 <div className="flex items-start gap-4">
@@ -164,6 +167,7 @@ function Contact() {
                 <Textarea
                   id="contact-message"
                   required
+                  minLength={10}
                   rows={6}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
