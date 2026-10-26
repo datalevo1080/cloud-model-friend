@@ -677,7 +677,7 @@ export function Resizer() {
               >
                 Discord GIF compressor
               </L>{" "}
-              for the 10MB, 256KB and 512KB limits, or the{" "}
+              for the 20MB, 256KB and 512KB limits, or the{" "}
               <L to="/gif-cropper" className="text-primary underline-offset-4 hover:underline">
                 GIF cropper
               </L>{" "}

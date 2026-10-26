@@ -9,7 +9,7 @@ export const faqs = [
   },
   {
     q: "How do I make a GIF smaller file size for Discord?",
-    a: "Set a target size instead of guessing. Discord's default attachment limit is 10 MiB, so pick 8 MB and let the compressor binary-search the lossy level until your GIF fits. For a custom emoji use 256 KB, and for a sticker use 512 KB. Those three numbers cover almost every Discord upload you'll ever do.",
+    a: "Set a target size instead of guessing. Discord's free attachment limit is 20 MB, so pick 8 MB and let the compressor binary-search the lossy level until your GIF fits. For a custom emoji use 256 KB, and for a sticker use 512 KB. Those three numbers cover almost every Discord upload you'll ever do.",
   },
   {
     q: "How long can a GIF be?",

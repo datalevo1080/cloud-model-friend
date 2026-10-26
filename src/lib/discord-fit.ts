@@ -26,10 +26,10 @@ export type DiscordTarget = {
 export const DISCORD_TARGETS: DiscordTarget[] = [
   {
     id: "upload",
-    label: "Under 10 MB Upload",
+    label: "Under 20 MB Upload",
     bytes: 8 * 1024 * 1024,
-    limitLabel: "10 MiB",
-    note: "Aims at 8 MB so the 10 MiB attachment limit is never borderline.",
+    limitLabel: "20 MB",
+    note: "Aims at 8 MB so it stays well under the 20 MB attachment limit.",
   },
   {
     id: "emoji",

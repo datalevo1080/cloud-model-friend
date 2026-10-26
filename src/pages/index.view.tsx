@@ -250,7 +250,7 @@ function Home() {
                 {[0, 1].map((dup) => (
                   <div key={dup} className="flex shrink-0 gap-10 pr-10">
                     {[
-                      "Discord 10 MB attachments",
+                      "Discord 20 MB attachments",
                       "256 KB custom emoji",
                       "512 KB stickers",
                       "5 MB on X",
@@ -358,7 +358,7 @@ function Home() {
               >
                 compressing a GIF for Discord
               </L>{" "}
-              with the 10 MB, emoji and sticker limits built in.
+              with the 20 MB, emoji and sticker limits built in.
             </p>
           </div>
         </section>

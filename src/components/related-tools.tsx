@@ -46,7 +46,7 @@ const TOOLS: Record<ToolPath, { name: string; blurb: string }> = {
   },
   "/compress-gif-for-discord": {
     name: "Compress a GIF for Discord",
-    blurb: "Hit the 10 MB attachment, 256 KB emoji and 512 KB sticker limits.",
+    blurb: "Hit the 20 MB attachment, 256 KB emoji and 512 KB sticker limits.",
   },
 };
 

@@ -81,7 +81,7 @@ const methods = [
 ];
 
 const discordLimits = [
-  { thing: "Attachment (default, all users)", limit: "10 MiB", note: "Higher with Nitro or server Boost Tier" },
+  { thing: "Attachment (free)", limit: "20 MB", note: "Higher with Nitro or server Boost" },
   { thing: "Custom emoji (static or animated)", limit: "256 KiB", note: "128×128 renders best" },
   { thing: "Sticker (PNG, APNG, GIF, Lottie)", limit: "512 KiB", note: "320×320 canvas" },
 ];
@@ -122,7 +122,7 @@ const socialLimits = [
 const platformLimits = [
   {
     platform: "Discord attachment",
-    limit: "10 MiB default",
+    limit: "20 MB free",
     target: "8 MB",
     href: "https://discord.com/developers/docs/reference",
   },
