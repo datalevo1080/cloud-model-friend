@@ -149,7 +149,7 @@ export async function buildGif(
 
     gif.writeFrame(index, width, height, {
       palette,
-      delay: Math.max(10, Math.round(delayMs)),
+      delay: Math.max(20, Math.round(delayMs)),
       repeat,
       first: i === 0,
       transparent: transparent && transparentIndex >= 0,

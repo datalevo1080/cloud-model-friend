@@ -16,11 +16,11 @@ const GOOGLE_ADS_SPECS = "https://support.google.com/google-ads/answer/1722096";
 const FAQS: { q: string; a: string }[] = [
   {
     q: "How to slow down a GIF",
-    a: "Open the speed changer, drop the GIF in, and pick anything under 1x — 0.5x is half speed, 0.25x is quarter speed. Every frame's delay is multiplied, no frames are removed, and the preview shows the new loop time before you download. Slowing down never triggers frame-skipping.",
+    a: "Open the speed changer, drop the GIF in, and pick anything under 1x — 0.5x is half speed, 0.25x is quarter speed. Every frame's delay is multiplied, no frames are removed, and the time readout shows the new loop time before you download. Slowing down never triggers frame-skipping.",
   },
   {
     q: "How to speed up a GIF",
-    a: "Drop the GIF in and pick anything above 1x, or drag the slider up to 8x. Delays shrink proportionally; if they'd fall under the 20ms browser floor, the tool drops frames evenly to reach your speed legally. The readout shows the old and new loop time before you commit.",
+    a: "Drop the GIF in and pick anything above 1x, or drag the slider up to 8x. Delays shrink proportionally; if they'd fall under the 20ms browser floor, the tool drops frames evenly to reach your speed legally. The readout shows the old and new loop time before you commit. At extreme short-delay × high-speed combinations, the 20 ms floor caps the result — the readout shows the real result.",
   },
   {
     q: "How many FPS are GIFs?",
@@ -104,7 +104,7 @@ function GifSpeedChangerPage() {
               2. Pick a preset from 0.25x to 4x, or drag the slider anywhere between 0.1x and 8x.
               The readout shows the loop time before and after - say, 3.2s to 1.6s.
             </li>
-            <li>3. Preview the new timing, then download. Same pixels, same colors, new clock.</li>
+            <li>3. Check the new loop time in the readout, then download. Same pixels, same colors, new clock.</li>
           </ol>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             That is genuinely all it takes to change GIF speed - no editor timeline, no export
@@ -311,7 +311,7 @@ function GifSpeedChangerPage() {
           <p className="mt-2 leading-relaxed text-muted-foreground">
             Open the speed changer, drop the GIF in, and pick anything under 1x - 0.5x is half
             speed, 0.25x is quarter speed. Every frame's delay is multiplied, no frames are removed,
-            and the preview shows the new loop time before you download. Slowing down never triggers
+            and the time readout shows the new loop time before you download. Slowing down never triggers
             frame-skipping.
           </p>
 
@@ -319,8 +319,7 @@ function GifSpeedChangerPage() {
           <p className="mt-2 leading-relaxed text-muted-foreground">
             Drop the GIF in and pick anything above 1x, or drag the slider up to 8x. Delays shrink
             proportionally; if they'd fall under the 20ms browser floor, the tool drops frames
-            evenly to reach your speed legally. The readout shows the old and new loop time before
-            you commit.
+            evenly to reach your speed legally. The readout shows the old and new loop time before you commit. At extreme short-delay × high-speed combinations, the 20 ms floor caps the result — the readout shows the real result.
           </p>
 
           <h3 className="mt-6 text-xl font-semibold">How many FPS are GIFs?</h3>

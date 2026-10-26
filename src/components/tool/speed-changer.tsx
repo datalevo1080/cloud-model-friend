@@ -85,6 +85,10 @@ export function SpeedChanger() {
     } catch {
       delays = [];
     }
+    if (delays.length === 0) {
+      setSkipped(`\"${file.name}\" — couldn't read this GIF's timing, so there's nothing to re-time.`);
+      return;
+    }
     const prev = itemRef.current;
     if (prev) {
       URL.revokeObjectURL(prev.url);

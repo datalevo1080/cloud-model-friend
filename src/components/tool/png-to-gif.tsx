@@ -334,13 +334,13 @@ export function PngToGif() {
               <input
                 id="pg-delay"
                 type="number"
-                min={10}
+                min={20}
                 max={5000}
                 step={10}
                 value={delayMs}
                 disabled={images.length < 2}
                 onChange={(e) => {
-                  setDelayMs(Math.max(10, Math.min(5000, Number(e.target.value) || 100)));
+                  setDelayMs(Math.max(20, Math.min(5000, Number(e.target.value) || 100)));
                   clearResult();
                 }}
                 className="mt-2 h-11 w-full rounded-lg border border-input bg-background px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-60"
@@ -348,7 +348,7 @@ export function PngToGif() {
               <p className="mt-1 text-xs text-muted-foreground">
                 {images.length < 2
                   ? "One image makes a still GIF, so delay does not apply."
-                  : `${delayMs}ms per frame — about ${(1000 / delayMs).toFixed(1)} frames per second.`}
+                  : `${delayMs}ms per frame — about ${(1000 / delayMs).toFixed(1)} frames per second. Browsers ignore delays under 20 ms.`}
               </p>
             </div>
 

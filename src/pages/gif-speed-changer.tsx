@@ -14,11 +14,11 @@ const GOOGLE_ADS_SPECS = "https://support.google.com/google-ads/answer/1722096";
 const FAQS: { q: string; a: string }[] = [
   {
     q: "How to slow down a GIF",
-    a: "Open the speed changer, drop the GIF in, and pick anything under 1x — 0.5x is half speed, 0.25x is quarter speed. Every frame's delay is multiplied, no frames are removed, and the preview shows the new loop time before you download. Slowing down never triggers frame-skipping.",
+    a: "Open the speed changer, drop the GIF in, and pick anything under 1x — 0.5x is half speed, 0.25x is quarter speed. Every frame's delay is multiplied, no frames are removed, and the time readout shows the new loop time before you download. Slowing down never triggers frame-skipping.",
   },
   {
     q: "How to speed up a GIF",
-    a: "Drop the GIF in and pick anything above 1x, or drag the slider up to 8x. Delays shrink proportionally; if they'd fall under the 20ms browser floor, the tool drops frames evenly to reach your speed legally. The readout shows the old and new loop time before you commit.",
+    a: "Drop the GIF in and pick anything above 1x, or drag the slider up to 8x. Delays shrink proportionally; if they'd fall under the 20ms browser floor, the tool drops frames evenly to reach your speed legally. The readout shows the old and new loop time before you commit. At extreme short-delay × high-speed combinations, the 20 ms floor caps the result — the readout shows the real result.",
   },
   {
     q: "How many FPS are GIFs?",

@@ -608,7 +608,10 @@ export function Resizer() {
                       ))}
                     </div>
                     <p className="mt-2 text-xs text-muted-foreground">
-                      Want it perfectly square without stretching?{" "}
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      In Fit mode, smaller GIFs are left alone — nothing is enlarged.
+                    </p>
+\1
                       <L
                         to="/gif-cropper"
                         className="text-primary underline-offset-4 hover:underline"

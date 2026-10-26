@@ -203,7 +203,10 @@ export async function runGifsicleMulti(
   });
   const files = (out ?? []).filter((f) => f && f.size > 0);
   if (!files.length) throw new Error("Gifsicle returned no output.");
-  return files.slice().sort((a, b) => a.name.localeCompare(b.name));
+  // Preventive numeric sort: plain lexicographic order would misorder
+  // unpadded frame names past 999 frames (frame-1000 before frame-2).
+  // Padded names sort identically either way, so this is behavior-preserving.
+  return files.slice().sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
 }
 
 
