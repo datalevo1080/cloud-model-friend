@@ -57,6 +57,7 @@ export const PAGE_PATHS = [
   "/research/gif-compression-test",
   "/blog",
   "/blog/how-to-make-a-gif-into-a-sticker",
+  "/blog/how-to-make-a-gif-from-video",
   "/blog/how-long-can-a-gif-be",
   "/blog/why-is-my-gif-so-big",
   "/blog/how-to-crop-a-gif",

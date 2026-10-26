@@ -87,6 +87,20 @@ export const BLOG_POSTS: BlogPost[] = [
     alt: "How to turn a GIF into a sticker: static, animated, and video sticker paths explained by ZipGIF",
   },
   {
+    path: "/blog/how-to-make-a-gif-from-video",
+    title: "How to Make a GIF From a Video",
+    description:
+      "Learn how to make a GIF from a video, whether with a direct converter or by extracting frames and building the GIF with ZipGIF's image-to-GIF tool.",
+    excerpt:
+      "ZipGIF has no video converter, so this guide is honest about that: use a direct converter for one-step conversion, or extract frames and build the GIF privately in your browser.",
+    published: "2026-10-26",
+    date: "October 26, 2026",
+    read: "11 min read",
+    tag: "Video to GIF",
+    image: "/og-how-to-make-a-gif-from-video.svg",
+    alt: "How to make a GIF from a video: a video clip becoming a looping GIF, explained by ZipGIF",
+  },
+  {
     path: "/blog/how-long-can-a-gif-be",
     title: "How Long Can a GIF Be? Duration, Loops and Upload Limits",
     description:

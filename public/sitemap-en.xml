@@ -142,6 +142,13 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://zipgif.com/blog/how-to-make-a-gif-from-video</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-to-make-a-gif-from-video" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-to-make-a-gif-from-video" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://zipgif.com/blog/how-long-can-a-gif-be</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://zipgif.com/blog/how-long-can-a-gif-be" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://zipgif.com/blog/how-long-can-a-gif-be" />
