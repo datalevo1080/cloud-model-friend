@@ -2026,5 +2026,6 @@
   "ZipGIF tools": "ZipGIFツール",
   "ZipGIF vs other online GIF compressors": "ZipGIFと他のオンラインGIF圧縮ツールとの比較",
   ", and its": "、およびその",
-  "File Attachments FAQ": "ファイル添付FAQ"
+  "File Attachments FAQ": "ファイル添付FAQ",
+  "Dimensions only in this table — also check Twitch's current emote file-size and frame limits before uploading an animated emote.": "この表では寸法のみです。アニメーションエモートをアップロードする前に、Twitchの現在のエモートのファイルサイズとフレームの制限も確認してください。"
 }

@@ -241,8 +241,7 @@ function HowToAnimateAPng() {
             animation chunks ignores them and shows a single image: the default image stored in the
             file. That is a useful safety net, and also the reason an APNG can look like a still
             image in the wrong app. It is not broken; the viewer is simply showing the fallback.
-            Current major browsers all support APNG: MDN lists Chrome 59, Edge 12, Firefox 3, Opera
-            46, and Safari 8 as the versions that introduced it (
+            All current major browsers play APNG, per MDN (
             <Cite href={SRC.mdnFormats}>MDN: Image file type and format guide</Cite>).
           </P>
           <H3>GIF is a separate, older animation format</H3>
