@@ -98,9 +98,9 @@ const steps = [
   },
 ];
 
-const proof = [
+const proof: { value: string; label: string; href?: string }[] = [
   { value: "0", label: "Bytes uploaded" },
-  { value: "70%", label: "Typical size cut" },
+  { value: "37%", label: "Average cut in our 16-file test", href: "/research/gif-compression-test" },
   { value: "20", label: "GIFs per batch" },
   { value: "8", label: "Free tools" },
 ];
@@ -131,7 +131,7 @@ const faqs = [
   },
   {
     q: "How much smaller can a GIF get?",
-    a: "Screen recordings and flat-colour animations usually drop 40% to 70%. Photographic GIFs give back less, often 15% to 30%, because their frames share fewer repeated colours.",
+    a: "Results vary widely by file: our 16-file compression test averaged a 37% cut, with the best file at 69.4%. Treat any single percentage as a rough guide, not a promise for your file.",
   },
   {
     q: "Does it work on a phone?",
@@ -279,7 +279,16 @@ function Home() {
                 <p className="font-mono text-3xl font-bold tracking-tight text-primary sm:text-4xl">
                   {p.value}
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">{p.label}</p>
+                {p.href ? (
+                  <a
+                    href={p.href}
+                    className="mt-1 block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    {p.label}
+                  </a>
+                ) : (
+                  <p className="mt-1 text-sm text-muted-foreground">{p.label}</p>
+                )}
               </Reveal>
             ))}
           </div>
