@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="420" viewBox="0 0 960 420" role="img" aria-labelledby="t d"><title id="t">Crop vs trim vs resize</title><desc id="d">Three panels: cropping cuts the edges off every frame, trimming cuts frames off the timeline, resizing scales the whole picture down.</desc>
+<rect width="960" height="420" fill="#1b1b2f"/>
+<g font-family="sans-serif" fill="#ffffff">
+<text x="40" y="44" font-size="26" font-weight="700">CROP: cuts space</text>
+<rect x="40" y="70" width="240" height="180" fill="#3a3a5c" stroke="#8b8bf0" stroke-width="3"/>
+<rect x="80" y="100" width="160" height="120" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="10 6"/>
+<circle cx="160" cy="160" r="30" fill="#5b4cf0"/>
+<text x="40" y="290" font-size="20" fill="#dcdcf0">Same frames, smaller canvas</text>
+<text x="40" y="320" font-size="20" fill="#dcdcf0">Edges gone, motion untouched</text>
+
+<text x="360" y="44" font-size="26" font-weight="700">TRIM: cuts time</text>
+<g>
+<rect x="360" y="70" width="70" height="180" fill="#3a3a5c" opacity="0.35"/>
+<rect x="440" y="70" width="70" height="180" fill="#5b4cf0"/>
+<rect x="520" y="70" width="70" height="180" fill="#5b4cf0"/>
+<rect x="600" y="70" width="70" height="180" fill="#3a3a5c" opacity="0.35"/>
+<line x1="430" y1="70" x2="430" y2="250" stroke="#ffffff" stroke-width="3"/>
+<line x1="600" y1="70" x2="600" y2="250" stroke="#ffffff" stroke-width="3"/>
+</g>
+<text x="360" y="290" font-size="20" fill="#dcdcf0">Fewer frames, same picture</text>
+<text x="360" y="320" font-size="20" fill="#dcdcf0">Shorter clip, same dimensions</text>
+
+<text x="720" y="44" font-size="26" font-weight="700">RESIZE: scales all</text>
+<rect x="720" y="70" width="160" height="120" fill="#3a3a5c" stroke="#8b8bf0" stroke-width="3"/>
+<circle cx="800" cy="130" r="26" fill="#5b4cf0"/>
+<text x="700" y="225" font-size="24" fill="#ffffff">↓</text>
+<rect x="740" y="240" width="110" height="82" fill="#3a3a5c" stroke="#8b8bf0" stroke-width="3"/>
+<circle cx="795" cy="281" r="17" fill="#5b4cf0"/>
+<text x="720" y="360" font-size="20" fill="#dcdcf0">Nothing cut, everything smaller</text>
+</g>
+</svg>

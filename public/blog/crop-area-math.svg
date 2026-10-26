@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-labelledby="t d"><title id="t">Crop area maths</title><desc id="d">A wide GIF frame of 800 by 600 pixels with a smaller crop rectangle inside it: the kept area is a fraction of the original pixels, but the palette, headers, and per-frame overhead stay the same.</desc>
+<rect width="960" height="480" fill="#1b1b2f"/>
+<g font-family="sans-serif">
+<rect x="80" y="60" width="640" height="300" fill="#3a3a5c" stroke="#8b8bf0" stroke-width="3"/>
+<rect x="200" y="120" width="320" height="180" fill="#5b4cf0" stroke="#ffffff" stroke-width="3" stroke-dasharray="10 6"/>
+<circle cx="360" cy="210" r="42" fill="#ffffff" opacity="0.85"/>
+<text x="80" y="400" font-size="24" font-weight="700" fill="#ffffff">Original frame: 800 × 600 = 480,000 pixels</text>
+<text x="80" y="440" font-size="24" font-weight="700" fill="#ffffff">Crop kept: 400 × 300 = 120,000 pixels (25%)</text>
+<text x="760" y="200" font-size="22" fill="#dcdcf0">Palette,</text>
+<text x="760" y="230" font-size="22" fill="#dcdcf0">headers and</text>
+<text x="760" y="260" font-size="22" fill="#dcdcf0">per-frame</text>
+<text x="760" y="290" font-size="22" fill="#dcdcf0">overhead</text>
+<text x="760" y="320" font-size="22" fill="#dcdcf0">stay put →</text>
+<text x="760" y="350" font-size="22" fill="#dcdcf0">bytes fall</text>
+<text x="760" y="380" font-size="22" fill="#dcdcf0">more slowly</text>
+</g>
+</svg>
