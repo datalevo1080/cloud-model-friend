@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="t d"><title id="t">How to Resize a GIF</title><desc id="d">ZipGIF guide: resize a GIF by exact pixels, percentage, or platform preset, keeping the aspect ratio and the animation intact.</desc>
+<rect width="1200" height="630" fill="#f6f6fb"/>
+<rect x="80" y="80" width="220" height="64" rx="32" fill="#1b1b2f"/>
+<text x="190" y="121" text-anchor="middle" font-family="sans-serif" font-size="30" font-weight="700" fill="#ffffff">ZipGIF</text>
+<text x="80" y="230" font-family="sans-serif" font-size="64" font-weight="700" fill="#1b1b2f">How to Resize a GIF</text>
+<text x="80" y="305" font-family="sans-serif" font-size="64" font-weight="700" fill="#5b4cf0">Without Stretching It</text>
+<text x="80" y="370" font-family="sans-serif" font-size="28" fill="#4a4a63">Exact pixels, percentage, or preset — same picture, new size, animation intact.</text>
+<g font-family="sans-serif" font-size="24" font-weight="700">
+<rect x="80" y="430" width="420" height="110" rx="16" fill="#1b1b2f"/>
+<text x="290" y="478" text-anchor="middle" fill="#ffffff">800 × 600</text>
+<text x="290" y="514" text-anchor="middle" fill="#c9c6e8" font-size="20" font-weight="400">480,000 pixels per frame</text>
+<text x="540" y="498" font-family="sans-serif" font-size="44" fill="#5b4cf0">→</text>
+<rect x="620" y="452" width="240" height="66" rx="16" fill="#5b4cf0"/>
+<text x="740" y="494" text-anchor="middle" fill="#ffffff">400 × 300</text>
+<text x="620" y="530" font-family="sans-serif" font-size="20" font-weight="400" fill="#4a4a63">120,000 pixels: a quarter</text>
+</g></svg>

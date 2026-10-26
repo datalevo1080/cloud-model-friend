@@ -114,6 +114,20 @@ export const BLOG_POSTS: BlogPost[] = [
     image: "/og-how-to-make-a-gif-size-smaller.svg",
     alt: "How to make a GIF smaller without ruining quality: a large GIF file shrinking into a smaller one by trimming, resizing, dropping frames and compressing",
   },
+  {
+    path: "/blog/how-to-resize-a-gif",
+    title: "How to Resize a GIF",
+    description:
+      "Learn how to resize a GIF by exact pixels, percentage, or platform preset, keep the aspect ratio, and understand how dimensions relate to file size.",
+    excerpt:
+      "Halving both sides quarters the pixel area, the aspect lock is what keeps a GIF from stretching, and a pixel number means resize while a KB number means compress.",
+    published: "2026-10-26",
+    date: "October 26, 2026",
+    read: "9 min read",
+    tag: "GIF size",
+    image: "/og-how-to-resize-a-gif.svg",
+    alt: "How to resize a GIF without stretching it: an 800 by 600 GIF becoming 400 by 300, a quarter of the pixel area",
+  },
 ];
 
 export function getPost(path: string): BlogPost {

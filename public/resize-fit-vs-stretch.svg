@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="t d"><title id="t">Fit inside versus stretch for a square preset</title><desc id="d">A wide GIF fitted inside a square keeps its proportions with empty space above and below; stretched to the square, the picture distorts.</desc>
+<rect width="1200" height="520" fill="#f6f6fb"/>
+<g font-family="sans-serif">
+<rect x="90" y="90" width="380" height="380" rx="12" fill="none" stroke="#5b4cf0" stroke-width="3" stroke-dasharray="10 8"/>
+<rect x="90" y="185" width="380" height="190" rx="6" fill="#1b1b2f"/>
+<text x="280" y="282" text-anchor="middle" font-size="26" font-weight="700" fill="#ffffff">128 × 72</text>
+<text x="280" y="505" text-anchor="middle" font-size="24" font-weight="700" fill="#1b1b2f">Fit inside: proportions kept</text>
+<rect x="730" y="90" width="380" height="380" rx="12" fill="#5b4cf0"/>
+<text x="920" y="282" text-anchor="middle" font-size="26" font-weight="700" fill="#ffffff">128 × 128</text>
+<text x="920" y="505" text-anchor="middle" font-size="24" font-weight="700" fill="#1b1b2f">Stretch: square, but distorted</text>
+</g></svg>
