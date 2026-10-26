@@ -114,6 +114,20 @@ export const BLOG_POSTS: BlogPost[] = [
     image: "/og-how-to-make-a-gif-size-smaller.svg",
     alt: "How to make a GIF smaller without ruining quality: a large GIF file shrinking into a smaller one by trimming, resizing, dropping frames and compressing",
   },
+  {
+    path: "/blog/how-to-make-a-gif-from-images",
+    title: "How to Make a GIF From Images",
+    description:
+      "Learn how to make a GIF from images: pick and order PNG, JPG, or WebP frames, set the delay, choose looping, and export — all in your browser.",
+    excerpt:
+      "A GIF from images is a stack of stills played in order: pick the frames, drag them into order, set one delay for all of them, and export.",
+    published: "2026-10-26",
+    date: "October 26, 2026",
+    read: "10 min read",
+    tag: "GIF from images",
+    image: "/og-how-to-make-a-gif-from-images.svg",
+    alt: "How to make a GIF from images: three still images becoming one animated GIF, explained by ZipGIF",
+  },
 ];
 
 export function getPost(path: string): BlogPost {
