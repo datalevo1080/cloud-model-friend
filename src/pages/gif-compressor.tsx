@@ -74,14 +74,14 @@ const methods = [
   },
   {
     method: "Scaling dimensions",
-    what: "Lowers GIF resolution — a 1200px-wide capture rarely needs to stay 1200px in a chat window.",
+    what: "Lowers GIF resolution — a 1200px-wide capture rarely needs to stay 1200px in a chat window. Dimension reduction lives in Target file size mode, where the ladder can scale frames down; Manual mode has no resize control.",
     saving: "40–75%",
     impact: "Sharpness drops. Text can get mushy below 50% scale.",
   },
 ];
 
 const discordLimits = [
-  { thing: "Attachment (default, all users)", limit: "10 MiB", note: "Higher with Nitro or server Boost Tier" },
+  { thing: "Attachment (free)", limit: "20 MB", note: "Higher with Nitro or server Boost" },
   { thing: "Custom emoji (static or animated)", limit: "256 KiB", note: "128×128 renders best" },
   { thing: "Sticker (PNG, APNG, GIF, Lottie)", limit: "512 KiB", note: "320×320 canvas" },
 ];
@@ -122,7 +122,7 @@ const socialLimits = [
 const platformLimits = [
   {
     platform: "Discord attachment",
-    limit: "10 MiB default",
+    limit: "20 MB free",
     target: "8 MB",
     href: "https://discord.com/developers/docs/reference",
   },
@@ -157,7 +157,7 @@ const comparison = [
   { label: "Watermark on output", zip: "Never", other: "Common on free tiers" },
   { label: "Signup or email", zip: "Not required", other: "Often required" },
   { label: "File size limit", zip: "200 MB per GIF", other: "Typically 5–50 MB" },
-  { label: "Batch support", zip: "20 GIFs, one .zip", other: "Usually one at a time" },
+  { label: "Batch support", zip: "Manual: 20 GIFs, one .zip; Target: 10 at a time, per-file downloads", other: "Usually one at a time" },
   { label: "Where files are processed", zip: "Your browser", other: "Their server" },
   { label: "Exact target file size", zip: "Yes, iterative passes", other: "Rare" },
 ];

@@ -8,6 +8,7 @@ export type BlogPost = {
   description: string;
   excerpt: string;
   published: string; // ISO date
+  updated?: string; // ISO date, when the article was last revised
   date: string; // display date
   read: string;
   tag: string;
@@ -38,6 +39,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "Halving both sides quarters the pixel area, the aspect lock is what keeps a GIF from stretching, and a pixel number means resize while a KB number means compress.",
     published: "2026-10-26",
+    updated: "2026-10-26",
     date: "October 26, 2026",
     read: "9 min read",
     tag: "GIF size",
@@ -80,6 +82,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "A GIF is not automatically a sticker: Telegram needs PNG, WebP, WebM or vector .TGS, while Discord accepts GIFs up to 512 KiB. Pick the platform, then the format.",
     published: "2026-10-24",
+    updated: "2026-10-26",
     date: "October 24, 2026",
     read: "12 min read",
     tag: "Stickers",
@@ -94,6 +97,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "ZipGIF has no video converter, so this guide is honest about that: use a direct converter for one-step conversion, or extract frames and build the GIF privately in your browser.",
     published: "2026-10-26",
+    updated: "2026-10-26",
     date: "October 26, 2026",
     read: "11 min read",
     tag: "Video to GIF",
@@ -122,6 +126,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "No single maker wins everything: GIPHY and EZGIF handle video, Canva and Imgflip handle text and design, ZipGIF keeps your files on your device. Pick by your starting point.",
     published: "2026-10-26",
+    updated: "2026-10-26",
     date: "October 26, 2026",
     read: "10 min read",
     tag: "GIF makers",
@@ -150,6 +155,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "A still PNG holds one image, so motion must be created or converted: build frames, order a sequence, or translate an APNG into GIF.",
     published: "2026-10-24",
+    updated: "2026-10-26",
     date: "October 24, 2026",
     read: "13 min read",
     tag: "PNG animation",
@@ -164,6 +170,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "Five ways to shrink a GIF — trimming, resizing, fewer frames, palette and compression — how to pick the right one for your file, and what a controlled same-file test actually showed.",
     published: "2026-10-24",
+    updated: "2026-10-26",
     date: "October 24, 2026",
     read: "10 min read",
     tag: "GIF size",
@@ -178,6 +185,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "A GIF from images is a stack of stills played in order: pick the frames, drag them into order, set one delay for all of them, and export.",
     published: "2026-10-26",
+    updated: "2026-10-26",
     date: "October 26, 2026",
     read: "10 min read",
     tag: "GIF from images",
@@ -225,7 +233,7 @@ export function blogPostHead(post: BlogPost, extraImages: string[] = []) {
           headline: post.title,
           description: post.description,
           datePublished: post.published,
-          dateModified: post.published,
+          dateModified: post.updated ?? post.published,
           mainEntityOfPage: { "@type": "WebPage", "@id": url },
           image: [image, ...extraImages.map((i) => `${SITE}${i}`)],
           author: { "@type": "Person", name: AUTHOR.name, url: AUTHOR.url },

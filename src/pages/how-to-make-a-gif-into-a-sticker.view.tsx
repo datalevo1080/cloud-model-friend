@@ -27,7 +27,7 @@ const toc = [
 const faqs = [
   {
     q: "Can I upload a GIF directly as a Telegram sticker?",
-    a: "No. Telegram's sticker uploads use PNG, WebP, and WebM files, and its animated stickers are vector .TGS files. A GIF is not an accepted sticker upload there. On Discord, by contrast, GIF is an accepted guild sticker format, up to 512 KiB.",
+    a: "No. Telegram's sticker uploads use PNG, WebP, and WebM files, and its animated stickers are vector .TGS files. A GIF is not an accepted sticker upload there. On Discord, by contrast, the developer sticker resource lists GIF among accepted uploads, but Discord's support FAQ for custom stickers lists only PNG (static) and APNG (animated) — so test a GIF sticker in Discord's own upload flow before relying on it, and keep it under 512 KiB at 320×320.",
   },
   {
     q: "Can I turn an animated GIF into an animated Telegram sticker without redrawing it?",
@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     q: "Do I need a different file for Discord and Telegram?",
-    a: "Yes, prepare one export per platform. A GIF under 512 KiB can be a Discord guild sticker as it is, while Telegram needs a PNG, WebP, WebM, or .TGS export at its own dimensions and size limits. One file rarely satisfies both.",
+    a: "Yes, prepare one export per platform. A GIF under 512 KiB at 320×320 can be tested as a Discord guild sticker, but Discord's support FAQ for custom stickers lists only PNG and APNG, so test it in Discord's own upload flow before relying on it, while Telegram needs a PNG, WebP, WebM, or .TGS export at its own dimensions and size limits. One file rarely satisfies both.",
   },
 ];
 
@@ -174,8 +174,7 @@ function HowToMakeAGifIntoASticker() {
 
           <p className="mt-8 rounded-xl border border-border bg-muted/30 p-5 text-lg leading-8">
             Short answer: a GIF file is not automatically a sticker. Whether your GIF works as one
-            depends on where you send it, and on whether you want it to move. On Discord, a GIF can
-            be uploaded as a guild sticker directly, as long as it fits the 512 KiB cap. On
+            depends on where you send it, and on whether you want it to move. On Discord, the developer sticker resource lists GIF among accepted uploads, but Discord's support FAQ for custom stickers lists only PNG (static) and APNG (animated) — so test a GIF sticker in Discord's own upload flow before relying on it, and keep it under 512 KiB at 320×320. On
             Telegram, it cannot: the GIF must become a static PNG or WebP image, a WebM video, or a
             rebuilt vector animation, each with its own size, dimension, and duration rules. So pick
             the platform, pick static or animated, then export to exactly the format that platform
@@ -349,7 +348,7 @@ function HowToMakeAGifIntoASticker() {
           </P>
           <Figure
             src="/blog/sticker-decision-tree.svg"
-            alt="Decision tree: start with a GIF. If it does not need to move, make a static sticker from one frame as PNG or WebP with one side exactly 512 pixels. If it must move, ask whether it can be rebuilt as vectors: yes leads to an animated TGS sticker, no leads to a WebM video sticker. A Discord shortcut notes that a GIF under 512 KiB can already be a guild sticker."
+            alt="Decision tree: start with a GIF. If it does not need to move, make a static sticker from one frame as PNG or WebP with one side exactly 512 pixels. If it must move, ask whether it can be rebuilt as vectors: yes leads to an animated TGS sticker, no leads to a WebM video sticker. A Discord shortcut notes that a GIF under 512 KiB can be tested as a guild sticker."
             w={960}
             h={800}
             caption="Follow the destination first, then the motion. The two dead ends are uploading a .gif to Telegram and trying to convert GIF pixels into .TGS vectors."

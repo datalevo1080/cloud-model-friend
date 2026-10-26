@@ -323,8 +323,7 @@ function HowToMakeAGifFromVideo() {
             <li>
               Set the frame delay in milliseconds. The default is 100 ms per frame, which plays
               at 10 frames per second — matching the extraction rate above, so a 40-frame
-              sequence loops for 4 seconds. Lengthen the delay on a frame you want the eye to
-              rest on.
+              sequence loops for 4 seconds. To hold one picture longer, add a copy of that image again in the sequence — the converter applies one delay to every frame, so a repeated image is how you create a pause.
             </li>
             <li>
               Choose the loop: forever, once, or a custom repeat count. Then preview the

@@ -16,6 +16,8 @@ export const options = {
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:url", content: URL },
+      { property: "og:image", content: "https://zipgif.com/og-image.jpg" },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },

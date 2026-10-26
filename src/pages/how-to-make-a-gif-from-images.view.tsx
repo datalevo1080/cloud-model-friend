@@ -282,8 +282,7 @@ function HowToMakeAGifFromImages() {
           <P>
             If the preview plays too fast, raise the delay rather than deleting frames: deleting
             frames removes motion, while a longer delay keeps every frame and simply shows each
-            one longer. If it plays too slowly, lower the delay — but remember the delay cannot go
-            below 10 ms in this tool, and very short delays can make viewers drop frames anyway.
+            one longer. If it plays too slowly, lower the delay — but remember the delay cannot go below 20 ms in this tool, and very short delays can make viewers drop frames anyway.
           </P>
 
           <H2 id="timing">Timing: delays, frame rates, and holds</H2>
@@ -399,7 +398,7 @@ function HowToMakeAGifFromImages() {
           <H3>The animation is too fast or too slow</H3>
           <P>
             Adjust the delay, not the frame count. Raise it to slow down, lower it to speed up,
-            and remember the 10 ms floor and the rounding to hundredths of a second.
+            and remember the 20 ms floor and the rounding to hundredths of a second.
           </P>
           <H3>One frame stays on screen too briefly</H3>
           <P>

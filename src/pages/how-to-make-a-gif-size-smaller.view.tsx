@@ -358,7 +358,7 @@ function HowToMakeAGifSizeSmaller() {
             <table className="w-full text-sm">
               <thead className="bg-muted/40">
                 <tr>
-                  <th className={th}>Change (one factor)</th>
+                  <th className={th}>Change</th>
                   <th className={th}>File size</th>
                   <th className={th}>Frames</th>
                   <th className={th}>Canvas</th>

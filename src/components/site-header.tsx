@@ -48,6 +48,17 @@ export function SiteHeader() {
   const toolsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
     if (!toolsOpen) return;
     const onDown = (e: MouseEvent) => {
       if (!toolsRef.current?.contains(e.target as Node)) setToolsOpen(false);

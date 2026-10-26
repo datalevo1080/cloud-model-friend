@@ -64,9 +64,12 @@ export const options = makeRouteOptions("/gif-trimmer", {
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
       { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: `${SITE}/og-image.jpg` },
     ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [

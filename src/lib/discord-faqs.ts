@@ -2,8 +2,8 @@
  *  from this same array so the structured data always matches the page. */
 export const discordFaqs = [
   {
-    q: "How do I compress a GIF to under 10 MB for Discord?",
-    a: "Pick the Under 10 MB Upload preset and drop your GIF in. The tool tries optimization first, then gradually reduces colours, size and frames until the file fits. Everything runs in your browser, so nothing is uploaded anywhere.",
+    q: "How do I compress a GIF to under 20 MB for Discord?",
+    a: "Pick the Under 20 MB Upload preset and drop your GIF in. The tool tries optimization first, then gradually reduces colours, size and frames until the file fits. Everything runs in your browser, so nothing is uploaded anywhere.",
   },
   {
     q: "How do I make a GIF under 256 KB for a Discord emoji?",

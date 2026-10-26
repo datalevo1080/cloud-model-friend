@@ -31,7 +31,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Does splitting a GIF reduce quality?",
-    a: "No. Splitting just reads out the frames the GIF already contains - nothing is recompressed. PNG output is lossless, and GIF output keeps the original palette. The frames you download are exactly the pixels that were in the animation.",
+    a: "No. Splitting just reads out the frames the GIF already contains - nothing is recompressed. PNG output is lossless, and GIF output keeps the original pixels. The frames you download are exactly the pixels that were in the animation.",
   },
 ];
 
@@ -60,9 +60,12 @@ export const options = makeRouteOptions("/gif-splitter", {
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
       { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: `${SITE}/og-image.jpg` },
     ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [

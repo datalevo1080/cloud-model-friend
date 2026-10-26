@@ -12,6 +12,7 @@ const SRC = {
   giphyBest: "https://support.giphy.com/hc/en-us/articles/360019914771-GIF-Creation-Best-Practices",
   imgflipMaker: "https://imgflip.com/gif-maker",
   canvaPricing: "https://www.canva.com/pricing/",
+  canvaLicensing: "https://www.canva.com/licensing-explained/",
 };
 
 const toc = [
@@ -359,8 +360,7 @@ function BestFreeGifMaker() {
             It requires an account, and its free plan is genuinely usable — exports made with
             free elements carry no watermark, while designs that include premium elements
             carry a watermark unless you subscribe to Pro (
-            <Cite href={SRC.canvaPricing}>Canva pricing</Cite>; premium-element watermark
-            behaviour corroborated by independent comparisons checked October 2026). That
+            <Cite href={SRC.canvaLicensing}>Canva licensing</Cite>; free users see a watermark on Pro content, removable by buying a licence or subscribing to Pro). That
             distinction is the trap to watch: a design that looks free can stop being free
             the moment one premium stock element slips in. Choose Canva when the GIF needs
             to look designed — a branded announcement, a polished social post, a templated
@@ -511,9 +511,7 @@ function BestFreeGifMaker() {
               removal.
             </li>
             <li>
-              <Cite href={SRC.canvaPricing}>Canva: Pricing</Cite> — free plan; the
-              premium-element watermark behaviour is corroborated by independent
-              comparisons checked October 2026.
+              <Cite href={SRC.canvaLicensing}>Canva: Licensing</Cite> — free users see a watermark on Pro content.
             </li>
           </ul>
           <p className="mt-6 text-sm text-muted-foreground">

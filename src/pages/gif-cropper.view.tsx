@@ -302,8 +302,7 @@ function GifCropperPage() {
           </h2>
           <p className="mt-4 leading-relaxed">
             The aspect ratio presets lock the crop box to a fixed shape while you drag it: Free for
-            no constraint, 1:1 for a square GIF, 16:9 for widescreen, 9:16 for vertical, and 4:3 or
-            3:2 for older captures and photo framing. Pick a preset, position the box, and the width
+            no constraint, 1:1 for a square GIF, 16:9 for widescreen, and 4:3 for older captures and photo framing. Pick a preset, position the box, and the width
             and height stay in proportion the whole time.
           </p>
           <h3 className="mt-8 text-xl font-semibold">Cropping a GIF for a profile picture</h3>
@@ -443,7 +442,7 @@ function GifCropperPage() {
             <div className="rounded-xl border border-border bg-card p-5">
               <h3 className="font-semibold">Social formats</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                1:1 for feed posts, 9:16 for stories and reels. Crop to the ratio before you upload
+                1:1 for feed posts; drag a Freeform vertical box for stories and reels. Crop to the ratio before you upload
                 and you avoid the platform's own crop, which never asks your opinion.
               </p>
             </div>

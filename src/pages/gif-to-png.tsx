@@ -33,7 +33,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Can I save every frame of a GIF as a PNG?",
-    a: "Yes. Choose All frames and the tool exports frame-001.png, frame-002.png and so on, in playback order, packed into a single zip. A 60-frame test animation produced a 123 KB zip in 0.2 seconds. Nothing is recompressed on the way out.",
+    a: "Yes. Choose All frames and the tool exports frame-001.png, frame-002.png and so on, in playback order, packed into a single zip. Nothing is re-encoded lossily on the way out.",
   },
   {
     q: "How to turn a GIF into a sticker?",
@@ -45,7 +45,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Why is my PNG bigger than the GIF?",
-    a: "PNG is lossless and stores one full image, while a GIF spreads its data across frames and reuses a 256-color palette. A photographic frame from a 1,488 KB GIF came out as a 78 KB PNG, about 60 KB inside the GIF. Detail costs bytes.",
+    a: "PNG is lossless and stores one full image, while a GIF spreads its data across frames and reuses a 256-color palette. A photographic frame stores far more detail as a PNG than its share inside the GIF. Detail costs bytes.",
   },
   {
     q: "What is a PNG sequence?",
@@ -60,18 +60,6 @@ const MEASURED: { input: string; output: string; size: string; time: string }[] 
     size: "2 KB",
     time: "under 0.1 s",
   },
-  {
-    input: "photo-style.gif, 480x360, 25 frames, 1,488 KB (about 60 KB per stored frame)",
-    output: "First frame PNG",
-    size: "78 KB",
-    time: "under 0.1 s",
-  },
-  {
-    input: "test-animation.gif, all 60 frames",
-    output: "Numbered PNG zip",
-    size: "123 KB",
-    time: "0.2 s",
-  },
 ];
 
 export const options = makeRouteOptions("/gif-to-png", {
@@ -84,9 +72,12 @@ export const options = makeRouteOptions("/gif-to-png", {
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
       { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: `${SITE}/og-image.jpg` },
     ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [

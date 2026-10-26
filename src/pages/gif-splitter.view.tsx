@@ -1,6 +1,5 @@
 import { L } from "@/components/l";
 import { RelatedTools } from "@/components/related-tools";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -32,7 +31,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Does splitting a GIF reduce quality?",
-    a: "No. Splitting just reads out the frames the GIF already contains - nothing is recompressed. PNG output is lossless, and GIF output keeps the original palette. The frames you download are exactly the pixels that were in the animation.",
+    a: "No. Splitting just reads out the frames the GIF already contains - nothing is recompressed. PNG output is lossless, and GIF output keeps the original pixels. The frames you download are exactly the pixels that were in the animation.",
   },
 ];
 
@@ -52,11 +51,6 @@ const STEPS: { name: string; text: string }[] = [
 ];
 
 function GifSplitterPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("This console message is a single frame.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

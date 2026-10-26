@@ -1,5 +1,4 @@
 import { L } from "@/components/l";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -33,11 +32,6 @@ const STEPS = [
 ];
 
 function GifResizerPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("This console message was resized to fit 80 columns.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -210,7 +204,7 @@ function GifResizerPage() {
                   ["Discord emoji", "128×128 (fit inside)", "256 KB (Discord developer docs)"],
                   ["Discord sticker", "320×320", "512 KB (Discord developer docs)"],
                   ["Discord avatar", "128×128", "Dimensions only"],
-                  ["Twitch emote", "112×112 (scales to 56 and 28)", "Dimensions only"],
+                  ["Twitch emote", "112×112 (scales to 56 and 28)", "Dimensions only in this table — also check Twitch's current emote file-size and frame limits before uploading an animated emote."],
                   ["Slack emoji", "128×128", "Dimensions only"],
                   ["Telegram sticker", "512×512", "Dimensions only"],
                   ["Email", "600px max width", "Dimensions only"],

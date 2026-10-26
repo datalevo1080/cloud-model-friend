@@ -25,7 +25,7 @@ export const SIZE_PRESETS: Preset[] = [
   { id: "512kb", label: "512 KB", bytes: 512 * 1024 },
   { id: "1mb", label: "1 MB", bytes: 1024 * 1024 },
   { id: "5mb", label: "5 MB", bytes: 5 * 1024 * 1024 },
-  { id: "10mb", label: "10 MB", bytes: 10 * 1024 * 1024 },
+  { id: "20mb", label: "20 MB", bytes: 20 * 1024 * 1024 },
 ];
 
 type Entry = {

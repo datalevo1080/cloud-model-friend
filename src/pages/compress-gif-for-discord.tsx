@@ -6,9 +6,9 @@ export const Page = lazyRouteComponent(() => import("./compress-gif-for-discord.
 
 const SITE = "https://zipgif.com";
 const PATH = "/compress-gif-for-discord";
-const TITLE = "Compress GIF for Discord — Under 10MB, 256KB or 512KB";
+const TITLE = "Compress GIF for Discord — Under 20MB, 256KB or 512KB";
 const DESCRIPTION =
-  "Free Discord GIF compressor with presets for 10 MB uploads, 256 KB emoji and 512 KB stickers. Runs in your browser: no upload, no signup, no watermark.";
+  "Free Discord GIF compressor with presets for 20 MB uploads, 256 KB emoji and 512 KB stickers. Runs in your browser: no upload, no signup, no watermark.";
 const MODIFIED = "2026-09-15";
 
 export const options = makeRouteOptions("/compress-gif-for-discord", {
@@ -27,7 +27,7 @@ export const options = makeRouteOptions("/compress-gif-for-discord", {
       { property: "og:image:height", content: "630" },
       {
         property: "og:image:alt",
-        content: "ZipGIF — compress a GIF for Discord under 10MB, 256KB or 512KB",
+        content: "ZipGIF — compress a GIF for Discord under 20MB, 256KB or 512KB",
       },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },

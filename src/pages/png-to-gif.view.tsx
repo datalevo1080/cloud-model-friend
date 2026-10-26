@@ -1,6 +1,5 @@
 import { L } from "@/components/l";
 import { RelatedTools } from "@/components/related-tools";
-import { useEffect } from "react";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -44,7 +43,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "How to make a transparent GIF?",
-    a: "Start from a PNG that already has a transparent background. This tool keeps pixels above 50% alpha opaque and makes everything at or below 50% fully transparent, because GIF has no partial transparency. A 512x512 transparent sticker PNG of 5 KB came out as a 3 KB transparent GIF.",
+    a: "Start from a PNG that already has a transparent background. This tool keeps pixels above 50% alpha opaque and makes everything at or below 50% fully transparent, because GIF has no partial transparency. A transparent sticker PNG typically comes out as a smaller transparent GIF.",
   },
   {
     q: "Can I convert APNG to GIF?",
@@ -74,11 +73,6 @@ const MEASURED: { input: string; output: string; size: string; time: string }[] 
 ];
 
 function PngToGifPage() {
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log("256 colors ought to be enough for anybody.");
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />

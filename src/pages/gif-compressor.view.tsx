@@ -75,14 +75,14 @@ const methods = [
   },
   {
     method: "Scaling dimensions",
-    what: "Lowers GIF resolution — a 1200px-wide capture rarely needs to stay 1200px in a chat window.",
+    what: "Lowers GIF resolution — a 1200px-wide capture rarely needs to stay 1200px in a chat window. Dimension reduction lives in Target file size mode, where the ladder can scale frames down; Manual mode has no resize control.",
     saving: "40–75%",
     impact: "Sharpness drops. Text can get mushy below 50% scale.",
   },
 ];
 
 const discordLimits = [
-  { thing: "Attachment (default, all users)", limit: "10 MiB", note: "Higher with Nitro or server Boost Tier" },
+  { thing: "Attachment (free)", limit: "20 MB", note: "Higher with Nitro or server Boost" },
   { thing: "Custom emoji (static or animated)", limit: "256 KiB", note: "128×128 renders best" },
   { thing: "Sticker (PNG, APNG, GIF, Lottie)", limit: "512 KiB", note: "320×320 canvas" },
 ];
@@ -123,7 +123,7 @@ const socialLimits = [
 const platformLimits = [
   {
     platform: "Discord attachment",
-    limit: "10 MiB default",
+    limit: "20 MB free",
     target: "8 MB",
     href: "https://discord.com/developers/docs/reference",
   },
@@ -158,7 +158,7 @@ const comparison = [
   { label: "Watermark on output", zip: "Never", other: "Common on free tiers" },
   { label: "Signup or email", zip: "Not required", other: "Often required" },
   { label: "File size limit", zip: "200 MB per GIF", other: "Typically 5–50 MB" },
-  { label: "Batch support", zip: "20 GIFs, one .zip", other: "Usually one at a time" },
+  { label: "Batch support", zip: "Manual: 20 GIFs, one .zip; Target: 10 at a time, per-file downloads", other: "Usually one at a time" },
   { label: "Where files are processed", zip: "Your browser", other: "Their server" },
   { label: "Exact target file size", zip: "Yes, iterative passes", other: "Rare" },
 ];
@@ -405,10 +405,10 @@ function Index() {
               GIF Compressor for Discord
             </h2>
             <p className="mt-5 text-lg leading-relaxed">
-              Discord's default attachment limit is 10 MiB for all users, higher only with Nitro or a
-              server's Boost Tier. GIFs fail to send because Discord won't re-encode them for you —
-              it accepts the file or rejects it. Compress the GIF to about 8 MB first and it posts
-              on the first try.
+              Discord's free attachment limit is 20 MB, higher with Nitro or server Boost — see
+              Discord's FAQ for paid tiers. GIFs fail to send because Discord won't re-encode them
+              for you — it accepts the file or rejects it. Compress the GIF to about 8 MB first and
+              it posts on the first try.
             </p>
             <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-card">
               <table className="w-full min-w-[560px] border-collapse text-left text-sm">
@@ -459,12 +459,21 @@ function Index() {
               >
                 sticker docs
               </a>
+              {", and its "}
+              <a
+                className="underline underline-offset-2 hover:text-foreground"
+                href="https://support.discord.com/hc/en-us/articles/25444343291031-File-Attachments-FAQ"
+                rel="noopener nofollow"
+                target="_blank"
+              >
+                File Attachments FAQ
+              </a>
               . Checked {LAST_UPDATED}.
             </p>
             <ul className="mt-6 space-y-3 text-muted-foreground">
               <li>
                 <strong className="text-foreground">Aim below the line, not at it.</strong> Target 8
-                MB rather than 10 MiB — Discord counts the whole request, so a caption and embed
+                MB rather than 20 MB — Discord counts the whole request, so a caption and embed
                 metadata ride along with your file.
               </li>
               <li>

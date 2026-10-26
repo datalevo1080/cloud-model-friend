@@ -1,5 +1,4 @@
 import { L } from "@/components/l";
-import { useEffect } from "react";
 
 import {
   ArrowRight,
@@ -99,9 +98,9 @@ const steps = [
   },
 ];
 
-const proof = [
+const proof: { value: string; label: string; href?: string }[] = [
   { value: "0", label: "Bytes uploaded" },
-  { value: "70%", label: "Typical size cut" },
+  { value: "37%", label: "Average cut in our 16-file test", href: "/research/gif-compression-test" },
   { value: "20", label: "GIFs per batch" },
   { value: "8", label: "Free tools" },
 ];
@@ -132,7 +131,7 @@ const faqs = [
   },
   {
     q: "How much smaller can a GIF get?",
-    a: "Screen recordings and flat-colour animations usually drop 40% to 70%. Photographic GIFs give back less, often 15% to 30%, because their frames share fewer repeated colours.",
+    a: "Results vary widely by file: our 16-file compression test averaged a 37% cut, with the best file at 69.4%. Treat any single percentage as a rough guide, not a promise for your file.",
   },
   {
     q: "Does it work on a phone?",
@@ -141,10 +140,6 @@ const faqs = [
 ];
 
 function Home() {
-  useEffect(() => {
-    console.log("Your GIF never made it into this console. That is the whole product.");
-  }, []);
-
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <SiteHeader />
@@ -203,7 +198,7 @@ function Home() {
                 See it happen, before you commit
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-hero-muted">
-                Drag the divider. Same GIF, two weights, and nothing left your device to make it
+                Watch it happen. Same GIF, two weights, and nothing left your device to make it
                 happen.
               </p>
             </Reveal>
@@ -250,7 +245,7 @@ function Home() {
                 {[0, 1].map((dup) => (
                   <div key={dup} className="flex shrink-0 gap-10 pr-10">
                     {[
-                      "Discord 10 MB attachments",
+                      "Discord 20 MB attachments",
                       "256 KB custom emoji",
                       "512 KB stickers",
                       "5 MB on X",
@@ -284,7 +279,16 @@ function Home() {
                 <p className="font-mono text-3xl font-bold tracking-tight text-primary sm:text-4xl">
                   {p.value}
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">{p.label}</p>
+                {p.href ? (
+                  <a
+                    href={p.href}
+                    className="mt-1 block text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    {p.label}
+                  </a>
+                ) : (
+                  <p className="mt-1 text-sm text-muted-foreground">{p.label}</p>
+                )}
               </Reveal>
             ))}
           </div>
@@ -358,7 +362,7 @@ function Home() {
               >
                 compressing a GIF for Discord
               </L>{" "}
-              with the 10 MB, emoji and sticker limits built in.
+              with the 20 MB, emoji and sticker limits built in.
             </p>
           </div>
         </section>

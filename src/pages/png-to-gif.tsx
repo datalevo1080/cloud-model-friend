@@ -41,7 +41,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "How to make a transparent GIF?",
-    a: "Start from a PNG that already has a transparent background. This tool keeps pixels above 50% alpha opaque and makes everything at or below 50% fully transparent, because GIF has no partial transparency. A 512x512 transparent sticker PNG of 5 KB came out as a 3 KB transparent GIF.",
+    a: "Start from a PNG that already has a transparent background. This tool keeps pixels above 50% alpha opaque and makes everything at or below 50% fully transparent, because GIF has no partial transparency. A transparent sticker PNG typically comes out as a smaller transparent GIF.",
   },
   {
     q: "Can I convert APNG to GIF?",
@@ -80,9 +80,12 @@ export const options = makeRouteOptions("/png-to-gif", {
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
       { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: `${SITE}/og-image.jpg` },
     ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [

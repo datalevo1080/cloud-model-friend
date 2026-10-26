@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { DEFAULT_LOCALE, useLocale } from "@/i18n";
+import { DEFAULT_LOCALE, isEnglishOnlyPath, useLocale } from "@/i18n";
 
 type LProps = {
   to: string;
@@ -14,10 +14,12 @@ type LProps = {
 /**
  * Locale-aware <Link>. Keeps internal links inside the current language version:
  * on /fr/* pages `to="/gif-cropper"` resolves to /fr/gif-cropper.
+ * English-only paths (blog, research) always resolve to the English URL,
+ * since no localized versions of those pages exist.
  */
 export function L({ to, ...rest }: LProps) {
   const locale = useLocale();
-  if (locale === DEFAULT_LOCALE) {
+  if (locale === DEFAULT_LOCALE || isEnglishOnlyPath(to)) {
     return <Link {...(rest as any)} to={to as any} />;
   }
   const target = to === "/" ? "/$lang" : `/$lang${to}`;

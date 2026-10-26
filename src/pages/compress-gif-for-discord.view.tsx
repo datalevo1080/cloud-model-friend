@@ -12,8 +12,8 @@ const LAST_UPDATED = "September 2026";
 
 const limits = [
   {
-    thing: "Attachment, default for all users",
-    limit: "10 MiB",
+    thing: "Attachment, free",
+    limit: "20 MB",
     target: "8 MB",
     href: "https://discord.com/developers/docs/reference",
   },
@@ -52,7 +52,7 @@ function DiscordGuide() {
           </nav>
 
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-balance sm:text-5xl">
-            Compress GIF for Discord — under 10MB, 256KB or 512KB
+            Compress GIF for Discord — under 20MB, 256KB or 512KB
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">
             By Shafiullah Tareen · Last updated: {LAST_UPDATED}
@@ -71,7 +71,7 @@ function DiscordGuide() {
           <h2 className="mt-12 text-2xl font-bold tracking-tight">How it works</h2>
           <ol className="mt-4 space-y-3 text-muted-foreground">
             <li>
-              <strong className="text-foreground">1. Choose a target.</strong> Under 10 MB for a
+              <strong className="text-foreground">1. Choose a target.</strong> Under 20 MB for a
               regular upload, 256 KB for an emoji, 512 KB for a sticker — or set your own custom
               size.
             </li>
@@ -123,7 +123,7 @@ function DiscordGuide() {
             </table>
           </div>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            Posting to a channel? Use Under 10 MB. Making a custom emoji? Use Under 256 KB — this
+            Posting to a channel? Use Under 20 MB. Making a custom emoji? Use Under 256 KB — this
             Discord emoji compressor preset also caps dimensions at 128×128 for you. Building a
             sticker? Use Under 512 KB, which targets 320×320.
           </p>

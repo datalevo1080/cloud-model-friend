@@ -11,7 +11,6 @@ const TITLE = "GIF Cropper — Crop GIFs Online Free (No Watermark)";
 const DESCRIPTION =
   "Free online GIF cropper. Crop animated GIFs in your browser — keep the animation, lose the borders. Square, 16:9 and PFP presets. No signup, no watermark.";
 const LAST_UPDATED = "August 14, 2026";
-const DATE_MODIFIED = "2026-08-12";
 
 const HOW_TO_STEPS = [
   {
@@ -66,9 +65,12 @@ export const options = makeRouteOptions("/gif-cropper", {
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
       { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
       { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: `${SITE}/og-image.jpg` },
     ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [
@@ -116,19 +118,6 @@ export const options = makeRouteOptions("/gif-cropper", {
             name: f.q,
             acceptedAnswer: { "@type": "Answer", text: f.a },
           })),
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Article",
-          headline: "GIF Cropper — Crop GIFs Without Losing the Animation",
-          description: DESCRIPTION,
-          author: { "@type": "Person", name: "Shafiullah Tareen" },
-          publisher: { "@type": "Organization", name: "ZipGIF", url: `${SITE}/` },
-          dateModified: DATE_MODIFIED,
-          mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE}${PATH}` },
         }),
       },
     ],
