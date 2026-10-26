@@ -1,7 +1,7 @@
 import { useT } from "@/i18n";
 import { LegalPage } from "@/components/legal-page";
 
-const SECTIONS = ["files", "accounts", "cookies", "logs", "children", "changes"] as const;
+const SECTIONS = ["files", "accounts", "cookies", "messages", "logs", "children", "contact", "changes"] as const;
 
 function Privacy() {
   const t = useT();
