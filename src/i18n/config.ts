@@ -81,6 +81,13 @@ export function localePath(locale: Locale, path: string): string {
   return clean === "/" ? `/${locale}` : `/${locale}${clean}`;
 }
 
+/** Blog and research pages are English-only by design: there are no
+ * localized /fr/blog or /fr/research URLs, so any locale-aware link to
+ * them must fall back to the English URL instead of prefixing. */
+export function isEnglishOnlyPath(path: string): boolean {
+  return path === "/blog" || path.startsWith("/blog/") || path === "/research" || path.startsWith("/research/");
+}
+
 /** Strip a locale prefix from a pathname, returning the English path. */
 export function stripLocale(pathname: string): { locale: Locale; path: string } {
   const match = /^\/([a-z]{2})(?=\/|$)/.exec(pathname);

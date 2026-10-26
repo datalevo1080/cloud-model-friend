@@ -1,8 +1,9 @@
-import { LOCALES, LOCALE_NAMES, localePath, useBasePath, useLocale, useT } from "@/i18n";
+import { LOCALES, LOCALE_NAMES, isEnglishOnlyPath, localePath, useBasePath, useLocale, useT } from "@/i18n";
 
 /**
  * Footer language switcher: real crawlable <a> links to the SAME page in each
- * language. No IP or Accept-Language redirects — ever.
+ * language. No IP or Accept-Language redirects — ever. English-only pages
+ * (blog, research) link back to the English URL in every language.
  */
 export function LanguageSwitcher() {
   const locale = useLocale();
@@ -14,7 +15,7 @@ export function LanguageSwitcher() {
       <h2 className="text-sm font-semibold text-foreground">{t("footer.language")}</h2>
       <nav aria-label={t("footer.languageLabel")} className="flex flex-wrap gap-x-4 gap-y-2">
         {LOCALES.map((l) => {
-          const href = localePath(l, basePath);
+          const href = isEnglishOnlyPath(basePath) ? basePath : localePath(l, basePath);
           const current = l === locale;
           return (
             <a

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, Globe } from "lucide-react";
 
-import { HREFLANG, LOCALES, LOCALE_NAMES, useBasePath, useLocale, useT } from "@/i18n";
+import { HREFLANG, LOCALES, LOCALE_NAMES, isEnglishOnlyPath, useBasePath, useLocale, useT } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +67,7 @@ export function LanguageToggle({ className }: { className?: string }) {
               return (
                 <li key={l}>
                   <a
-                    href={localePath(l, basePath)}
+                    href={isEnglishOnlyPath(basePath) ? basePath : localePath(l, basePath)}
                     hrefLang={HREFLANG[l]}
                     lang={HREFLANG[l]}
                     aria-current={current ? "true" : undefined}
