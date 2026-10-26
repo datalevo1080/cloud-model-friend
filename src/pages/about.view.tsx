@@ -2,7 +2,6 @@ import { useT } from "@/i18n";
 import { Mail } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import authorImage from "@/assets/shafiullah-tareen.png.asset.json";
 
 const STAT_KEYS = ["about.stat1", "about.stat2", "about.stat3"] as const;
 
@@ -83,7 +82,7 @@ function About() {
             <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-3">
               <div className="md:col-span-1">
                 <img
-                  src={authorImage.url}
+                  src="/author/shafiullah-tareen.jpg"
                   alt={t("about.author.imgAlt")}
                   width={480}
                   height={480}
