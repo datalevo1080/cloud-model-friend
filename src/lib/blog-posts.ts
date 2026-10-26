@@ -59,6 +59,20 @@ export const BLOG_POSTS: BlogPost[] = [
     alt: "Why is my GIF so big: a large GIF file shrinking into a smaller optimized GIF with fewer colours and pixels",
   },
   {
+    path: "/blog/how-to-crop-a-gif",
+    title: "How to Crop a GIF",
+    description:
+      "Learn how to crop a GIF without losing the animation: crop vs resize vs trim, aspect ratios, what happens to frames and file size, and the mistakes to avoid.",
+    excerpt:
+      "Cropping cuts the same rectangle out of every frame, so the picture shrinks and the animation stays. Which job it is, which preset fits, and why bytes fall more slowly than pixels.",
+    published: "2026-10-26",
+    date: "October 26, 2026",
+    read: "10 min read",
+    tag: "GIF cropping",
+    image: "/og-how-to-crop-a-gif.svg",
+    alt: "How to crop a GIF without losing the motion: crop vs resize vs trim, framing, and file size explained by ZipGIF",
+  },
+  {
     path: "/blog/how-to-make-a-gif-into-a-sticker",
     title: "How to Turn a GIF Into a Sticker: Static vs. Animated",
     description:
