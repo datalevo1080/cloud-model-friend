@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="t d"><title id="t">How to make a GIF from a video</title><desc id="d">A video clip on the left becomes a looping GIF of frames on the right, under the ZipGIF name.</desc>
+<rect width="1200" height="630" fill="#1b1b2f"/>
+<g font-family="sans-serif">
+<rect x="90" y="180" width="300" height="200" rx="20" fill="#5b4cf0"/><polygon points="200,240 200,320 270,280" fill="#fff"/><text x="240" y="410" text-anchor="middle" font-size="22" fill="#e6e2ff">VIDEO</text>
+<text x="430" y="295" font-size="44" fill="#c9c5e8">→</text>
+<rect x="500" y="180" width="150" height="200" rx="16" fill="#7d70f5"/><circle cx="575" cy="280" r="42" fill="#fff" opacity="0.9"/>
+<rect x="670" y="180" width="150" height="200" rx="16" fill="#a39af8"/><circle cx="745" cy="280" r="42" fill="#fff" opacity="0.7"/>
+<rect x="840" y="180" width="150" height="200" rx="16" fill="#c9c5e8"/><circle cx="915" cy="280" r="42" fill="#fff" opacity="0.55"/>
+<text x="1030" y="295" font-size="44" fill="#c9c5e8">↻</text>
+<text x="90" y="470" font-size="56" font-weight="700" fill="#ffffff">How to Make a GIF From a Video</text>
+<text x="90" y="530" font-size="30" fill="#c9c5e8">Direct converters and the private frames route — explained by ZipGIF</text>
+</g></svg>

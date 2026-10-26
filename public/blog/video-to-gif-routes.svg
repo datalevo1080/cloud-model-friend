@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="t d"><title id="t">Two routes from video to GIF</title><desc id="d">The direct route converts the video file in one step with an online converter. The frames route extracts still images first, then builds the GIF from those images in the browser.</desc>
+<rect width="960" height="520" rx="24" fill="#f6f6fb"/>
+<text x="40" y="52" font-family="sans-serif" font-size="24" font-weight="700" fill="#1b1b2f">Start from a video file</text>
+<g font-family="sans-serif">
+<g><rect x="40" y="80" width="220" height="96" rx="12" fill="#5b4cf0"/><text x="150" y="122" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">Video file</text><text x="150" y="150" text-anchor="middle" font-size="16" fill="#e6e2ff">MP4, MOV, WebM</text></g>
+<text x="292" y="138" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="324" y="80" width="300" height="96" rx="12" fill="#fff" stroke="#d8d5ef" stroke-width="2"/><text x="474" y="122" text-anchor="middle" font-size="18" font-weight="700" fill="#1b1b2f">Route 1: direct converter</text><text x="474" y="150" text-anchor="middle" font-size="16" fill="#4a4a63">Upload, trim, download a GIF</text></g>
+<text x="656" y="138" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="688" y="80" width="232" height="96" rx="12" fill="#5b4cf0"/><text x="804" y="122" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">GIF, one step</text><text x="804" y="150" text-anchor="middle" font-size="16" fill="#e6e2ff">File is uploaded</text></g>
+<g><rect x="40" y="220" width="220" height="96" rx="12" fill="#5b4cf0"/><text x="150" y="262" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">Video file</text><text x="150" y="290" text-anchor="middle" font-size="16" fill="#e6e2ff">MP4, MOV, WebM</text></g>
+<text x="292" y="278" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="324" y="220" width="300" height="96" rx="12" fill="#fff" stroke="#d8d5ef" stroke-width="2"/><text x="474" y="262" text-anchor="middle" font-size="18" font-weight="700" fill="#1b1b2f">Extract frames first</text><text x="474" y="290" text-anchor="middle" font-size="16" fill="#4a4a63">PNG or JPG image sequence</text></g>
+<text x="656" y="278" text-anchor="middle" font-size="26" fill="#4a4a63">→</text>
+<g><rect x="688" y="220" width="232" height="96" rx="12" fill="#fff" stroke="#d8d5ef" stroke-width="2"/><text x="804" y="262" text-anchor="middle" font-size="18" font-weight="700" fill="#1b1b2f">ZipGIF PNG to GIF</text><text x="804" y="290" text-anchor="middle" font-size="16" fill="#4a4a63">Built in your browser</text></g>
+<text x="40" y="380" font-size="19" fill="#4a4a63">Route 1 is faster. Route 2 keeps the file on your device and lets you control every frame.</text>
+<text x="40" y="420" font-size="19" fill="#4a4a63">ZipGIF has no video converter: route 2 is how ZipGIF fits into the job.</text>
+</g></svg>
