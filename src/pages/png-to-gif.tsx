@@ -79,11 +79,14 @@ export const options = makeRouteOptions("/png-to-gif", {
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE}${PATH}` },
-\1      { property: "og:image", content: `${SITE}/og-image.jpg` },
+      { property: "og:site_name", content: "ZipGIF" },
+      { property: "og:image", content: `${SITE}/og-image.jpg` },
       { property: "og:image:alt", content: "ZipGIF — free online GIF tools" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: TITLE },
-\1      { name: \"twitter:image\", content: `${SITE}/og-image.jpg` },\n    ],
+      { name: "twitter:description", content: DESCRIPTION },
+      { name: "twitter:image", content: `${SITE}/og-image.jpg` },
+    ],
     links: [{ rel: "canonical", href: `${SITE}${PATH}` }],
     scripts: [
       {
