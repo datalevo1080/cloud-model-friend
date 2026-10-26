@@ -52,6 +52,7 @@ export default defineConfig({
       { path: "/blog/how-long-can-a-gif-be", prerender: { enabled: true } },
       { path: "/blog/why-is-my-gif-so-big", prerender: { enabled: true } },
       { path: "/blog/how-many-fps-are-gifs", prerender: { enabled: true } },
+      { path: "/blog/how-to-resize-a-gif", prerender: { enabled: true } },
       { path: "/about", prerender: { enabled: true } },
       { path: "/contact", prerender: { enabled: true } },
       { path: "/privacy", prerender: { enabled: true } },

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="t d"><title id="t">Halving both sides quarters the pixel area</title><desc id="d">An 800 by 600 GIF has 480,000 pixels per frame; at 400 by 300 it has 120,000, one quarter of the area.</desc>
+<rect width="1200" height="520" fill="#f6f6fb"/>
+<g font-family="sans-serif">
+<rect x="90" y="90" width="440" height="330" rx="12" fill="#1b1b2f"/>
+<text x="310" y="235" text-anchor="middle" font-size="34" font-weight="700" fill="#ffffff">800 × 600</text>
+<text x="310" y="285" text-anchor="middle" font-size="24" fill="#c9c6e8">480,000 pixels per frame</text>
+<text x="580" y="270" font-size="52" font-weight="700" fill="#5b4cf0">→</text>
+<rect x="660" y="180" width="220" height="165" rx="12" fill="#5b4cf0"/>
+<text x="770" y="252" text-anchor="middle" font-size="30" font-weight="700" fill="#ffffff">400 × 300</text>
+<text x="770" y="292" text-anchor="middle" font-size="22" fill="#e3e0f7">120,000 pixels</text>
+<text x="770" y="420" text-anchor="middle" font-size="26" font-weight="700" fill="#1b1b2f">50% each side = 25% of the area</text>
+</g></svg>
