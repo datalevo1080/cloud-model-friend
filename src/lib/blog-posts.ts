@@ -114,6 +114,20 @@ export const BLOG_POSTS: BlogPost[] = [
     image: "/og-how-to-make-a-gif-size-smaller.svg",
     alt: "How to make a GIF smaller without ruining quality: a large GIF file shrinking into a smaller one by trimming, resizing, dropping frames and compressing",
   },
+  {
+    path: "/blog/best-free-gif-maker",
+    title: "What Is the Best Free GIF Maker?",
+    description:
+      "Compare free GIF makers on price, watermarks, signups, privacy, video import and editing — and find which one fits what you actually want to make.",
+    excerpt:
+      "No single maker wins everything: GIPHY and EZGIF handle video, Canva and Imgflip handle text and design, ZipGIF keeps your files on your device. Pick by your starting point.",
+    published: "2026-10-26",
+    date: "October 26, 2026",
+    read: "10 min read",
+    tag: "GIF makers",
+    image: "/og-best-free-gif-maker.svg",
+    alt: "What is the best free GIF maker: comparing GIPHY, EZGIF, Canva, Imgflip and ZipGIF by price, watermark, privacy and features",
+  },
 ];
 
 export function getPost(path: string): BlogPost {

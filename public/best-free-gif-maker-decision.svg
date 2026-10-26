@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="t d"><title id="t">Pick a GIF maker by your starting point</title><desc id="d">Decision guide: starting from a video, from pictures, from an existing GIF, or from a meme idea, and which free maker fits each.</desc>
+<rect width="1200" height="520" fill="#f6f6fb"/>
+<text x="600" y="60" text-anchor="middle" font-family="sans-serif" font-size="34" font-weight="700" fill="#1b1b2f">Pick by your starting point</text>
+<g font-family="sans-serif" font-size="24" font-weight="700">
+<rect x="60" y="110" width="250" height="150" rx="16" fill="#ffffff" stroke="#dddde8" stroke-width="2"/>
+<text x="185" y="165" text-anchor="middle" fill="#1b1b2f">Starting from</text>
+<text x="185" y="200" text-anchor="middle" fill="#1b1b2f">a video?</text>
+<text x="185" y="240" text-anchor="middle" fill="#5b4cf0" font-size="22">EZGIF · GIPHY</text>
+<rect x="330" y="110" width="250" height="150" rx="16" fill="#ffffff" stroke="#dddde8" stroke-width="2"/>
+<text x="455" y="165" text-anchor="middle" fill="#1b1b2f">Starting from</text>
+<text x="455" y="200" text-anchor="middle" fill="#1b1b2f">pictures?</text>
+<text x="455" y="240" text-anchor="middle" fill="#5b4cf0" font-size="22">EZGIF · ZipGIF</text>
+<rect x="600" y="110" width="250" height="150" rx="16" fill="#ffffff" stroke="#dddde8" stroke-width="2"/>
+<text x="725" y="165" text-anchor="middle" fill="#1b1b2f">Starting from</text>
+<text x="725" y="200" text-anchor="middle" fill="#1b1b2f">an existing GIF?</text>
+<text x="725" y="240" text-anchor="middle" fill="#5b4cf0" font-size="22">ZipGIF · EZGIF</text>
+<rect x="870" y="110" width="250" height="150" rx="16" fill="#ffffff" stroke="#dddde8" stroke-width="2"/>
+<text x="995" y="165" text-anchor="middle" fill="#1b1b2f">Starting from</text>
+<text x="995" y="200" text-anchor="middle" fill="#1b1b2f">a meme idea?</text>
+<text x="995" y="240" text-anchor="middle" fill="#5b4cf0" font-size="22">Imgflip · Canva</text>
+</g>
+<g font-family="sans-serif" font-size="24" fill="#4a4a63">
+<text x="600" y="330" text-anchor="middle">Then ask two more questions before you commit:</text>
+<text x="600" y="375" text-anchor="middle">does the free export carry a watermark, and does your file leave your device?</text>
+<text x="600" y="440" text-anchor="middle" font-weight="700" fill="#1b1b2f">The honest answer: no single maker wins all four starting points.</text>
+</g></svg>

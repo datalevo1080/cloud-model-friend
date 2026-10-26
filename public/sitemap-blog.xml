@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://zipgif.com/blog</loc>
-    <lastmod>2026-10-24</lastmod>
+    <lastmod>2026-10-26</lastmod>
   </url>
   <url>
     <loc>https://zipgif.com/blog/how-many-fps-are-gifs</loc>
@@ -31,5 +31,9 @@
   <url>
     <loc>https://zipgif.com/blog/how-to-make-a-gif-size-smaller</loc>
     <lastmod>2026-10-24</lastmod>
+  </url>
+  <url>
+    <loc>https://zipgif.com/blog/best-free-gif-maker</loc>
+    <lastmod>2026-10-26</lastmod>
   </url>
 </urlset>
