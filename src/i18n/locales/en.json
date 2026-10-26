@@ -154,7 +154,7 @@
   "privacy.logs.h2": "Server logs",
   "privacy.logs.p": "Serving the page itself involves standard web hosting. Our host may record ordinary request metadata such as IP address, timestamp, and user agent for security and reliability purposes. That metadata concerns the delivery of the web page — it never contains your GIF or anything derived from it.",
   "privacy.children.h2": "Children and third parties",
-  "privacy.children.p": "Because ZipGIF collects no personal information from anyone, it collects none from children. We share nothing with third parties, because we hold nothing to share.",
+  "privacy.children.p": "ZipGIF is a general tool website and is not directed at children. We do not knowingly collect personal information from children. The only personal information the site collects is what a visitor voluntarily types into the contact form (name, email address, and message), which is used only to reply. If you believe a child has submitted personal information through the contact form, please let us know through the Contact page and we will delete it. Your GIF files are never shared with anyone: they are processed in your browser and never uploaded. Separately, loading the website itself involves third parties: our hosting serves the pages, Google Fonts and Google Tag Manager receive ordinary request data when pages load, and contact messages pass through our hosting provider's email service to reach us. ZipGIF does not sell personal information.",
   "privacy.contact.h2": "Questions about this policy",
   "privacy.contact.p": "Questions about this policy can be sent through the Contact page.",
   "privacy.changes.h2": "Changes",
