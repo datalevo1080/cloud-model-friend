@@ -58,6 +58,7 @@ export const PAGE_PATHS = [
   "/blog",
   "/blog/how-to-make-a-gif-into-a-sticker",
   "/blog/how-long-can-a-gif-be",
+  "/blog/best-free-gif-maker",
   "/blog/why-is-my-gif-so-big",
   "/blog/how-many-fps-are-gifs",
   "/about",
@@ -67,7 +68,6 @@ export const PAGE_PATHS = [
   "/blog/how-to-slow-down-a-gif",
   "/blog/how-to-animate-a-png",
   "/blog/how-to-make-a-gif-size-smaller",
-  "/blog/best-free-gif-maker",
 ] as const;
 
 /** Prefix a root-relative English path with a locale. English is unchanged. */

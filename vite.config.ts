@@ -50,6 +50,7 @@ export default defineConfig({
       { path: "/blog", prerender: { enabled: true } },
       { path: "/blog/how-to-make-a-gif-into-a-sticker", prerender: { enabled: true } },
       { path: "/blog/how-long-can-a-gif-be", prerender: { enabled: true } },
+      { path: "/blog/best-free-gif-maker", prerender: { enabled: true } },
       { path: "/blog/why-is-my-gif-so-big", prerender: { enabled: true } },
       { path: "/blog/how-many-fps-are-gifs", prerender: { enabled: true } },
       { path: "/about", prerender: { enabled: true } },
@@ -129,7 +130,6 @@ export default defineConfig({
       { path: "/blog/how-to-slow-down-a-gif", prerender: { enabled: true } },
       { path: "/blog/how-to-animate-a-png", prerender: { enabled: true } },
       { path: "/blog/how-to-make-a-gif-size-smaller", prerender: { enabled: true } },
-      { path: "/blog/best-free-gif-maker", prerender: { enabled: true } },
     ],
   },
 });
