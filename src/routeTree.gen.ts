@@ -38,8 +38,17 @@ import { Route as LangPngToGifRouteImport } from './routes/$lang/png-to-gif'
 import { Route as LangPrivacyRouteImport } from './routes/$lang/privacy'
 import { Route as LangTermsRouteImport } from './routes/$lang/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogBestFreeGifMakerRouteImport } from './routes/blog.best-free-gif-maker'
 import { Route as BlogHowLongCanAGifBeRouteImport } from './routes/blog.how-long-can-a-gif-be'
 import { Route as BlogHowManyFpsAreGifsRouteImport } from './routes/blog.how-many-fps-are-gifs'
+import { Route as BlogHowToAnimateAPngRouteImport } from './routes/blog.how-to-animate-a-png'
+import { Route as BlogHowToCropAGifRouteImport } from './routes/blog.how-to-crop-a-gif'
+import { Route as BlogHowToMakeAGifFromImagesRouteImport } from './routes/blog.how-to-make-a-gif-from-images'
+import { Route as BlogHowToMakeAGifFromVideoRouteImport } from './routes/blog.how-to-make-a-gif-from-video'
+import { Route as BlogHowToMakeAGifIntoAStickerRouteImport } from './routes/blog.how-to-make-a-gif-into-a-sticker'
+import { Route as BlogHowToMakeAGifSizeSmallerRouteImport } from './routes/blog.how-to-make-a-gif-size-smaller'
+import { Route as BlogHowToResizeAGifRouteImport } from './routes/blog.how-to-resize-a-gif'
+import { Route as BlogHowToSlowDownAGifRouteImport } from './routes/blog.how-to-slow-down-a-gif'
 import { Route as BlogWhyIsMyGifSoBigRouteImport } from './routes/blog.why-is-my-gif-so-big'
 import { Route as ResearchGifCompressionTestRouteImport } from './routes/research.gif-compression-test'
 
@@ -189,6 +198,11 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogBestFreeGifMakerRoute = BlogBestFreeGifMakerRouteImport.update({
+  id: '/blog/best-free-gif-maker',
+  path: '/blog/best-free-gif-maker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogHowLongCanAGifBeRoute = BlogHowLongCanAGifBeRouteImport.update({
   id: '/blog/how-long-can-a-gif-be',
   path: '/blog/how-long-can-a-gif-be',
@@ -197,6 +211,50 @@ const BlogHowLongCanAGifBeRoute = BlogHowLongCanAGifBeRouteImport.update({
 const BlogHowManyFpsAreGifsRoute = BlogHowManyFpsAreGifsRouteImport.update({
   id: '/blog/how-many-fps-are-gifs',
   path: '/blog/how-many-fps-are-gifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogHowToAnimateAPngRoute = BlogHowToAnimateAPngRouteImport.update({
+  id: '/blog/how-to-animate-a-png',
+  path: '/blog/how-to-animate-a-png',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogHowToCropAGifRoute = BlogHowToCropAGifRouteImport.update({
+  id: '/blog/how-to-crop-a-gif',
+  path: '/blog/how-to-crop-a-gif',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogHowToMakeAGifFromImagesRoute =
+  BlogHowToMakeAGifFromImagesRouteImport.update({
+    id: '/blog/how-to-make-a-gif-from-images',
+    path: '/blog/how-to-make-a-gif-from-images',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogHowToMakeAGifFromVideoRoute =
+  BlogHowToMakeAGifFromVideoRouteImport.update({
+    id: '/blog/how-to-make-a-gif-from-video',
+    path: '/blog/how-to-make-a-gif-from-video',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogHowToMakeAGifIntoAStickerRoute =
+  BlogHowToMakeAGifIntoAStickerRouteImport.update({
+    id: '/blog/how-to-make-a-gif-into-a-sticker',
+    path: '/blog/how-to-make-a-gif-into-a-sticker',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogHowToMakeAGifSizeSmallerRoute =
+  BlogHowToMakeAGifSizeSmallerRouteImport.update({
+    id: '/blog/how-to-make-a-gif-size-smaller',
+    path: '/blog/how-to-make-a-gif-size-smaller',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlogHowToResizeAGifRoute = BlogHowToResizeAGifRouteImport.update({
+  id: '/blog/how-to-resize-a-gif',
+  path: '/blog/how-to-resize-a-gif',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogHowToSlowDownAGifRoute = BlogHowToSlowDownAGifRouteImport.update({
+  id: '/blog/how-to-slow-down-a-gif',
+  path: '/blog/how-to-slow-down-a-gif',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogWhyIsMyGifSoBigRoute = BlogWhyIsMyGifSoBigRouteImport.update({
@@ -239,8 +297,17 @@ export interface FileRoutesByFullPath {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/blog/best-free-gif-maker': typeof BlogBestFreeGifMakerRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
   '/blog/how-many-fps-are-gifs': typeof BlogHowManyFpsAreGifsRoute
+  '/blog/how-to-animate-a-png': typeof BlogHowToAnimateAPngRoute
+  '/blog/how-to-crop-a-gif': typeof BlogHowToCropAGifRoute
+  '/blog/how-to-make-a-gif-from-images': typeof BlogHowToMakeAGifFromImagesRoute
+  '/blog/how-to-make-a-gif-from-video': typeof BlogHowToMakeAGifFromVideoRoute
+  '/blog/how-to-make-a-gif-into-a-sticker': typeof BlogHowToMakeAGifIntoAStickerRoute
+  '/blog/how-to-make-a-gif-size-smaller': typeof BlogHowToMakeAGifSizeSmallerRoute
+  '/blog/how-to-resize-a-gif': typeof BlogHowToResizeAGifRoute
+  '/blog/how-to-slow-down-a-gif': typeof BlogHowToSlowDownAGifRoute
   '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
@@ -274,8 +341,17 @@ export interface FileRoutesByTo {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/blog/best-free-gif-maker': typeof BlogBestFreeGifMakerRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
   '/blog/how-many-fps-are-gifs': typeof BlogHowManyFpsAreGifsRoute
+  '/blog/how-to-animate-a-png': typeof BlogHowToAnimateAPngRoute
+  '/blog/how-to-crop-a-gif': typeof BlogHowToCropAGifRoute
+  '/blog/how-to-make-a-gif-from-images': typeof BlogHowToMakeAGifFromImagesRoute
+  '/blog/how-to-make-a-gif-from-video': typeof BlogHowToMakeAGifFromVideoRoute
+  '/blog/how-to-make-a-gif-into-a-sticker': typeof BlogHowToMakeAGifIntoAStickerRoute
+  '/blog/how-to-make-a-gif-size-smaller': typeof BlogHowToMakeAGifSizeSmallerRoute
+  '/blog/how-to-resize-a-gif': typeof BlogHowToResizeAGifRoute
+  '/blog/how-to-slow-down-a-gif': typeof BlogHowToSlowDownAGifRoute
   '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang': typeof LangIndexRoute
@@ -310,8 +386,17 @@ export interface FileRoutesById {
   '/$lang/png-to-gif': typeof LangPngToGifRoute
   '/$lang/privacy': typeof LangPrivacyRoute
   '/$lang/terms': typeof LangTermsRoute
+  '/blog/best-free-gif-maker': typeof BlogBestFreeGifMakerRoute
   '/blog/how-long-can-a-gif-be': typeof BlogHowLongCanAGifBeRoute
   '/blog/how-many-fps-are-gifs': typeof BlogHowManyFpsAreGifsRoute
+  '/blog/how-to-animate-a-png': typeof BlogHowToAnimateAPngRoute
+  '/blog/how-to-crop-a-gif': typeof BlogHowToCropAGifRoute
+  '/blog/how-to-make-a-gif-from-images': typeof BlogHowToMakeAGifFromImagesRoute
+  '/blog/how-to-make-a-gif-from-video': typeof BlogHowToMakeAGifFromVideoRoute
+  '/blog/how-to-make-a-gif-into-a-sticker': typeof BlogHowToMakeAGifIntoAStickerRoute
+  '/blog/how-to-make-a-gif-size-smaller': typeof BlogHowToMakeAGifSizeSmallerRoute
+  '/blog/how-to-resize-a-gif': typeof BlogHowToResizeAGifRoute
+  '/blog/how-to-slow-down-a-gif': typeof BlogHowToSlowDownAGifRoute
   '/blog/why-is-my-gif-so-big': typeof BlogWhyIsMyGifSoBigRoute
   '/research/gif-compression-test': typeof ResearchGifCompressionTestRoute
   '/$lang/': typeof LangIndexRoute
@@ -347,8 +432,17 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/blog/best-free-gif-maker'
     | '/blog/how-long-can-a-gif-be'
     | '/blog/how-many-fps-are-gifs'
+    | '/blog/how-to-animate-a-png'
+    | '/blog/how-to-crop-a-gif'
+    | '/blog/how-to-make-a-gif-from-images'
+    | '/blog/how-to-make-a-gif-from-video'
+    | '/blog/how-to-make-a-gif-into-a-sticker'
+    | '/blog/how-to-make-a-gif-size-smaller'
+    | '/blog/how-to-resize-a-gif'
+    | '/blog/how-to-slow-down-a-gif'
     | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang/'
@@ -382,8 +476,17 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/blog/best-free-gif-maker'
     | '/blog/how-long-can-a-gif-be'
     | '/blog/how-many-fps-are-gifs'
+    | '/blog/how-to-animate-a-png'
+    | '/blog/how-to-crop-a-gif'
+    | '/blog/how-to-make-a-gif-from-images'
+    | '/blog/how-to-make-a-gif-from-video'
+    | '/blog/how-to-make-a-gif-into-a-sticker'
+    | '/blog/how-to-make-a-gif-size-smaller'
+    | '/blog/how-to-resize-a-gif'
+    | '/blog/how-to-slow-down-a-gif'
     | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang'
@@ -417,8 +520,17 @@ export interface FileRouteTypes {
     | '/$lang/png-to-gif'
     | '/$lang/privacy'
     | '/$lang/terms'
+    | '/blog/best-free-gif-maker'
     | '/blog/how-long-can-a-gif-be'
     | '/blog/how-many-fps-are-gifs'
+    | '/blog/how-to-animate-a-png'
+    | '/blog/how-to-crop-a-gif'
+    | '/blog/how-to-make-a-gif-from-images'
+    | '/blog/how-to-make-a-gif-from-video'
+    | '/blog/how-to-make-a-gif-into-a-sticker'
+    | '/blog/how-to-make-a-gif-size-smaller'
+    | '/blog/how-to-resize-a-gif'
+    | '/blog/how-to-slow-down-a-gif'
     | '/blog/why-is-my-gif-so-big'
     | '/research/gif-compression-test'
     | '/$lang/'
@@ -453,8 +565,17 @@ export interface RootRouteChildren {
   LangPngToGifRoute: typeof LangPngToGifRoute
   LangPrivacyRoute: typeof LangPrivacyRoute
   LangTermsRoute: typeof LangTermsRoute
+  BlogBestFreeGifMakerRoute: typeof BlogBestFreeGifMakerRoute
   BlogHowLongCanAGifBeRoute: typeof BlogHowLongCanAGifBeRoute
   BlogHowManyFpsAreGifsRoute: typeof BlogHowManyFpsAreGifsRoute
+  BlogHowToAnimateAPngRoute: typeof BlogHowToAnimateAPngRoute
+  BlogHowToCropAGifRoute: typeof BlogHowToCropAGifRoute
+  BlogHowToMakeAGifFromImagesRoute: typeof BlogHowToMakeAGifFromImagesRoute
+  BlogHowToMakeAGifFromVideoRoute: typeof BlogHowToMakeAGifFromVideoRoute
+  BlogHowToMakeAGifIntoAStickerRoute: typeof BlogHowToMakeAGifIntoAStickerRoute
+  BlogHowToMakeAGifSizeSmallerRoute: typeof BlogHowToMakeAGifSizeSmallerRoute
+  BlogHowToResizeAGifRoute: typeof BlogHowToResizeAGifRoute
+  BlogHowToSlowDownAGifRoute: typeof BlogHowToSlowDownAGifRoute
   BlogWhyIsMyGifSoBigRoute: typeof BlogWhyIsMyGifSoBigRoute
   ResearchGifCompressionTestRoute: typeof ResearchGifCompressionTestRoute
   LangIndexRoute: typeof LangIndexRoute
@@ -666,6 +787,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/best-free-gif-maker': {
+      id: '/blog/best-free-gif-maker'
+      path: '/blog/best-free-gif-maker'
+      fullPath: '/blog/best-free-gif-maker'
+      preLoaderRoute: typeof BlogBestFreeGifMakerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/how-long-can-a-gif-be': {
       id: '/blog/how-long-can-a-gif-be'
       path: '/blog/how-long-can-a-gif-be'
@@ -678,6 +806,62 @@ declare module '@tanstack/react-router' {
       path: '/blog/how-many-fps-are-gifs'
       fullPath: '/blog/how-many-fps-are-gifs'
       preLoaderRoute: typeof BlogHowManyFpsAreGifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-animate-a-png': {
+      id: '/blog/how-to-animate-a-png'
+      path: '/blog/how-to-animate-a-png'
+      fullPath: '/blog/how-to-animate-a-png'
+      preLoaderRoute: typeof BlogHowToAnimateAPngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-crop-a-gif': {
+      id: '/blog/how-to-crop-a-gif'
+      path: '/blog/how-to-crop-a-gif'
+      fullPath: '/blog/how-to-crop-a-gif'
+      preLoaderRoute: typeof BlogHowToCropAGifRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-make-a-gif-from-images': {
+      id: '/blog/how-to-make-a-gif-from-images'
+      path: '/blog/how-to-make-a-gif-from-images'
+      fullPath: '/blog/how-to-make-a-gif-from-images'
+      preLoaderRoute: typeof BlogHowToMakeAGifFromImagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-make-a-gif-from-video': {
+      id: '/blog/how-to-make-a-gif-from-video'
+      path: '/blog/how-to-make-a-gif-from-video'
+      fullPath: '/blog/how-to-make-a-gif-from-video'
+      preLoaderRoute: typeof BlogHowToMakeAGifFromVideoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-make-a-gif-into-a-sticker': {
+      id: '/blog/how-to-make-a-gif-into-a-sticker'
+      path: '/blog/how-to-make-a-gif-into-a-sticker'
+      fullPath: '/blog/how-to-make-a-gif-into-a-sticker'
+      preLoaderRoute: typeof BlogHowToMakeAGifIntoAStickerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-make-a-gif-size-smaller': {
+      id: '/blog/how-to-make-a-gif-size-smaller'
+      path: '/blog/how-to-make-a-gif-size-smaller'
+      fullPath: '/blog/how-to-make-a-gif-size-smaller'
+      preLoaderRoute: typeof BlogHowToMakeAGifSizeSmallerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-resize-a-gif': {
+      id: '/blog/how-to-resize-a-gif'
+      path: '/blog/how-to-resize-a-gif'
+      fullPath: '/blog/how-to-resize-a-gif'
+      preLoaderRoute: typeof BlogHowToResizeAGifRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/how-to-slow-down-a-gif': {
+      id: '/blog/how-to-slow-down-a-gif'
+      path: '/blog/how-to-slow-down-a-gif'
+      fullPath: '/blog/how-to-slow-down-a-gif'
+      preLoaderRoute: typeof BlogHowToSlowDownAGifRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/why-is-my-gif-so-big': {
@@ -725,8 +909,17 @@ const rootRouteChildren: RootRouteChildren = {
   LangPngToGifRoute: LangPngToGifRoute,
   LangPrivacyRoute: LangPrivacyRoute,
   LangTermsRoute: LangTermsRoute,
+  BlogBestFreeGifMakerRoute: BlogBestFreeGifMakerRoute,
   BlogHowLongCanAGifBeRoute: BlogHowLongCanAGifBeRoute,
   BlogHowManyFpsAreGifsRoute: BlogHowManyFpsAreGifsRoute,
+  BlogHowToAnimateAPngRoute: BlogHowToAnimateAPngRoute,
+  BlogHowToCropAGifRoute: BlogHowToCropAGifRoute,
+  BlogHowToMakeAGifFromImagesRoute: BlogHowToMakeAGifFromImagesRoute,
+  BlogHowToMakeAGifFromVideoRoute: BlogHowToMakeAGifFromVideoRoute,
+  BlogHowToMakeAGifIntoAStickerRoute: BlogHowToMakeAGifIntoAStickerRoute,
+  BlogHowToMakeAGifSizeSmallerRoute: BlogHowToMakeAGifSizeSmallerRoute,
+  BlogHowToResizeAGifRoute: BlogHowToResizeAGifRoute,
+  BlogHowToSlowDownAGifRoute: BlogHowToSlowDownAGifRoute,
   BlogWhyIsMyGifSoBigRoute: BlogWhyIsMyGifSoBigRoute,
   ResearchGifCompressionTestRoute: ResearchGifCompressionTestRoute,
   LangIndexRoute: LangIndexRoute,
