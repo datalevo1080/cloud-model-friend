@@ -145,7 +145,7 @@ function withCacheHeaders(request: Request, response: Response): Response {
  */
 function prerenderSlashRewrite(request: Request): Request {
   const isPrerendering =
-    typeof process !== "undefined" && process.env?.TSS_PRERENDERING === "true";
+    typeof process !== "undefined" && process.env?.['TSS_PRERENDERING'] === "true";
   if (!isPrerendering) return request;
   const url = new URL(request.url);
   if (url.pathname.length <= 1 || !url.pathname.endsWith("/")) return request;
